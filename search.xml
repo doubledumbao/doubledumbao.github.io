@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>JUC学习笔记</title>
-    <url>/2020/04/25/JUC%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <url>/2020/04/25/JUC/</url>
     <content><![CDATA[<h1 id="JUC学习笔记"><a href="#JUC学习笔记" class="headerlink" title="JUC学习笔记"></a>JUC学习笔记</h1><h2 id="1-什么是JUC"><a href="#1-什么是JUC" class="headerlink" title="1.什么是JUC"></a>1.什么是JUC</h2><p>源码+官方文档</p>
 <p><img src="/.com//image-20200422083034285.png" alt="image-20200422083034285"></p>
 <p>JUC ==&gt; java util concurrent</p>
