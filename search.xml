@@ -27,6 +27,9 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">webpack-study</span><br><span class="line">├── dist</span><br><span class="line">│   └── js</span><br><span class="line">│       └── bundle.js</span><br><span class="line">├── index.html</span><br><span class="line">├── modules</span><br><span class="line">│   ├── hello.js</span><br><span class="line">│   └── main.js</span><br><span class="line">└── webpack.config.js</span><br></pre></td></tr></table></figure>
 
 ]]></content>
+      <categories>
+        <category>web前端</category>
+      </categories>
       <tags>
         <tag>webpack</tag>
       </tags>
