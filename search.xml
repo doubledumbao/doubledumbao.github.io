@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>学习数据结构和算法的网站</title>
+    <url>/2020/04/27/%E5%AD%A6%E4%B9%A0%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%9A%84%E7%BD%91%E7%AB%99/</url>
+    <content><![CDATA[<h1 id="数据结构和算法可视化网站："><a href="#数据结构和算法可视化网站：" class="headerlink" title="数据结构和算法可视化网站："></a>数据结构和算法可视化网站：</h1><h6 id="数据结构和算法动态可视化-https-visualgo-net-zh"><a href="#数据结构和算法动态可视化-https-visualgo-net-zh" class="headerlink" title="数据结构和算法动态可视化 https://visualgo.net/zh"></a>数据结构和算法动态可视化 <a href="https://visualgo.net/zh" target="_blank" rel="noopener">https://visualgo.net/zh</a></h6><h6 id="Data-Structure-Visualizations-https-www-cs-usfca-edu-galles-visualization-Algorithms-html"><a href="#Data-Structure-Visualizations-https-www-cs-usfca-edu-galles-visualization-Algorithms-html" class="headerlink" title="Data Structure Visualizations https://www.cs.usfca.edu/~galles/visualization/Algorithms.html"></a>Data Structure Visualizations <a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" target="_blank" rel="noopener">https://www.cs.usfca.edu/~galles/visualization/Algorithms.html</a></h6><h6 id="尚硅谷Java数据结构与java算法，韩顺平数据结构与算法-https-www-bilibili-com-video-BV1E4411H73v"><a href="#尚硅谷Java数据结构与java算法，韩顺平数据结构与算法-https-www-bilibili-com-video-BV1E4411H73v" class="headerlink" title="尚硅谷Java数据结构与java算法，韩顺平数据结构与算法 https://www.bilibili.com/video/BV1E4411H73v"></a>尚硅谷Java数据结构与java算法，韩顺平数据结构与算法 <a href="https://www.bilibili.com/video/BV1E4411H73v" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1E4411H73v</a></h6>]]></content>
+      <categories>
+        <category>数据结构和算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>稀疏sparsearray数组</title>
     <url>/2020/04/27/%E7%A8%80%E7%96%8Fsparsearray%E6%95%B0%E7%BB%84/</url>
     <content><![CDATA[<p><strong>先看一个实际的需求</strong></p>
