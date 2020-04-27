@@ -13,7 +13,7 @@
 <p>稀疏数组的处理方法是:</p>
 <p>1)记录数组一共有几行几列，有多少个不同的值</p>
 <p>2)把具有不同值的元素的行列及值记录在一个小规模的数组中，从而缩小程序的规模</p>
-<p><img src="https://note.youdao.com/yws/public/resource/40270b32c0f73e2f81cca917c61dfdaf/xmlnote/12AF0448EC894B66B676D955D842CCF5/5127" alt="2"></p>
+<p><img src="https://note.youdao.com/yws/public/resource/40270b32c0f73e2f81cca917c61dfdaf/xmlnote/7D26C52F0C514B4AAA4473490DC582C3/5132" alt="2"></p>
 <p><strong>稀疏数组和二维数组转换思路</strong></p>
 <p><img src="https://note.youdao.com/yws/public/resource/40270b32c0f73e2f81cca917c61dfdaf/xmlnote/4676C64317D04CCEBF5380D7F20A9027/5129" alt="3"></p>
 ]]></content>
