@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    linux打开文件数 too many open files 解决办法 |  刘雪课堂
+    maven依赖范围 |  刘雪课堂
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -36,7 +36,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
+  <article id="post-maven依赖范围" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -44,7 +44,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  linux打开文件数 too many open files 解决办法
+  maven依赖范围
 </h1>
  
 
@@ -53,14 +53,10 @@
 
     
     <div class="article-meta">
-      <a href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
-  <time datetime="2020-05-03T00:30:45.000Z" itemprop="datePublished">2020-05-03</time>
+      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-date">
+  <time datetime="2020-05-03T02:34:09.000Z" itemprop="datePublished">2020-05-03</time>
 </a>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>
-  </div>
-
       
       
 <div class="word_count">
@@ -68,7 +64,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">380字</span>
+            <span class="post-count">1.2k字</span>
         </span>
     </span>
 
@@ -77,7 +73,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1分钟</span>
+            <span class="post-count">5分钟</span>
         </span>
     </span>
 </div>
@@ -88,6 +84,8 @@
 
     
     
+    <div class="tocbot"></div>
+
 
 
 
@@ -100,27 +98,73 @@
       
 
       
-      <p><strong>阿里巴巴Java开发手册中规定：</strong></p>
-<blockquote>
-<p>调大服务器所支持的最大文件句柄数(File Descriptor，简写为fd)。 说明:主流操作系统的设计是将 TCP/UDP 连接采用与文件一样的方式去管理，即一个连接对 应于一个 fd。主流的 linux 服务器默认所支持最大 fd 数量为 1024，当并发连接数很大时很 容易因为 fd 不足而出现“open too many files”错误，导致新的连接无法建立。 建议将 linux 服务器所支持的最大句柄数调高数倍(与服务器的内存数量相关)。</p>
+      <h1 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h1><blockquote>
+<p>上一节提到，JUnit依赖的测试范围是test，测试范围用元素scope表示。本节将详细解释什么是测试范围，以及各种测试范围的效果和用途。</p>
+<p>首先需要知道，Maven在编译项目主代码的时候需要使用一套classpath。在上例中，编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。其次，Maven在编译和执行测试的时候会使用另外一套classpath。上例中的JUnit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖范围是test。最后，实际运行Maven项目的时候，又会使用一套classpath，上例中的spring-core需要在该classpath中，而JUnit则不需要。</p>
+<p>依赖范围就是用来控制依赖与这三种classpath（编译classpath、测试classpath、运行classpath）的关系，Maven有以下几种依赖范围：</p>
+<p>compile：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
+<p>test：测试依赖范围。使用此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是JUnit，它只有在编译测试代码及运行测试的时候才需要。</p>
+<p>provided：已提供依赖范围。使用此依赖范围的Maven依赖，对于编译和测试class-path有效，但在运行时无效。典型的例子是servlet-api，编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要Maven重复地引入一遍。</p>
+<p>runtime：运行时依赖范围。使用此依赖范围的Maven依赖，对于测试和运行class-path有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述接口的具体JDBC驱动。</p>
+<p>system：系统依赖范围。该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围的依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建</p>
+<p>“的不可移植，因此应该谨慎使用。systemPath元素可以引用环境变量，如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜dependency＞</span><br><span class="line">    ＜groupId＞javax.sql＜/groupId＞</span><br><span class="line">    ＜artifactId＞jdbc-stdext＜/artifactId＞</span><br><span class="line">    ＜version＞2.0＜/version＞</span><br><span class="line">    ＜scope＞system＜/scope＞</span><br><span class="line">    ＜systemPath＞$&#123;java.home&#125;/lib/rt.jar＜/systemPath＞</span><br><span class="line">＜/dependency＞</span><br></pre></td></tr></table></figure>
+
+<p>import（Maven 2.0.9及以上）：导入依赖范围。该依赖范围不会对三种classpath产生实际的影响，本书将在8.3.3节介绍Maven依赖和dependencyManagement的时候详细介绍此依赖范围。</p>
 </blockquote>
-<p><strong>查看每个用户最大允许打开文件数量</strong></p>
-<blockquote>
-<p>ulimit -a </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 20</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 16382</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) unlimited</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<p>查看某一进程的打开文件数量</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep java</span><br><span class="line">lsof -p 进程号 | wc -l</span><br></pre></td></tr></table></figure>
-
-<p>设置open files数值方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 2048</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>这样就可以把当前用户的最大允许打开文件数量设置为2048了，但这种设置方法在重启后会还原为默认值。</em></strong></p>
-<p><strong>永久设置方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在最后加入</span><br><span class="line">* soft nofile 4096</span><br><span class="line">* hard nofile 4096</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>最前的表示所有用户，可根据需要设置某一用户，改完后注销一下就能生效。</em></strong></p>
+<p>摘录来自: 许晓斌. “Maven实战。” </p>
+<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope" target="_blank" rel="noopener">官网对scope的介绍</a></p>
+<h3 id="Dependency-Scope"><a href="#Dependency-Scope" class="headerlink" title="Dependency Scope"></a>Dependency Scope</h3><p>Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.</p>
+<p>There are 6 scopes available:</p>
+<ul>
+<li><strong>compile</strong><br>This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.</li>
+<li><strong>provided</strong><br>This is much like <code>compile</code>, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope <code>provided</code> because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.</li>
+<li><strong>runtime</strong><br>This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath.</li>
+<li><strong>test</strong><br>This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive.</li>
+<li><strong>system</strong><br>This scope is similar to <code>provided</code> except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository.</li>
+<li><strong>import</strong><br>This scope is only supported on a dependency of type <code>pom</code> in the <code>section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM&#39;s</code> section. Since they are replaced, dependencies with a scope of <code>import</code> do not actually participate in limiting the transitivity of a dependency.</li>
+</ul>
+<p>Each of the scopes (except for <code>import</code>) affects transitive dependencies in different ways, as is demonstrated in the table below. If a dependency is set to the scope in the left column, transitive dependencies of that dependency with the scope across the top row will result in a dependency in the main project with the scope listed at the intersection. If no scope is listed, it means the dependency will be omitted.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>compile</th>
+<th>provided</th>
+<th>runtime</th>
+<th>test</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>compile(*)</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>provided</td>
+<td>-</td>
+<td>provided</td>
+<td>-</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td>runtime</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>test</td>
+<td>test</td>
+<td>-</td>
+<td>test</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p><strong>(*) Note:</strong> it is intended that this should be runtime scope instead, so that all compile dependencies must be explicitly listed. However, if a library you depend on extends a class from another library, both must be available at compile time. For this reason, compile time dependencies remain as compile scope even when they are transitive.</p>
 
       
       <!-- reward -->
@@ -190,15 +234,13 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
-
 
     </footer>
 
@@ -208,19 +250,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            maven依赖范围
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/" class="article-nav-link">
+      <a href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">几个前端技术名词整理</div>
+        <div class="article-nav-title">linux打开文件数 too many open files 解决办法</div>
       </a>
     
   </nav>

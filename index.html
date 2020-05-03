@@ -70,6 +70,136 @@
     
     
     
+    <article id="post-maven依赖范围" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/"
+    >maven依赖范围</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-date">
+  <time datetime="2020-05-03T02:34:09.000Z" itemprop="datePublished">2020-05-03</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h1 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h1><blockquote>
+<p>上一节提到，JUnit依赖的测试范围是test，测试范围用元素scope表示。本节将详细解释什么是测试范围，以及各种测试范围的效果和用途。</p>
+<p>首先需要知道，Maven在编译项目主代码的时候需要使用一套classpath。在上例中，编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。其次，Maven在编译和执行测试的时候会使用另外一套classpath。上例中的JUnit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖范围是test。最后，实际运行Maven项目的时候，又会使用一套classpath，上例中的spring-core需要在该classpath中，而JUnit则不需要。</p>
+<p>依赖范围就是用来控制依赖与这三种classpath（编译classpath、测试classpath、运行classpath）的关系，Maven有以下几种依赖范围：</p>
+<p>compile：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
+<p>test：测试依赖范围。使用此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是JUnit，它只有在编译测试代码及运行测试的时候才需要。</p>
+<p>provided：已提供依赖范围。使用此依赖范围的Maven依赖，对于编译和测试class-path有效，但在运行时无效。典型的例子是servlet-api，编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要Maven重复地引入一遍。</p>
+<p>runtime：运行时依赖范围。使用此依赖范围的Maven依赖，对于测试和运行class-path有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述接口的具体JDBC驱动。</p>
+<p>system：系统依赖范围。该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围的依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建</p>
+<p>“的不可移植，因此应该谨慎使用。systemPath元素可以引用环境变量，如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜dependency＞</span><br><span class="line">    ＜groupId＞javax.sql＜/groupId＞</span><br><span class="line">    ＜artifactId＞jdbc-stdext＜/artifactId＞</span><br><span class="line">    ＜version＞2.0＜/version＞</span><br><span class="line">    ＜scope＞system＜/scope＞</span><br><span class="line">    ＜systemPath＞$&#123;java.home&#125;/lib/rt.jar＜/systemPath＞</span><br><span class="line">＜/dependency＞</span><br></pre></td></tr></table></figure>
+
+<p>import（Maven 2.0.9及以上）：导入依赖范围。该依赖范围不会对三种classpath产生实际的影响，本书将在8.3.3节介绍Maven依赖和dependencyManagement的时候详细介绍此依赖范围。</p>
+</blockquote>
+<p>摘录来自: 许晓斌. “Maven实战。” </p>
+<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope" target="_blank" rel="noopener">官网对scope的介绍</a></p>
+<h3 id="Dependency-Scope"><a href="#Dependency-Scope" class="headerlink" title="Dependency Scope"></a>Dependency Scope</h3><p>Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.</p>
+<p>There are 6 scopes available:</p>
+<ul>
+<li><strong>compile</strong><br>This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.</li>
+<li><strong>provided</strong><br>This is much like <code>compile</code>, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope <code>provided</code> because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.</li>
+<li><strong>runtime</strong><br>This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath.</li>
+<li><strong>test</strong><br>This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive.</li>
+<li><strong>system</strong><br>This scope is similar to <code>provided</code> except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository.</li>
+<li><strong>import</strong><br>This scope is only supported on a dependency of type <code>pom</code> in the <code>section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM&#39;s</code> section. Since they are replaced, dependencies with a scope of <code>import</code> do not actually participate in limiting the transitivity of a dependency.</li>
+</ul>
+<p>Each of the scopes (except for <code>import</code>) affects transitive dependencies in different ways, as is demonstrated in the table below. If a dependency is set to the scope in the left column, transitive dependencies of that dependency with the scope across the top row will result in a dependency in the main project with the scope listed at the intersection. If no scope is listed, it means the dependency will be omitted.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>compile</th>
+<th>provided</th>
+<th>runtime</th>
+<th>test</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>compile(*)</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>provided</td>
+<td>-</td>
+<td>provided</td>
+<td>-</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td>runtime</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>test</td>
+<td>test</td>
+<td>-</td>
+<td>test</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p><strong>(*) Note:</strong> it is intended that this should be runtime scope instead, so that all compile dependencies must be explicitly listed. However, if a library you depend on extends a class from another library, both must be available at compile time. For this reason, compile time dependencies remain as compile scope even when they are transitive.</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1317,77 +1447,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-CSS滤镜" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/25/CSS%E6%BB%A4%E9%95%9C/"
-    >CSS滤镜</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/25/CSS%E6%BB%A4%E9%95%9C/" class="article-date">
-  <time datetime="2020-04-25T07:36:47.000Z" itemprop="datePublished">2020-04-25</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">title</span>&gt;</span>滤镜<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line">			img&#123;</span><br><span class="line">				width: 500px;</span><br><span class="line">				height: auto;</span><br><span class="line">				display: block;</span><br><span class="line">				margin: 0 auto;</span><br><span class="line">				transition: 2s;</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh</span>&#123;</span></span><br><span class="line"><span class="css">				<span class="comment">/* grayscale:设置灰度 1 百分之百 */</span></span></span><br><span class="line">				-webkit-filter: grayscale(1);</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-tag">img</span><span class="selector-pseudo">:hover</span>&#123;</span></span><br><span class="line">				-webkit-filter: none;</span><br><span class="line">				transition: 2s;</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh2</span>&#123;</span></span><br><span class="line"><span class="css">				<span class="comment">/* 曝光度 */</span></span></span><br><span class="line">				-webkit-filter: brightness(2);</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh3</span>&#123;</span></span><br><span class="line">				/* 褐色属性</span><br><span class="line">				 sepia 1 百分百褐色 正常0*/</span><br><span class="line">				-webkit-filter: sepia(1);</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh4</span>&#123;</span></span><br><span class="line"><span class="css">				<span class="comment">/* 模糊度 */</span></span></span><br><span class="line">				-webkit-filter: blur(5px);</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh5</span>&#123;</span></span><br><span class="line">				/* </span><br><span class="line">				 调整输入图像的对比度。的值0%将创建完全灰色的图像。</span><br><span class="line">				 值100%保持输入不变。</span><br><span class="line">				 100%允许超过的值，从而提供更具对比度的结果。</span><br><span class="line">				 内插的lacuna值为1。</span><br><span class="line">				 */</span><br><span class="line"><span class="css">				<span class="selector-tag">-webkit-filter</span>: <span class="selector-tag">contrast</span>(0<span class="selector-class">.5</span>);</span></span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh6</span>&#123;</span></span><br><span class="line">				/* 使输入图像饱和。的值amount定义转换的比例。</span><br><span class="line">				值0%完全不饱和。值100%保持输入不变。其他值是效果的线性乘数。</span><br><span class="line">				100%允许超过的值，从而提供超饱和的结果。内插的lacuna值为1。 */</span><br><span class="line"><span class="css">				<span class="selector-tag">-webkit-filter</span><span class="selector-pseudo">:saturate(2)</span>;</span></span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh7</span>&#123;</span></span><br><span class="line">				/* 反转输入图像中的样本。的值amount定义转换的比例。</span><br><span class="line">				值100%完全反转。</span><br><span class="line">				值0%保持输入不变。之间的值0%并且100%是在效果线性乘法器。</span><br><span class="line">				内插的lacuna值为0。 */</span><br><span class="line">				-webkit-filter: invert();</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh8</span>&#123;</span></span><br><span class="line">				/**</span><br><span class="line">				 * 在输入图像上应用色相旋转。</span><br><span class="line">				 的值angle定义将调整输入样本的色环周围的度数。</span><br><span class="line">				 值0deg 保持输入不变。内插的lacuna值为0。</span><br><span class="line">				 虽然没有最大值 上面的值的效果360deg回绕。</span><br><span class="line">				 */</span><br><span class="line"><span class="css">				<span class="selector-tag">-webkit-filter</span><span class="selector-pseudo">:hue-rotate(10deg)</span>;</span></span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh9</span>&#123;</span></span><br><span class="line">				-webkit-filter: brightness(10) blur(1) grayscale(1);</span><br><span class="line">				transition: all 15s;</span><br><span class="line">			&#125;</span><br><span class="line"><span class="css">			<span class="selector-class">.zjh9</span><span class="selector-pseudo">:hover</span>&#123;</span></span><br><span class="line">				-webkit-filter: brightness(1) blur(0px) grayscale(1);</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh2"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh3"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh4"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh5"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh6"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh7"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh8"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">img</span> <span class="attr">class</span>=<span class="string">"zjh9"</span> <span class="attr">src</span>=<span class="string">"img/jiangxin.png"</span> &gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/" rel="tag">CSS</a></li></ul>
 
 
     </footer>
