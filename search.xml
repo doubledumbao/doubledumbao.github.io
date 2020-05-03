@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>linux打开文件数 too many open files 解决办法</title>
+    <url>/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    <content><![CDATA[<p><strong>阿里巴巴Java开发手册中规定：</strong></p>
+<blockquote>
+<p>调大服务器所支持的最大文件句柄数(File Descriptor，简写为fd)。 说明:主流操作系统的设计是将 TCP/UDP 连接采用与文件一样的方式去管理，即一个连接对 应于一个 fd。主流的 linux 服务器默认所支持最大 fd 数量为 1024，当并发连接数很大时很 容易因为 fd 不足而出现“open too many files”错误，导致新的连接无法建立。 建议将 linux 服务器所支持的最大句柄数调高数倍(与服务器的内存数量相关)。</p>
+</blockquote>
+<p><strong>查看每个用户最大允许打开文件数量</strong></p>
+<blockquote>
+<p>ulimit -a </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 20</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 16382</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) unlimited</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<p>查看某一进程的打开文件数量</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ps -ef | grep java</span><br><span class="line">lsof -p 进程号 | wc -l</span><br></pre></td></tr></table></figure>
+
+<p>设置open files数值方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ulimit -n 2048</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>这样就可以把当前用户的最大允许打开文件数量设置为2048了，但这种设置方法在重启后会还原为默认值。</em></strong></p>
+<p><strong>永久设置方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在最后加入</span><br><span class="line">* soft nofile 4096</span><br><span class="line">* hard nofile 4096</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>最前的表示所有用户，可根据需要设置某一用户，改完后注销一下就能生效。</em></strong></p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>几个前端技术名词整理</title>
     <url>/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/</url>
     <content><![CDATA[<h1 id="Babel-是什么？"><a href="#Babel-是什么？" class="headerlink" title="Babel 是什么？"></a>Babel 是什么？</h1><h2 id="Babel-是一个-JavaScript-编译器"><a href="#Babel-是一个-JavaScript-编译器" class="headerlink" title="Babel 是一个 JavaScript 编译器"></a>Babel 是一个 JavaScript 编译器</h2><p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：</p>
