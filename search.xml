@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Dockerfile初探</title>
+    <url>/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/</url>
+    <content><![CDATA[<h3 id="测试使用Dockerfile创建一个myshop镜像"><a href="#测试使用Dockerfile创建一个myshop镜像" class="headerlink" title="测试使用Dockerfile创建一个myshop镜像"></a>测试使用Dockerfile创建一个myshop镜像</h3><p>1.新建文件夹myshop</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir myshop</span><br><span class="line"><span class="comment">#查看当前目录</span></span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line">/Users/doubledumbao/docker-demo/202005/myshop</span><br></pre></td></tr></table></figure>
+
+<p>2.新建index.html文件，文件内容如下：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello docker <span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello docker!!!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3.将index.html打包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -zcvf myshop.tar.gz index.html</span><br></pre></td></tr></table></figure>
+
+<p>4.编写Dockerfile文件</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># FROM 指令用于指定其后构建新镜像所使用的基础镜像。FROM 指令必是 Dockerfile 文件中的首条命令，启动构建流程后，Docker 将会基于该镜像构建新镜像，FROM 后的命令也会基于这个基础镜像。</span></span><br><span class="line"><span class="keyword">FROM</span> tomcat:latest</span><br><span class="line"><span class="comment"># 删除/usr/local/tomcat/webapps/ROOT/目录下的内容</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> rm -rf /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/*</span></span><br><span class="line"><span class="comment"># COPY 指令将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的&amp;lt;目标路径&amp;gt;位置。</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> myshop.tar.gz /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># WORKDIR用于在容器内设置一个工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># RUN在镜像的构建过程中执行特定的命令，并生成一个中间镜像。</span></span><br><span class="line"><span class="comment"># 解压tar包并删除tar包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -zxvf myshop.tar.gz \</span></span><br><span class="line"><span class="bash">   &amp;&amp; rm -fr myshop.tar.gz</span></span><br><span class="line"><span class="comment"># 为构建的镜像设置监听端口，使容器在运行时监听。格式：EXPOSE &lt;port&gt; [&lt;port&gt;...]。EXPOSE 指令并不会让容器监听 host 的端口，如果需要，需要在 docker run 时使用 -p、-P 参数来发布容器端口到 host 的某个端口上。</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>5.编译Dockerfile</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
+
+<p>6.运行容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
+
+<p>7.查看浏览器localhost:8080效果</p>
+<p>8.查看容器内目录结构，使用命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 11474d41fac5 /bin/bash</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HashMap源码详解和面试题分析</title>
+    <url>/2020/05/09/HashMap%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>HashMap</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker服务编排</title>
     <url>/2020/05/08/docker%E6%9C%8D%E5%8A%A1%E7%BC%96%E6%8E%92/</url>
     <content><![CDATA[<p><strong><em>根据哔哩哔哩视频<a href="https://www.bilibili.com/video/BV1Wt411w72h/?spm_id_from=333.788.videocard.0" target="_blank" rel="noopener">【docker入门2】实战~如何组织一个多容器项目docker-compose</a>进行学习</em></strong></p>
