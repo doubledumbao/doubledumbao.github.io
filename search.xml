@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>虚拟机栈的5道面试题</title>
+    <url>/2020/05/11/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E7%9A%845%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<p>举例栈溢出的情况（StackOverflowError）</p>
+<ul>
+<li>通过-Xss设置栈的大小；OOM</li>
+</ul>
+<p>调整栈大小，就能保证不出现溢出吗？不能</p>
+<p>分配的栈内存越大越好吗？不是</p>
+<p>垃圾回收是否会涉及到虚拟机栈？不会</p>
+<p>方法中定义的局部变量是否线程安全？具体情况具体分析</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>docker-compose 例子</title>
+    <url>/2020/05/11/docker-compose-%E4%BE%8B%E5%AD%90/</url>
+    <content><![CDATA[<h2 id="Mysql-8-x"><a href="#Mysql-8-x" class="headerlink" title="Mysql 8.x"></a>Mysql 8.x</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="string">--default-authentication-plugin=mysql_native_password</span></span><br><span class="line">      <span class="string">--character-set-server=utf8mb4</span></span><br><span class="line">      <span class="string">--collation-server=utf8mb4_general_ci</span></span><br><span class="line">      <span class="string">--explicit_defaults_for_timestamp=true</span></span><br><span class="line">      <span class="string">--lower_case_table_names=1</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">3306</span><span class="string">:3306</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/var/lib/mysql</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">adminer:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">adminer</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">9090</span><span class="string">:8080</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="GitLab"><a href="#GitLab" class="headerlink" title="GitLab"></a>GitLab</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">web:</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">'twang2218/gitlab-ce-zh'</span></span><br><span class="line">      <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">      <span class="attr">hostname:</span> <span class="string">'192.168.0.120'</span></span><br><span class="line">      <span class="attr">environment:</span></span><br><span class="line">        <span class="attr">TZ:</span> <span class="string">'Asia/Shanghai'</span></span><br><span class="line">        <span class="attr">GITLAB_OMNIBUS_CONFIG:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">external_url</span> <span class="string">'http://192.168.0.120:8080'</span></span><br><span class="line">          <span class="string">gitlab_rails['gitlab_shell_ssh_port']</span> <span class="string">=</span> <span class="number">2222</span></span><br><span class="line">          <span class="string">unicorn['port']</span> <span class="string">=</span> <span class="number">8888</span></span><br><span class="line">          <span class="string">nginx['listen_port']</span> <span class="string">=</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'8080:8080'</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'8443:443'</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'2222:22'</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./config:/etc/gitlab</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./data:/var/opt/gitlab</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./logs:/var/log/gitlab</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Nexus"><a href="#Nexus" class="headerlink" title="Nexus"></a>Nexus</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nexus:</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">sonatype/nexus3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nexus</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8081</span><span class="string">:8081</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">data:/nexus-data</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">data:</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Docker</category>
+        <category>docker-compose</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>docker-compose</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CentOS安装Docker</title>
     <url>/2020/05/11/CentOS%E5%AE%89%E8%A3%85Docker/</url>
     <content><![CDATA[<p>1.卸载Docker旧版本</p>

@@ -70,6 +70,263 @@
     
     
     
+    <article id="post-几个前端技术名词整理" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/"
+    >几个前端技术名词整理</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/" class="article-date">
+  <time datetime="2020-05-01T02:40:37.000Z" itemprop="datePublished">2020-05-01</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h1 id="Babel-是什么？"><a href="#Babel-是什么？" class="headerlink" title="Babel 是什么？"></a>Babel 是什么？</h1><h2 id="Babel-是一个-JavaScript-编译器"><a href="#Babel-是一个-JavaScript-编译器" class="headerlink" title="Babel 是一个 JavaScript 编译器"></a>Babel 是一个 JavaScript 编译器</h2><p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：</p>
+<ul>
+<li>语法转换</li>
+<li>通过 Polyfill 方式在目标环境中添加缺失的特性 (通过 <a href="https://www.babeljs.cn/docs/babel-polyfill" target="_blank" rel="noopener">@babel/polyfill</a> 模块)</li>
+<li>源码转换 (codemods)</li>
+<li>更多！ (查看这些 <a href="https://www.babeljs.cn/videos.html" target="_blank" rel="noopener">视频</a> 获得启发)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Babel 输入： ES2015 箭头函数</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function">(<span class="params">n</span>) =&gt;</span> n + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Babel 输出： ES5 语法实现的同等功能</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> n + <span class="number">1</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>参考地址：<a href="https://www.babeljs.cn/" target="_blank" rel="noopener">https://www.babeljs.cn/</a></p>
+<h1 id="ESLint"><a href="#ESLint" class="headerlink" title="ESLint"></a>ESLint</h1><h2 id="About"><a href="#About" class="headerlink" title="About"></a>About</h2><p>ESLint 是一个开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于2013年6月创建。代码检查是一种静态的分析，常用于寻找有问题的模式或者代码，并且不依赖于具体的编码风格。对大多数编程语言来说都会有代码检查，一般来说编译程序会内置检查工具。</p>
+<p>JavaScript 是一个动态的弱类型语言，在开发中比较容易出错。因为没有编译程序，为了寻找 JavaScript 代码错误通常需要在执行过程中不断调试。像 ESLint 这样的可以让程序员在编码的过程中发现问题而不是在执行的过程中。</p>
+<p>ESLint 的初衷是为了让程序员可以创建自己的检测规则。ESLint 的所有规则都被设计成可插入的。ESLint 的默认规则与其他的插件并没有什么区别，规则本身和测试可以依赖于同样的模式。为了便于人们使用，ESLint 内置了一些规则，当然，你可以在使用过程中自定义规则。</p>
+<p>ESLint 使用 Node.js 编写，这样既可以有一个快速的运行环境的同时也便于安装。</p>
+<h2 id="Philosophy"><a href="#Philosophy" class="headerlink" title="Philosophy"></a>Philosophy</h2><p>所有都是可拔插的</p>
+<ul>
+<li>内置规则和自定义规则共用一套规则 API</li>
+<li>内置的格式化方法和自定义的格式化方法共用一套格式化 API</li>
+<li>额外的规则和格式化方法能够在运行时指定</li>
+<li>规则和对应的格式化方法并不强制捆绑使用</li>
+</ul>
+<p>每条规则:</p>
+<ul>
+<li>各自独立</li>
+<li>可以开启或关闭（没有什么可以被认为“太重要所以不能关闭”）</li>
+<li>可以将结果设置成警告或者错误</li>
+</ul>
+<p>另外:</p>
+<ul>
+<li>ESLint 并不推荐任何编码风格，规则是自由的</li>
+<li>所有内置规则都是泛化的</li>
+</ul>
+<p>项目:</p>
+<ul>
+<li>通过丰富文档减少沟通成本</li>
+<li>尽可能的简单透明</li>
+<li>相信测试的重要性</li>
+</ul>
+<p>参考地址：<a href="http://eslint.cn/docs/user-guide/getting-started" target="_blank" rel="noopener">http://eslint.cn/docs/user-guide/getting-started</a></p>
+<h1 id="webpack"><a href="#webpack" class="headerlink" title="webpack"></a>webpack</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>本质上，<strong>webpack</strong> 是一个现代 JavaScript 应用程序的<em>静态模块打包工具</em>。当 webpack 处理应用程序时，它会在内部构建一个 <a href="https://webpack.docschina.org/concepts/dependency-graph/" target="_blank" rel="noopener">依赖图(dependency graph)</a>，此依赖图会映射项目所需的每个模块，并生成一个或多个 <em>bundle</em>。</p>
+<blockquote>
+<p>可以在 <a href="https://webpack.docschina.org/concepts/modules" target="_blank" rel="noopener">这里</a> 了解更多关于 JavaScript 模块和 webpack 模块的信息。</p>
+</blockquote>
+<p>从 v4.0.0 开始，<strong>webpack 可以不用再引入一个配置文件</strong>来打包项目，然而，但它仍然有着 <a href="https://webpack.docschina.org/configuration" target="_blank" rel="noopener">高度可配置性</a>，可以很好满足你的需求。</p>
+<p>在开始前你需要先理解一些<strong>核心概念</strong>：</p>
+<ul>
+<li><a href="https://webpack.docschina.org/concepts/#entry" target="_blank" rel="noopener">入口(entry)</a></li>
+<li><a href="https://webpack.docschina.org/concepts/#output" target="_blank" rel="noopener">输出(output)</a></li>
+<li><a href="https://webpack.docschina.org/concepts/#loaders" target="_blank" rel="noopener">loader</a></li>
+<li><a href="https://webpack.docschina.org/concepts/#plugins" target="_blank" rel="noopener">插件(plugin)</a></li>
+<li><a href="https://webpack.docschina.org/concepts/#mode" target="_blank" rel="noopener">模式(mode)</a></li>
+<li><a href="https://webpack.docschina.org/concepts/#browser-compatibility" target="_blank" rel="noopener">浏览器兼容性(browser compatibility)</a></li>
+</ul>
+<p>本文档旨在给出这些概念的<strong>高度</strong>概述，同时提供具体概念的详尽相关用例。</p>
+<p>为了更好地理解模块打包工具背后的理念，以及在底层它们是如何运作的，请参考以下资源：</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=UNMkLHzofQI" target="_blank" rel="noopener">手动打包一个应用程序</a></li>
+<li><a href="https://www.youtube.com/watch?v=Gc9-7PBqOC8" target="_blank" rel="noopener">实时创建一个简单打包工具</a></li>
+<li><a href="https://github.com/ronami/minipack" target="_blank" rel="noopener">一个简单打包工具的详细说明</a></li>
+</ul>
+<h2 id="入口-entry"><a href="#入口-entry" class="headerlink" title="入口(entry)"></a>入口(entry)</h2><p><strong>入口起点(entry point)</strong>指示 webpack 应该使用哪个模块，来作为构建其内部 <em><a href="https://webpack.docschina.org/concepts/dependency-graph/" target="_blank" rel="noopener">依赖图(dependency graph)</a></em> 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。</p>
+<p>默认值是 <code>./src/index.js</code>，但你可以通过在 <a href="https://webpack.docschina.org/configuration" target="_blank" rel="noopener">webpack configuration</a> 中配置 <strong>entry</strong> 属性，来指定一个（或多个）不同的入口起点。例如：</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">'./path/to/my/entry/file.js'</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 <a href="https://webpack.docschina.org/concepts/entry-points" target="_blank" rel="noopener">入口起点</a> 章节可以了解更多信息。</p>
+</blockquote>
+<h2 id="输出-output"><a href="#输出-output" class="headerlink" title="输出(output)"></a>输出(output)</h2><p><strong>output</strong> 属性告诉 webpack 在哪里输出它所创建的 <em>bundle</em>，以及如何命名这些文件。主要输出文件的默认值是 <code>./dist/main.js</code>，其他生成文件默认放置在 <code>./dist</code> 文件夹中。</p>
+<p>你可以通过在配置中指定一个 <code>output</code> 字段，来配置这些处理过程：</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">'./path/to/my/entry/file.js'</span>,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">    filename: <span class="string">'my-first-webpack.bundle.js'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，我们通过 <code>output.filename</code> 和 <code>output.path</code> 属性，来告诉 webpack bundle 的名称，以及我们想要 bundle 生成(emit)到哪里。可能你想要了解在代码最上面导入的 path 模块是什么，它是一个 <a href="https://nodejs.org/api/modules.html" target="_blank" rel="noopener">Node.js 核心模块</a>，用于操作文件路径。</p>
+<blockquote>
+<p><code>output</code> 属性还有 <a href="https://webpack.docschina.org/configuration/output" target="_blank" rel="noopener">许多可配置的特性</a>，如果你想要了解更多其背后的概念，你可以通过 <a href="https://webpack.docschina.org/concepts/output" target="_blank" rel="noopener">阅读输出章节</a> 来了解。</p>
+</blockquote>
+<h2 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h2><p>webpack 只能理解 JavaScript 和 JSON 文件。<strong>loader</strong> 让 webpack 能够去处理其他类型的文件，并将它们转换为有效 <a href="https://webpack.docschina.org/concepts/modules" target="_blank" rel="noopener">模块</a>，以供应用程序使用，以及被添加到依赖图中。</p>
+<blockquote>
+<p>注意，loader 能够 <code>import</code> 导入任何类型的模块（例如 <code>.css</code> 文件），这是 webpack 特有的功能，其他打包程序或任务执行器的可能并不支持。我们认为这种语言扩展是很有必要的，因为这可以使开发人员创建出更准确的依赖关系图。</p>
+</blockquote>
+<p>在更高层面，在 webpack 的配置中 <strong>loader</strong> 有两个属性：</p>
+<ol>
+<li><code>test</code> 属性，用于标识出应该被对应的 loader 进行转换的某个或某些文件。</li>
+<li><code>use</code> 属性，表示进行转换时，应该使用哪个 loader。</li>
+</ol>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: <span class="string">'my-first-webpack.bundle.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.txt$/</span>, <span class="attr">use</span>: <span class="string">'raw-loader'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上配置中，对一个单独的 module 对象定义了 <code>rules</code> 属性，里面包含两个必须属性：<code>test</code> 和 <code>use</code>。这告诉 webpack 编译器(compiler) 如下信息：</p>
+<blockquote>
+<p>“嘿，webpack 编译器，当你碰到「在 <code>require()</code>/<code>import</code> 语句中被解析为 ‘.txt’ 的路径」时，在你对它打包之前，先 <strong>使用</strong> <code>raw-loader</code> 转换一下。”</p>
+</blockquote>
+<blockquote>
+<p>重要的是要记住，在 webpack 配置中定义 rules 时，要定义在 <code>module.rules</code> 而不是 <code>rules</code> 中。为了使你受益于此，如果没有按照正确方式去做，webpack 会给出警告。</p>
+</blockquote>
+<blockquote>
+<p>请记住，使用正则表达式匹配文件时，你不要为它添加引号。也就是说，<code>/\.txt$/</code> 与 <code>&#39;/\.txt$/&#39;</code>/ <code>&quot;/\.txt$/&quot;</code> 不一样。前者指示 webpack 匹配任何以 .txt 结尾的文件，后者指示 webpack 匹配具有绝对路径 ‘.txt’ 的单个文件; 这可能不符合你的意图。</p>
+</blockquote>
+<p>在使用 loader 时，可以阅读 <a href="https://webpack.docschina.org/concepts/loaders" target="_blank" rel="noopener">loader 章节</a> 查看更深入的自定义配置。</p>
+<h2 id="插件-plugin"><a href="#插件-plugin" class="headerlink" title="插件(plugin)"></a>插件(plugin)</h2><p>loader 用于转换某些类型的模块，而插件则可以用于执行范围更广的任务。包括：打包优化，资源管理，注入环境变量。</p>
+<blockquote>
+<p><a href="https://webpack.docschina.org/api/plugins" target="_blank" rel="noopener">插件接口(plugin interface)</a> 功能极其强大，可以用来处理各种各样的任务。</p>
+</blockquote>
+<p>想要使用一个插件，你只需要 <code>require()</code> 它，然后把它添加到 <code>plugins</code> 数组中。多数插件可以通过选项(option)自定义。你也可以在一个配置文件中因为不同目的而多次使用同一个插件，这时需要通过使用 <code>new</code> 操作符来创建它的一个实例。</p>
+<p><strong>webpack.config.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>); <span class="comment">// 通过 npm 安装</span></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>); <span class="comment">// 用于访问内置插件</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.txt$/</span>, <span class="attr">use</span>: <span class="string">'raw-loader'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;<span class="attr">template</span>: <span class="string">'./src/index.html'</span>&#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，<code>html-webpack-plugin</code> 为应用程序生成 HTML 一个文件，并自动注入所有生成的 bundle。</p>
+<blockquote>
+<p>webpack 提供许多开箱可用的插件！查阅 <a href="https://webpack.docschina.org/plugins" target="_blank" rel="noopener">插件列表</a> 获取更多。</p>
+</blockquote>
+<p>在 webpack 配置中使用插件是简单直接的，然而也有很多值得我们进一步探讨的用例。<a href="https://webpack.docschina.org/concepts/plugins" target="_blank" rel="noopener">查看这里了解更多</a>。</p>
+<h2 id="模式-mode"><a href="#模式-mode" class="headerlink" title="模式(mode)"></a>模式(mode)</h2><p>通过选择 <code>development</code>, <code>production</code> 或 <code>none</code> 之中的一个，来设置 <code>mode</code> 参数，你可以启用 webpack 内置在相应环境下的优化。其默认值为 <code>production</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>查看 <a href="https://webpack.docschina.org/concepts/mode" target="_blank" rel="noopener">模式配置</a> 章节了解其详细内容和每个值所作的优化。</p>
+<h2 id="浏览器兼容性-browser-compatibility"><a href="#浏览器兼容性-browser-compatibility" class="headerlink" title="浏览器兼容性(browser compatibility)"></a>浏览器兼容性(browser compatibility)</h2><p>webpack 支持所有符合 <a href="https://kangax.github.io/compat-table/es5/" target="_blank" rel="noopener">ES5 标准</a> 的浏览器（不支持 IE8 及以下版本）。webpack 的 <code>import()</code> 和 <code>require.ensure()</code> 需要 <code>Promise</code>。如果你想要支持旧版本浏览器，在使用这些表达式之前，还需要 <a href="https://webpack.docschina.org/guides/shimming/" target="_blank" rel="noopener">提前加载 polyfill</a>。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Babel/" rel="tag">Babel</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-开源项目领课试玩" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/30/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E9%A2%86%E8%AF%BE%E8%AF%95%E7%8E%A9/"
+    >开源项目领课试玩</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/30/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E9%A2%86%E8%AF%BE%E8%AF%95%E7%8E%A9/" class="article-date">
+  <time datetime="2020-04-30T11:16:37.179Z" itemprop="datePublished">2020-04-30</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p><strong>启动顺序：注册中心 → 配置中心→ 模块工程 → 定时器 → 网关工程</strong> </p>
+<p>1.启动注册中心</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.roncoo.education.server.eureka.ServerEurekaApplication</span><br></pre></td></tr></table></figure>
+
+<p>2.启动配置中心</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.roncoo.education.service.config.ServerConfigApplication</span><br></pre></td></tr></table></figure>
+
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-单向链表" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1130,116 +1387,13 @@
 
 </article>
     
-    <article id="post-hexo搭建blog" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/03/31/hexo%E6%90%AD%E5%BB%BAblog/"
-    >hexo搭建blog</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/03/31/hexo%E6%90%AD%E5%BB%BAblog/" class="article-date">
-  <time datetime="2020-03-31T04:14:04.000Z" itemprop="datePublished">2020-03-31</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="MacOS从零开始搭建hexo博客"><a href="#MacOS从零开始搭建hexo博客" class="headerlink" title="MacOS从零开始搭建hexo博客"></a>MacOS从零开始搭建hexo博客</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
-<li>前期准备</li>
-<li>安装hexo</li>
-<li>生成SSH并添加到github</li>
-<li>部署项目</li>
-<li>上传到github</li>
-<li>绑定个人域名</li>
-<li>修改及配置主题</li>
-</ol>
-<hr>
-<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><pre><code>1. 安装git
-2. 安装node.js
-    查看node.js版本号
-    node -v 
-    npm -v
-3.安装cnpm
-    查看cnpm的版本号
-    cnpm -v</code></pre><hr>
-<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">安装hexo命令：cnpm install -g hexo-cli</span><br><span class="line">查看hexo版本号：hexo -v</span><br><span class="line">初始化命令：hexo init blog</span><br><span class="line">解释一下：</span><br><span class="line">    node_modules：是依赖包</span><br><span class="line">    public：存放的是生成的页面</span><br><span class="line">    scaffolds：命令生成文章等的模板</span><br><span class="line">    <span class="built_in">source</span>：用命令创建的各种文章</span><br><span class="line">    themes：主题</span><br><span class="line">    _config.yml：整个博客的配置</span><br><span class="line">    db.json：<span class="built_in">source</span>解析所得到的</span><br><span class="line">    package.json：项目所需模块项目的配置信息</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="创建github-repo"><a href="#创建github-repo" class="headerlink" title="创建github repo"></a>创建github repo</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">创建repo,名称为myname.github.io,myname与github用户名保持一致。</span><br><span class="line">git config --global user.name <span class="string">"my-name"</span></span><br><span class="line">git config --global user.email <span class="string">"my-email"</span></span><br><span class="line">ssh-keygen -t rsa -C <span class="string">"my-email"</span></span><br><span class="line">配置ssh,Settings -&gt; SSH and GPG keys -&gt; New SSH key</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="打开blog项目，修改-config-yml配置文件"><a href="#打开blog项目，修改-config-yml配置文件" class="headerlink" title="打开blog项目，修改_config.yml配置文件"></a>打开blog项目，修改_config.yml配置文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: https://github.com/my-github-name/my-github-name.github.io.git</span><br><span class="line">  branch: master</span><br><span class="line"><span class="comment"># 进入blog目录，执行下列命令：</span></span><br><span class="line">hexo new <span class="string">"博客名称"</span></span><br><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo server</span><br><span class="line"><span class="comment">#打开浏览器，输入http://localhost:4000,可以看到博客效果了。</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="上传到github"><a href="#上传到github" class="headerlink" title="上传到github"></a>上传到github</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">执行命令：npm install hexo-deployer-git --save</span><br><span class="line">然后执行：</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br><span class="line">hexo deploy</span><br><span class="line">打开浏览器，输入http://my-github-name.github.io，查看效果。</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="绑定个人域名"><a href="#绑定个人域名" class="headerlink" title="绑定个人域名"></a>绑定个人域名</h2><pre><code>在blog/source目录下新建名为CNAME的文件，文件中添加自己的域名，保存退出</code></pre><hr>
-<h2 id="修改及配置主题"><a href="#修改及配置主题" class="headerlink" title="修改及配置主题"></a>修改及配置主题</h2><pre><code>以ayer为例，进入blog目录，执行命令：git clone https://github.com/Shen-Yu/hexo-theme-ayer.git themes/ayer
-修改_config.yml,修改主题为：
-    theme: ayer
-然后执行：
-hexo clean
-hexo generate
-hexo deploy    </code></pre><hr>
-<h2 id="打开自己域名，查看效果"><a href="#打开自己域名，查看效果" class="headerlink" title="打开自己域名，查看效果"></a>打开自己域名，查看效果</h2>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
   </nav>
   
 </section>
