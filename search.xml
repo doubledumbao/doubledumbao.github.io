@@ -1,6 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CAP定理和BASE理论</title>
+    <url>/2020/05/12/CAP%E5%AE%9A%E7%90%86%E5%92%8CBASE%E7%90%86%E8%AE%BA/</url>
+    <content><![CDATA[<h3 id="CAP定理"><a href="#CAP定理" class="headerlink" title="CAP定理"></a>CAP定理</h3><blockquote>
+<p>2000 年 7 月，加州大学伯克利分校的 Eric Brewer 教授在 ACM PODC 会议上提出 CAP 猜想。2年后，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 从理论上证明了 CAP。之后，CAP 理论正式成为分布式计算领域的公认定理。</p>
+</blockquote>
+<blockquote>
+<p>CAP 理论为：一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+</blockquote>
+<ul>
+<li><strong>一致性(Consistency)</strong>： 一致性指 (all nodes see the same data at the same time)，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。</li>
+<li><strong>可用性(Availability)</strong>： 可用性指(Reads and writes always succeed)，即服务一直可用，而且是正常响应时间。</li>
+<li><strong>分区容错性(Partition tolerance)</strong>： 分区容错性指(the system continues to operate despite arbitrary message loss or failure of part of the system)，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。</li>
+</ul>
+<h3 id="CAP-权衡"><a href="#CAP-权衡" class="headerlink" title="CAP 权衡"></a>CAP 权衡</h3><blockquote>
+<p>通过 CAP 理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</p>
+</blockquote>
+<p>对于多数大型互联网应用的场景，主机众多、部署分散，而且现在的集群规模越来越大，所以节点故障、网络故障是常态，而且要保证服务可用性达到 N 个 9，即保证 P 和 A，舍弃C（退而求其次保证最终一致性）。虽然某些地方会影响客户体验，但没达到造成用户流程的严重程度。</p>
+<p>对于涉及到钱财这样不能有一丝让步的场景，C 必须保证。网络发生故障宁可停止服务，这是保证 CA，舍弃 P。貌似这几年国内银行业发生了不下 10 起事故，但影响面不大，报道也不多，广大群众知道的少。还有一种是保证 CP，舍弃 A。例如网络故障是只读不写。</p>
+<p>孰优孰略，没有定论，只能根据场景定夺，适合的才是最好的。</p>
+<h3 id="BASE-理论"><a href="#BASE-理论" class="headerlink" title="BASE 理论"></a>BASE 理论</h3><blockquote>
+<p>eBay 的架构师 Dan Pritchett 源于对大规模分布式系统的实践总结，在 ACM 上发表文章提出 BASE 理论，BASE 理论是对 CAP 理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP 的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
+</blockquote>
+<ul>
+<li><p><strong>基本可用(Basically Available)</strong>： 基本可用是指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。这就是损失部分可用性的体现。</p>
+</li>
+<li><p><strong>软状态(Soft State)</strong>： 软状态是指允许系统存在中间状态，而该中间状态不会影响系统整体可用性。分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。MySQL Replication 的异步复制也是一种体现。</p>
+</li>
+<li><p><strong>最终一致性(Eventual Consistency)</strong>： 最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</p>
+<h3 id="ACID-和-BASE-的区别与联系"><a href="#ACID-和-BASE-的区别与联系" class="headerlink" title="ACID 和 BASE 的区别与联系"></a>ACID 和 BASE 的区别与联系</h3><p>ACID 是传统数据库常用的设计理念，追求强一致性模型。BASE 支持的是大型分布式系统，提出通过牺牲强一致性获得高可用性。</p>
+</li>
+</ul>
+<p>ACID 和 BASE 代表了两种截然相反的设计哲学，在分布式系统设计的场景中，系统组件对一致性要求是不同的，因此 ACID 和 BASE 又会结合使用。</p>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java脑图整理</title>
+    <url>/2020/05/12/Java%E8%84%91%E5%9B%BE%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<p><strong>GC2019.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1MYrxGkAwKRXR85-FwKocIQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1MYrxGkAwKRXR85-FwKocIQ</a>  密码: f1ra</p>
+<p><strong>mysql_zhouyang_yuan.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1l3eM_fgqYUeDeam3nh6_3g" target="_blank" rel="noopener">https://pan.baidu.com/s/1l3eM_fgqYUeDeam3nh6_3g</a>  密码: 74bd</p>
+<p><strong>MySQL高级19v04.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1p0mxixZODzwnSaocBNu-RA" target="_blank" rel="noopener">https://pan.baidu.com/s/1p0mxixZODzwnSaocBNu-RA</a>  密码: 1sc0</p>
+<p><strong>Docker.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1aOt532IMqQsr2hIG4ndPmw" target="_blank" rel="noopener">https://pan.baidu.com/s/1aOt532IMqQsr2hIG4ndPmw</a>  密码: i02f</p>
+<p><strong>尚硅谷SpringCloud第2季2020.3.2.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1-8e2d1QOBt4nVo1izOZuSw" target="_blank" rel="noopener">https://pan.baidu.com/s/1-8e2d1QOBt4nVo1izOZuSw</a>  密码: baug</p>
+]]></content>
+      <categories>
+        <category>脑图</category>
+      </categories>
+      <tags>
+        <tag>脑图</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java集合时间复杂度</title>
+    <url>/2020/05/12/Java%E9%9B%86%E5%90%88%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/</url>
+    <content><![CDATA[<p>List<br>ArrayList LinkedList<br>Arraylist 可增长的数组长度 查询快 get（） set（） 常数级<br>插入和现有所有项的删除代价昂贵 除非在表的末端</p>
+<p>ArrayList 是线性表（数组）<br>get() 直接读取第几个下标，复杂度 O(1)<br>add(E) 添加元素，直接在后面添加，复杂度O（1）<br>add(index, E) 添加元素，在第几个元素后面插入，后面的元素需要向后移动，复杂度O（n）<br>remove（）删除元素，后面的元素需要逐个移动，复杂度O（n）</p>
+<p>总结：查 O（1） 增 末尾0（1）中间0（n） 删0（n）<br>移动是消耗时间复杂度的</p>
+<p>LinkedList 双链表 删快<br>新项的插入和现有项的删除都是非常的快<br>在表的前端添加和删除都是常数级<br>addFrist  removeFrist  addLast  removeLast  getFirst  getLast<br>但是不容易做索引</p>
+<p>LinkedList 是链表的操作<br>get() 获取第几个元素，依次遍历，复杂度O(n)<br>add(E) 添加到末尾，复杂度O(1)<br>add(index, E) 添加第几个元素后，需要先查找到第几个元素，直接指针指向操作，复杂度O(n)<br>remove（）删除元素，直接指针指向操作，复杂度O(1)</p>
+<p>总结：查 O（n） 增 末尾O（1）中间O（n） 删O（1）</p>
+<p>Set集合有三个常见的实现类：HashSet，TreeSet，LinkedHashSet。<br>简单的说，如果你关注性能，应该使用HashSet；<br>如果你需要一个有序的Set集合，应该使用TreeSet；<br>如果你需要一个Set集合保存了原始的元素插入顺序，应该使用LinkedHashSet。</p>
+<p>HashSet是基于散列表实现的，元素没有顺序；add、remove、contains方法的时间复杂度为O(1)。(contains为false时，就直接往集合里存)<br>总结：查 O（1） 增 O（1） 删O（1）</p>
+<p>TreeSet是基于树实现的（红黑树），元素是有序的；add、remove、contains方法的时间复杂度为O(log (n))(contains为false时，插入前需要重新排序)。</p>
+<p>总结：查 O（log n） 增 O（log n） 删O（log n）<br>因为元素是有序的，它提供了若干个相关方法如first(), last(), headSet(), tailSet()等；<br>LinkedHashSet介于HashSet和TreeSet之间，是基于哈希表和链表实现的，支持元素的插入顺序；基本方法的时间复杂度为O(1)；</p>
+<p>待定<br>总结：查 O（1） 增 O（1） 删O（1）</p>
+<p>map集合有三个常见的实现类：HashMap，TreeMap，LinkedHashMap。</p>
+<p>TreeMap基于红黑树（一种自平衡二叉查找树）实现的，时间复杂度平均能达到O(log n)。<br>HashMap是基于散列表实现的，时间复杂度平均能达到O(1)。正常是O(1)到O（n） jdk1.8添加了 红黑树 是 O（log n）</p>
+<p>TreeMap的get操作的时间复杂度是O(log(n))的，相比于HashMap的O(1)还是差不少的。<br>LinkedHashMap的出现就是为了平衡这些因素，能以O(1)时间复杂度查找元素，又能够保证key的有序性</p>
+<p>在描述算法复杂度时,经常用到o(1), o(n), o(logn), o(nlogn)来表示对应算法的时间复杂度, 这里进行归纳一下它们代表的含义:</p>
+<p>这是算法的时空复杂度的表示。不仅仅用于表示时间复杂度，也用于表示空间复杂度。<br>O后面的括号中有一个函数，指明某个算法的耗时/耗空间与数据增长量之间的关系。其中的n代表输入数据的量。<br>比如时间复杂度为O(n)，就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法。<br>比如时间复杂度O(n^2)，就代表数据量增大n倍时，耗时增大n的平方倍，这是比线性更高的时间复杂度。比如冒泡排序，就是典型的O(n^2)的算法，对n个数排序，需要扫描n×n次。<br>比如O(logn)，当数据增大n倍时，耗时增大logn倍（这里的log是以2为底的，比如，当数据增大256倍时，耗时只增大8倍，是比线性还要低的时间复杂度）。二分查找就是O(logn)的算法，每找一次排除一半的可能，256个数据中查找只要找8次就可以找到目标。<br>O(nlogn)同理，就是n乘以logn，当数据增大256倍时，耗时增大256*8=2048倍。这个复杂度高于线性低于平方。归并排序就是O(nlogn)的时间复杂度。<br>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p>
+<p>文章来源：<a href="https://www.cnblogs.com/alex-xyl/p/11460931.html" target="_blank" rel="noopener">https://www.cnblogs.com/alex-xyl/p/11460931.html</a></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>数据结构和算法</category>
+      </categories>
+      <tags>
+        <tag>数据结构和算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>虚拟机栈的5道面试题</title>
     <url>/2020/05/11/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E7%9A%845%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<p>举例栈溢出的情况（StackOverflowError）</p>

@@ -70,6 +70,265 @@
     
     
     
+    <article id="post-CAP定理和BASE理论" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/12/CAP%E5%AE%9A%E7%90%86%E5%92%8CBASE%E7%90%86%E8%AE%BA/"
+    >CAP定理和BASE理论</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/12/CAP%E5%AE%9A%E7%90%86%E5%92%8CBASE%E7%90%86%E8%AE%BA/" class="article-date">
+  <time datetime="2020-05-12T00:37:37.000Z" itemprop="datePublished">2020-05-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="CAP定理"><a href="#CAP定理" class="headerlink" title="CAP定理"></a>CAP定理</h3><blockquote>
+<p>2000 年 7 月，加州大学伯克利分校的 Eric Brewer 教授在 ACM PODC 会议上提出 CAP 猜想。2年后，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 从理论上证明了 CAP。之后，CAP 理论正式成为分布式计算领域的公认定理。</p>
+</blockquote>
+<blockquote>
+<p>CAP 理论为：一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+</blockquote>
+<ul>
+<li><strong>一致性(Consistency)</strong>： 一致性指 (all nodes see the same data at the same time)，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。</li>
+<li><strong>可用性(Availability)</strong>： 可用性指(Reads and writes always succeed)，即服务一直可用，而且是正常响应时间。</li>
+<li><strong>分区容错性(Partition tolerance)</strong>： 分区容错性指(the system continues to operate despite arbitrary message loss or failure of part of the system)，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。</li>
+</ul>
+<h3 id="CAP-权衡"><a href="#CAP-权衡" class="headerlink" title="CAP 权衡"></a>CAP 权衡</h3><blockquote>
+<p>通过 CAP 理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</p>
+</blockquote>
+<p>对于多数大型互联网应用的场景，主机众多、部署分散，而且现在的集群规模越来越大，所以节点故障、网络故障是常态，而且要保证服务可用性达到 N 个 9，即保证 P 和 A，舍弃C（退而求其次保证最终一致性）。虽然某些地方会影响客户体验，但没达到造成用户流程的严重程度。</p>
+<p>对于涉及到钱财这样不能有一丝让步的场景，C 必须保证。网络发生故障宁可停止服务，这是保证 CA，舍弃 P。貌似这几年国内银行业发生了不下 10 起事故，但影响面不大，报道也不多，广大群众知道的少。还有一种是保证 CP，舍弃 A。例如网络故障是只读不写。</p>
+<p>孰优孰略，没有定论，只能根据场景定夺，适合的才是最好的。</p>
+<h3 id="BASE-理论"><a href="#BASE-理论" class="headerlink" title="BASE 理论"></a>BASE 理论</h3><blockquote>
+<p>eBay 的架构师 Dan Pritchett 源于对大规模分布式系统的实践总结，在 ACM 上发表文章提出 BASE 理论，BASE 理论是对 CAP 理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP 的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
+</blockquote>
+<ul>
+<li><p><strong>基本可用(Basically Available)</strong>： 基本可用是指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。这就是损失部分可用性的体现。</p>
+</li>
+<li><p><strong>软状态(Soft State)</strong>： 软状态是指允许系统存在中间状态，而该中间状态不会影响系统整体可用性。分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。MySQL Replication 的异步复制也是一种体现。</p>
+</li>
+<li><p><strong>最终一致性(Eventual Consistency)</strong>： 最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</p>
+<h3 id="ACID-和-BASE-的区别与联系"><a href="#ACID-和-BASE-的区别与联系" class="headerlink" title="ACID 和 BASE 的区别与联系"></a>ACID 和 BASE 的区别与联系</h3><p>ACID 是传统数据库常用的设计理念，追求强一致性模型。BASE 支持的是大型分布式系统，提出通过牺牲强一致性获得高可用性。</p>
+</li>
+</ul>
+<p>ACID 和 BASE 代表了两种截然相反的设计哲学，在分布式系统设计的场景中，系统组件对一致性要求是不同的，因此 ACID 和 BASE 又会结合使用。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-Java脑图整理" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/12/Java%E8%84%91%E5%9B%BE%E6%95%B4%E7%90%86/"
+    >Java脑图整理</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/12/Java%E8%84%91%E5%9B%BE%E6%95%B4%E7%90%86/" class="article-date">
+  <time datetime="2020-05-11T23:48:34.000Z" itemprop="datePublished">2020-05-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%84%91%E5%9B%BE/">脑图</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p><strong>GC2019.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1MYrxGkAwKRXR85-FwKocIQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1MYrxGkAwKRXR85-FwKocIQ</a>  密码: f1ra</p>
+<p><strong>mysql_zhouyang_yuan.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1l3eM_fgqYUeDeam3nh6_3g" target="_blank" rel="noopener">https://pan.baidu.com/s/1l3eM_fgqYUeDeam3nh6_3g</a>  密码: 74bd</p>
+<p><strong>MySQL高级19v04.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1p0mxixZODzwnSaocBNu-RA" target="_blank" rel="noopener">https://pan.baidu.com/s/1p0mxixZODzwnSaocBNu-RA</a>  密码: 1sc0</p>
+<p><strong>Docker.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1aOt532IMqQsr2hIG4ndPmw" target="_blank" rel="noopener">https://pan.baidu.com/s/1aOt532IMqQsr2hIG4ndPmw</a>  密码: i02f</p>
+<p><strong>尚硅谷SpringCloud第2季2020.3.2.mmap</strong> 链接: <a href="https://pan.baidu.com/s/1-8e2d1QOBt4nVo1izOZuSw" target="_blank" rel="noopener">https://pan.baidu.com/s/1-8e2d1QOBt4nVo1izOZuSw</a>  密码: baug</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%84%91%E5%9B%BE/" rel="tag">脑图</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-Java集合时间复杂度" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/12/Java%E9%9B%86%E5%90%88%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"
+    >Java集合时间复杂度</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/12/Java%E9%9B%86%E5%90%88%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="article-date">
+  <time datetime="2020-05-11T23:37:44.000Z" itemprop="datePublished">2020-05-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>List<br>ArrayList LinkedList<br>Arraylist 可增长的数组长度 查询快 get（） set（） 常数级<br>插入和现有所有项的删除代价昂贵 除非在表的末端</p>
+<p>ArrayList 是线性表（数组）<br>get() 直接读取第几个下标，复杂度 O(1)<br>add(E) 添加元素，直接在后面添加，复杂度O（1）<br>add(index, E) 添加元素，在第几个元素后面插入，后面的元素需要向后移动，复杂度O（n）<br>remove（）删除元素，后面的元素需要逐个移动，复杂度O（n）</p>
+<p>总结：查 O（1） 增 末尾0（1）中间0（n） 删0（n）<br>移动是消耗时间复杂度的</p>
+<p>LinkedList 双链表 删快<br>新项的插入和现有项的删除都是非常的快<br>在表的前端添加和删除都是常数级<br>addFrist  removeFrist  addLast  removeLast  getFirst  getLast<br>但是不容易做索引</p>
+<p>LinkedList 是链表的操作<br>get() 获取第几个元素，依次遍历，复杂度O(n)<br>add(E) 添加到末尾，复杂度O(1)<br>add(index, E) 添加第几个元素后，需要先查找到第几个元素，直接指针指向操作，复杂度O(n)<br>remove（）删除元素，直接指针指向操作，复杂度O(1)</p>
+<p>总结：查 O（n） 增 末尾O（1）中间O（n） 删O（1）</p>
+<p>Set集合有三个常见的实现类：HashSet，TreeSet，LinkedHashSet。<br>简单的说，如果你关注性能，应该使用HashSet；<br>如果你需要一个有序的Set集合，应该使用TreeSet；<br>如果你需要一个Set集合保存了原始的元素插入顺序，应该使用LinkedHashSet。</p>
+<p>HashSet是基于散列表实现的，元素没有顺序；add、remove、contains方法的时间复杂度为O(1)。(contains为false时，就直接往集合里存)<br>总结：查 O（1） 增 O（1） 删O（1）</p>
+<p>TreeSet是基于树实现的（红黑树），元素是有序的；add、remove、contains方法的时间复杂度为O(log (n))(contains为false时，插入前需要重新排序)。</p>
+<p>总结：查 O（log n） 增 O（log n） 删O（log n）<br>因为元素是有序的，它提供了若干个相关方法如first(), last(), headSet(), tailSet()等；<br>LinkedHashSet介于HashSet和TreeSet之间，是基于哈希表和链表实现的，支持元素的插入顺序；基本方法的时间复杂度为O(1)；</p>
+<p>待定<br>总结：查 O（1） 增 O（1） 删O（1）</p>
+<p>map集合有三个常见的实现类：HashMap，TreeMap，LinkedHashMap。</p>
+<p>TreeMap基于红黑树（一种自平衡二叉查找树）实现的，时间复杂度平均能达到O(log n)。<br>HashMap是基于散列表实现的，时间复杂度平均能达到O(1)。正常是O(1)到O（n） jdk1.8添加了 红黑树 是 O（log n）</p>
+<p>TreeMap的get操作的时间复杂度是O(log(n))的，相比于HashMap的O(1)还是差不少的。<br>LinkedHashMap的出现就是为了平衡这些因素，能以O(1)时间复杂度查找元素，又能够保证key的有序性</p>
+<p>在描述算法复杂度时,经常用到o(1), o(n), o(logn), o(nlogn)来表示对应算法的时间复杂度, 这里进行归纳一下它们代表的含义:</p>
+<p>这是算法的时空复杂度的表示。不仅仅用于表示时间复杂度，也用于表示空间复杂度。<br>O后面的括号中有一个函数，指明某个算法的耗时/耗空间与数据增长量之间的关系。其中的n代表输入数据的量。<br>比如时间复杂度为O(n)，就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法。<br>比如时间复杂度O(n^2)，就代表数据量增大n倍时，耗时增大n的平方倍，这是比线性更高的时间复杂度。比如冒泡排序，就是典型的O(n^2)的算法，对n个数排序，需要扫描n×n次。<br>比如O(logn)，当数据增大n倍时，耗时增大logn倍（这里的log是以2为底的，比如，当数据增大256倍时，耗时只增大8倍，是比线性还要低的时间复杂度）。二分查找就是O(logn)的算法，每找一次排除一半的可能，256个数据中查找只要找8次就可以找到目标。<br>O(nlogn)同理，就是n乘以logn，当数据增大256倍时，耗时增大256*8=2048倍。这个复杂度高于线性低于平方。归并排序就是O(nlogn)的时间复杂度。<br>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p>
+<p>文章来源：<a href="https://www.cnblogs.com/alex-xyl/p/11460931.html" target="_blank" rel="noopener">https://www.cnblogs.com/alex-xyl/p/11460931.html</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" rel="tag">数据结构和算法</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-虚拟机栈的5道面试题" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -672,335 +931,6 @@
     <footer class="article-footer">
       
       
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-桥接模式" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"
-    >桥接模式</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/" class="article-date">
-  <time datetime="2020-05-03T11:21:10.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h1><p>桥接模式是将抽象部分与它的实现部分分离，使它们都可以独立地变化。它是一种对象<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=177096017&ss_c=ssc.citiao.link" target="_blank" rel="noopener">结构型模式</a>，又称为柄体(Handle and Body)模式或接口(Interfce)模式。</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在软件系统中，某些类型由于自身的逻辑，它具有两个或多个维度的变化，那么如何应对这种“多维度的变化”？如何利用面向对象的技术来使得该类型能够轻松的沿着多个方向进行变化，而又不引入额外的复杂度？这就要使用Bridge模式。</p>
-<h2 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h2><p>【GOF95】在提出桥梁模式的时候指出，桥梁模式的用意是”将<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=70235444&ss_c=ssc.citiao.link" target="_blank" rel="noopener">抽象化</a>(Abstraction)与实现化(Implementation)脱耦，使得二者可以独立地变化”。这句话有三个关键词，也就是抽象化、实现化和脱耦。</p>
-<h3 id="抽象化"><a href="#抽象化" class="headerlink" title="抽象化"></a>抽象化</h3><p>存在于多个实体中的共同的概念性联系，就是抽象化。作为一个过程，抽象化就是忽略一些信息，从而把不同的实体当做同样的实体对待。</p>
-<h3 id="实现化"><a href="#实现化" class="headerlink" title="实现化"></a>实现化</h3><p>抽象化给出的具体实现，就是实现化。</p>
-<h3 id="脱耦"><a href="#脱耦" class="headerlink" title="脱耦"></a>脱耦</h3><p>所谓耦合，就是两个实体的行为的某种强关联。而将它们的强关联去掉，就是耦合的解脱，或称脱耦。在这里，脱耦是指将<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=70235444&ss_c=ssc.citiao.link" target="_blank" rel="noopener">抽象化</a>和实现化之间的耦合解脱开，或者说是将它们之间的强关联改换成弱关联。</p>
-<p>将两个角色之间的继承关系改为<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=8918469&ss_c=ssc.citiao.link" target="_blank" rel="noopener">聚合关系</a>，就是将它们之间的强关联改换成为弱关联。因此，桥梁模式中的所谓脱耦，就是指在一个软件系统的抽象化和实现化之间使用组合/聚合关系而不是继承关系，从而使两者可以相对独立地变化。这就是桥梁模式的用意。</p>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>可以看出，这个系统含有两个等级结构，也就是：</p>
-<p>由抽象化角色和修正抽象化角色组成的抽象化等级结构。</p>
-<p>由实现化角色和两个具体实现化角色所组成的实现化等级结构。</p>
-<p>桥梁模式所涉及的角色有：</p>
-<p>抽象化(Abstraction)角色：抽象化给出的定义，并保存一个对实现化对象的引用。</p>
-<p>修正抽象化(Refined Abstraction)角色：扩展抽象化角色，改变和修正父类对抽象化的定义。</p>
-<p>实现化(Implementor)角色：这个角色给出实现化角色的接口，但不给出具体的实现。必须指出的是，这个接口不一定和抽象化角色的接口定义相同，实际上，这两个接口可以非常不一样。实现化角色应当只给出底层操作，而抽象化角色应当只给出基于底层操作的更高一层的操作。</p>
-<p>具体实现化(Concrete Implementor)角色：这个角色给出实现化角色接口的具体实现。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 品牌</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Brand</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">info</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Lenovo</span> <span class="keyword">implements</span> <span class="title">Brand</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"联想"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 苹果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Apple</span>  <span class="keyword">implements</span>  <span class="title">Brand</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"苹果"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 电脑超类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Brand brand;<span class="comment">//组合品牌</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Computer</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.brand = brand;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span></span>&#123;</span><br><span class="line">        brand.info();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 笔记本电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Desktop</span> <span class="keyword">extends</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Desktop</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"台式机"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 笔记本电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Laptop</span> <span class="keyword">extends</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Laptop</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"笔记本电脑"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 平板电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tablat</span> <span class="keyword">extends</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Tablat</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"平板电脑"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Computer lenovo = <span class="keyword">new</span> Desktop(<span class="keyword">new</span> Lenovo());</span><br><span class="line">        lenovo.info();</span><br><span class="line"></span><br><span class="line">        Computer mac = <span class="keyword">new</span> Desktop(<span class="keyword">new</span> Apple());</span><br><span class="line">        mac.info();</span><br><span class="line"></span><br><span class="line">        Computer lenovo2 = <span class="keyword">new</span> Laptop(<span class="keyword">new</span> Lenovo());</span><br><span class="line">        lenovo2.info();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="模式优缺点"><a href="#模式优缺点" class="headerlink" title="模式优缺点"></a>模式优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>1、分离抽象接口及其实现部分。提高了比继承更好的解决方案。</li>
-<li>2、桥接模式提高了系统的可扩充性，在两个变化维度中任意扩展一个维度，都不需要修改原有系统。</li>
-<li>3、实现细节对客户透明，可以对用户隐藏实现细节。</li>
-</ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>1、桥接模式的引入会增加系统的理解与设计难度，由于聚合关联关系建立在抽象层，要求开发者针对抽象进行设计与编程。</li>
-<li>2、桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。</li>
-</ul>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-maven依赖范围" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/"
-    >maven依赖范围</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-date">
-  <time datetime="2020-05-03T02:34:09.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h1><blockquote>
-<p>上一节提到，JUnit依赖的测试范围是test，测试范围用元素scope表示。本节将详细解释什么是测试范围，以及各种测试范围的效果和用途。</p>
-<p>首先需要知道，Maven在编译项目主代码的时候需要使用一套classpath。在上例中，编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。其次，Maven在编译和执行测试的时候会使用另外一套classpath。上例中的JUnit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖范围是test。最后，实际运行Maven项目的时候，又会使用一套classpath，上例中的spring-core需要在该classpath中，而JUnit则不需要。</p>
-<p>依赖范围就是用来控制依赖与这三种classpath（编译classpath、测试classpath、运行classpath）的关系，Maven有以下几种依赖范围：</p>
-<p>compile：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
-<p>test：测试依赖范围。使用此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是JUnit，它只有在编译测试代码及运行测试的时候才需要。</p>
-<p>provided：已提供依赖范围。使用此依赖范围的Maven依赖，对于编译和测试class-path有效，但在运行时无效。典型的例子是servlet-api，编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要Maven重复地引入一遍。</p>
-<p>runtime：运行时依赖范围。使用此依赖范围的Maven依赖，对于测试和运行class-path有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述接口的具体JDBC驱动。</p>
-<p>system：系统依赖范围。该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围的依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建</p>
-<p>“的不可移植，因此应该谨慎使用。systemPath元素可以引用环境变量，如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜dependency＞</span><br><span class="line">    ＜groupId＞javax.sql＜/groupId＞</span><br><span class="line">    ＜artifactId＞jdbc-stdext＜/artifactId＞</span><br><span class="line">    ＜version＞2.0＜/version＞</span><br><span class="line">    ＜scope＞system＜/scope＞</span><br><span class="line">    ＜systemPath＞$&#123;java.home&#125;/lib/rt.jar＜/systemPath＞</span><br><span class="line">＜/dependency＞</span><br></pre></td></tr></table></figure>
-
-<p>import（Maven 2.0.9及以上）：导入依赖范围。该依赖范围不会对三种classpath产生实际的影响，本书将在8.3.3节介绍Maven依赖和dependencyManagement的时候详细介绍此依赖范围。</p>
-</blockquote>
-<p>摘录来自: 许晓斌. “Maven实战。” </p>
-<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope" target="_blank" rel="noopener">官网对scope的介绍</a></p>
-<h3 id="Dependency-Scope"><a href="#Dependency-Scope" class="headerlink" title="Dependency Scope"></a>Dependency Scope</h3><p>Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.</p>
-<p>There are 6 scopes available:</p>
-<ul>
-<li><strong>compile</strong><br>This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.</li>
-<li><strong>provided</strong><br>This is much like <code>compile</code>, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope <code>provided</code> because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.</li>
-<li><strong>runtime</strong><br>This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath.</li>
-<li><strong>test</strong><br>This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive.</li>
-<li><strong>system</strong><br>This scope is similar to <code>provided</code> except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository.</li>
-<li><strong>import</strong><br>This scope is only supported on a dependency of type <code>pom</code> in the <code>section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM&#39;s</code> section. Since they are replaced, dependencies with a scope of <code>import</code> do not actually participate in limiting the transitivity of a dependency.</li>
-</ul>
-<p>Each of the scopes (except for <code>import</code>) affects transitive dependencies in different ways, as is demonstrated in the table below. If a dependency is set to the scope in the left column, transitive dependencies of that dependency with the scope across the top row will result in a dependency in the main project with the scope listed at the intersection. If no scope is listed, it means the dependency will be omitted.</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>compile</th>
-<th>provided</th>
-<th>runtime</th>
-<th>test</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>compile</td>
-<td>compile(*)</td>
-<td>-</td>
-<td>runtime</td>
-<td>-</td>
-</tr>
-<tr>
-<td>provided</td>
-<td>provided</td>
-<td>-</td>
-<td>provided</td>
-<td>-</td>
-</tr>
-<tr>
-<td>runtime</td>
-<td>runtime</td>
-<td>-</td>
-<td>runtime</td>
-<td>-</td>
-</tr>
-<tr>
-<td>test</td>
-<td>test</td>
-<td>-</td>
-<td>test</td>
-<td>-</td>
-</tr>
-</tbody></table>
-<p><strong>(*) Note:</strong> it is intended that this should be runtime scope instead, so that all compile dependencies must be explicitly listed. However, if a library you depend on extends a class from another library, both must be available at compile time. For this reason, compile time dependencies remain as compile scope even when they are transitive.</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"
-    >linux打开文件数 too many open files 解决办法</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
-  <time datetime="2020-05-03T00:30:45.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p><strong>阿里巴巴Java开发手册中规定：</strong></p>
-<blockquote>
-<p>调大服务器所支持的最大文件句柄数(File Descriptor，简写为fd)。 说明:主流操作系统的设计是将 TCP/UDP 连接采用与文件一样的方式去管理，即一个连接对 应于一个 fd。主流的 linux 服务器默认所支持最大 fd 数量为 1024，当并发连接数很大时很 容易因为 fd 不足而出现“open too many files”错误，导致新的连接无法建立。 建议将 linux 服务器所支持的最大句柄数调高数倍(与服务器的内存数量相关)。</p>
-</blockquote>
-<p><strong>查看每个用户最大允许打开文件数量</strong></p>
-<blockquote>
-<p>ulimit -a </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 20</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 16382</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) unlimited</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<p>查看某一进程的打开文件数量</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep java</span><br><span class="line">lsof -p 进程号 | wc -l</span><br></pre></td></tr></table></figure>
-
-<p>设置open files数值方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 2048</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>这样就可以把当前用户的最大允许打开文件数量设置为2048了，但这种设置方法在重启后会还原为默认值。</em></strong></p>
-<p><strong>永久设置方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在最后加入</span><br><span class="line">* soft nofile 4096</span><br><span class="line">* hard nofile 4096</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>最前的表示所有用户，可根据需要设置某一用户，改完后注销一下就能生效。</em></strong></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
-
 
     </footer>
 
