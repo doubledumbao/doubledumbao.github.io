@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Java |  刘雪课堂
+    关于Java流的几个概念：IO、BIO、NIO、AIO |  刘雪课堂
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -36,164 +36,296 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article class="articles">
+  <article id="post-关于Java流的几个概念：IO、BIO、NIO、AIO" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">Java</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="archive-article-date">
-  <time datetime="2020-05-13T15:32:41.000Z" itemprop="datePublished">05/13</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/"
-    >关于Java流的几个概念：IO、BIO、NIO、AIO</a> 
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  关于Java流的几个概念：IO、BIO、NIO、AIO
+</h1>
  
 
     </header>
     
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="article-date">
+  <time datetime="2020-05-13T15:32:41.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
       
   <div class="article-category">
     <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/IO/">IO</a>
   </div>
 
-    
-    
-  </div>
-</article>
       
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/05/12/Java%E9%9B%86%E5%90%88%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="archive-article-date">
-  <time datetime="2020-05-11T23:37:44.000Z" itemprop="datePublished">05/12</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/12/Java%E9%9B%86%E5%90%88%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/"
-    >Java集合时间复杂度</a> 
-</h2>
- 
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">627字</span>
+        </span>
+    </span>
 
-    </header>
-    
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a>
-  </div>
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">2分钟</span>
+        </span>
+    </span>
+</div>
 
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/05/09/HashMap%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/" class="archive-article-date">
-  <time datetime="2020-05-09T01:47:30.000Z" itemprop="datePublished">05/09</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/09/HashMap%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/"
-    >HashMap源码详解和面试题分析</a> 
-</h2>
- 
-
-    </header>
-    
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/" class="archive-article-date">
-  <time datetime="2020-05-06T12:56:09.000Z" itemprop="datePublished">05/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/"
-    >多线程问题整理</a> 
-</h2>
- 
-
-    </header>
-    
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
-  </div>
-
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/04/25/Jsoup%E7%88%AC%E5%8F%96%E4%BA%AC%E4%B8%9C%E5%92%8C%E8%9E%8De%E8%B4%AD%E5%95%86%E5%93%81%E5%88%97%E8%A1%A8/" class="archive-article-date">
-  <time datetime="2020-04-25T07:19:48.000Z" itemprop="datePublished">04/25</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/04/25/Jsoup%E7%88%AC%E5%8F%96%E4%BA%AC%E4%B8%9C%E5%92%8C%E8%9E%8De%E8%B4%AD%E5%95%86%E5%93%81%E5%88%97%E8%A1%A8/"
-    >Jsoup爬取京东和融e购商品列表</a> 
-</h2>
- 
-
-    </header>
-    
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-    
-    
-  </div>
-</article>
-      
       
     </div>
+    
+
+    
+    
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>关于同步、阻塞的知识我之前的文章有介绍，所以关于流用到这些概念与之前多线程用的概念一样。</p>
+<p>下面具体来看看java中的几种流</p>
+<blockquote>
+<p><strong>IO/BIO</strong></p>
+</blockquote>
+<p>BIO就是指IO，即传统的Blocking IO,即同步并阻塞的IO。这也是jdk1.4之前的唯一选择，依赖于ServerSocket实现，即一个请求对应一个线程，如果线程数不够连接则会等待空余线程或者拒绝连接。所以用这种方式，在高并发情况下效率是很低的，也不可靠，一般只应用于连接数比较小且固定架构的应用，但api也比较容易使用。</p>
+<blockquote>
+<p><strong>NIO</strong></p>
+</blockquote>
+<p>新的IO,即New IO或者Non-Blocking IO,即同步不阻塞的IO。jdk1.4之后提供了一系列的方法来操作流，定义在java.nio包下面。相比于传统的BIO,NIO 提供了高速的面向快的I/O,它加入了Buffer、Channel、Selector等概念。它是基于事件驱动的，采用了Reactor模式，它使用一个线程管理所有的socket通道，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理。它的特点是要不断主动地去询问数据有没有处理完，一般只适用于连接数目较大但连接时间短的应用，如聊天应用等。</p>
+<blockquote>
+<p><strong>AIO</strong></p>
+</blockquote>
+<p>新的IO2.0，即NIO2.0，jdk1.7开始应用，叫做异步不阻塞的IO。AIO引入异常通道的概念，采用了Proactor模式，简化了程序编写，一个有效的请求才启动一个线程，它的特点是先由操作系统完成后才通知服务端程序启动线程去处理，一般适用于连接数较多且连接时间长的应用。</p>
+<p>几种IO的综合对比：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BIO</th>
+<th>NIO</th>
+<th>AIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端:线程数</td>
+<td>1:1</td>
+<td>M:1</td>
+<td>M:0</td>
+</tr>
+<tr>
+<td>阻塞类型</td>
+<td>阻塞</td>
+<td>非阻塞</td>
+<td>非阻塞</td>
+</tr>
+<tr>
+<td>同步类型</td>
+<td>同步</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>编程难度</td>
+<td>简单</td>
+<td>非常复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>调试难度</td>
+<td>简单</td>
+<td>复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>非常差</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>吞吐量</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>java提供的NIO的api使用比较复杂，一般建议使用像netty这样的框架，而不要使用jdk自带的api。</p>
+<p>参考资料：<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1589383756&ver=2336&signature=NnEosAC2ZzCSQ8*vGWbXB91aszMNFn9lhC8kahomW3M6xDNKrl5M1qxxOMXbymBqqSn74DGOMLe-X9wApLLcz6mHB3e5Lpa55nqSu0xOkN71PZ2j8OGmXh4iy9jvDafQ&new=1" target="_blank" rel="noopener">关于java流的几个概念：IO、BIO、NIO、AIO，有几个人全知道？</a></p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/" rel="tag">IO</a></li></ul>
+
+
+    </footer>
+
   </div>
+
   
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Redis面试题汇总</div>
+      </a>
+    
+  </nav>
+
+
   
 
   
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
 </section>
       <footer class="footer">
   <div class="outer">
@@ -348,6 +480,24 @@
 </script>
 
 
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 
 

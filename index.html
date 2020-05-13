@@ -70,6 +70,144 @@
     
     
     
+    <article id="post-关于Java流的几个概念：IO、BIO、NIO、AIO" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/"
+    >关于Java流的几个概念：IO、BIO、NIO、AIO</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="article-date">
+  <time datetime="2020-05-13T15:32:41.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/IO/">IO</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>关于同步、阻塞的知识我之前的文章有介绍，所以关于流用到这些概念与之前多线程用的概念一样。</p>
+<p>下面具体来看看java中的几种流</p>
+<blockquote>
+<p><strong>IO/BIO</strong></p>
+</blockquote>
+<p>BIO就是指IO，即传统的Blocking IO,即同步并阻塞的IO。这也是jdk1.4之前的唯一选择，依赖于ServerSocket实现，即一个请求对应一个线程，如果线程数不够连接则会等待空余线程或者拒绝连接。所以用这种方式，在高并发情况下效率是很低的，也不可靠，一般只应用于连接数比较小且固定架构的应用，但api也比较容易使用。</p>
+<blockquote>
+<p><strong>NIO</strong></p>
+</blockquote>
+<p>新的IO,即New IO或者Non-Blocking IO,即同步不阻塞的IO。jdk1.4之后提供了一系列的方法来操作流，定义在java.nio包下面。相比于传统的BIO,NIO 提供了高速的面向快的I/O,它加入了Buffer、Channel、Selector等概念。它是基于事件驱动的，采用了Reactor模式，它使用一个线程管理所有的socket通道，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理。它的特点是要不断主动地去询问数据有没有处理完，一般只适用于连接数目较大但连接时间短的应用，如聊天应用等。</p>
+<blockquote>
+<p><strong>AIO</strong></p>
+</blockquote>
+<p>新的IO2.0，即NIO2.0，jdk1.7开始应用，叫做异步不阻塞的IO。AIO引入异常通道的概念，采用了Proactor模式，简化了程序编写，一个有效的请求才启动一个线程，它的特点是先由操作系统完成后才通知服务端程序启动线程去处理，一般适用于连接数较多且连接时间长的应用。</p>
+<p>几种IO的综合对比：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BIO</th>
+<th>NIO</th>
+<th>AIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端:线程数</td>
+<td>1:1</td>
+<td>M:1</td>
+<td>M:0</td>
+</tr>
+<tr>
+<td>阻塞类型</td>
+<td>阻塞</td>
+<td>非阻塞</td>
+<td>非阻塞</td>
+</tr>
+<tr>
+<td>同步类型</td>
+<td>同步</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>编程难度</td>
+<td>简单</td>
+<td>非常复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>调试难度</td>
+<td>简单</td>
+<td>复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>非常差</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>吞吐量</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>java提供的NIO的api使用比较复杂，一般建议使用像netty这样的框架，而不要使用jdk自带的api。</p>
+<p>参考资料：<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1589383756&ver=2336&signature=NnEosAC2ZzCSQ8*vGWbXB91aszMNFn9lhC8kahomW3M6xDNKrl5M1qxxOMXbymBqqSn74DGOMLe-X9wApLLcz6mHB3e5Lpa55nqSu0xOkN71PZ2j8OGmXh4iy9jvDafQ&new=1" target="_blank" rel="noopener">关于java流的几个概念：IO、BIO、NIO、AIO，有几个人全知道？</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/" rel="tag">IO</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Redis面试题汇总" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -979,97 +1117,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CentOS/" rel="tag">CentOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Dockerfile初探" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/"
-    >Dockerfile初探</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/" class="article-date">
-  <time datetime="2020-05-11T04:52:40.000Z" itemprop="datePublished">2020-05-11</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker/">Docker</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h3 id="测试使用Dockerfile创建一个myshop镜像"><a href="#测试使用Dockerfile创建一个myshop镜像" class="headerlink" title="测试使用Dockerfile创建一个myshop镜像"></a>测试使用Dockerfile创建一个myshop镜像</h3><p>1.新建文件夹myshop</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir myshop</span><br><span class="line"><span class="comment">#查看当前目录</span></span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line">/Users/doubledumbao/docker-demo/202005/myshop</span><br></pre></td></tr></table></figure>
-
-<p>2.新建index.html文件，文件内容如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello docker <span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello docker!!!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.将index.html打包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf myshop.tar.gz index.html</span><br></pre></td></tr></table></figure>
-
-<p>4.编写Dockerfile文件</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FROM 指令用于指定其后构建新镜像所使用的基础镜像。FROM 指令必是 Dockerfile 文件中的首条命令，启动构建流程后，Docker 将会基于该镜像构建新镜像，FROM 后的命令也会基于这个基础镜像。</span></span><br><span class="line"><span class="keyword">FROM</span> tomcat:latest</span><br><span class="line"><span class="comment"># 删除/usr/local/tomcat/webapps/ROOT/目录下的内容</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> rm -rf /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/*</span></span><br><span class="line"><span class="comment"># COPY 指令将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的&amp;lt;目标路径&amp;gt;位置。</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> myshop.tar.gz /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># WORKDIR用于在容器内设置一个工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># RUN在镜像的构建过程中执行特定的命令，并生成一个中间镜像。</span></span><br><span class="line"><span class="comment"># 解压tar包并删除tar包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -zxvf myshop.tar.gz \</span></span><br><span class="line"><span class="bash">   &amp;&amp; rm -fr myshop.tar.gz</span></span><br><span class="line"><span class="comment"># 为构建的镜像设置监听端口，使容器在运行时监听。格式：EXPOSE &lt;port&gt; [&lt;port&gt;...]。EXPOSE 指令并不会让容器监听 host 的端口，如果需要，需要在 docker run 时使用 -p、-P 参数来发布容器端口到 host 的某个端口上。</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
-
-<p>5.编译Dockerfile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
-
-<p>6.运行容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
-
-<p>7.查看浏览器localhost:8080效果</p>
-<p>8.查看容器内目录结构，使用命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 11474d41fac5 /bin/bash</span><br></pre></td></tr></table></figure>
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
 
 
     </footer>
