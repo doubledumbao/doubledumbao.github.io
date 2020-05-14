@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    关于Java流的几个概念：IO、BIO、NIO、AIO |  刘雪课堂
+    高性能MySQL--1.3事务 |  刘雪课堂
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -36,7 +36,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-关于Java流的几个概念：IO、BIO、NIO、AIO" class="article article-type-post" itemscope
+  <article id="post-高性能MySQL-1-3事务" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -44,7 +44,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  关于Java流的几个概念：IO、BIO、NIO、AIO
+  高性能MySQL--1.3事务
 </h1>
  
 
@@ -53,12 +53,12 @@
 
     
     <div class="article-meta">
-      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="article-date">
-  <time datetime="2020-05-13T15:32:41.000Z" itemprop="datePublished">2020-05-13</time>
+      <a href="/2020/05/14/%E9%AB%98%E6%80%A7%E8%83%BDMySQL-1-3%E4%BA%8B%E5%8A%A1/" class="article-date">
+  <time datetime="2020-05-14T14:21:44.000Z" itemprop="datePublished">2020-05-14</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/IO/">IO</a>
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
   </div>
 
       
@@ -68,7 +68,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">627字</span>
+            <span class="post-count">2.2k字</span>
         </span>
     </span>
 
@@ -77,7 +77,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">7分钟</span>
         </span>
     </span>
 </div>
@@ -100,75 +100,49 @@
       
 
       
-      <p>关于同步、阻塞的知识我之前的文章有介绍，所以关于流用到这些概念与之前多线程用的概念一样。</p>
-<p>下面具体来看看java中的几种流</p>
-<blockquote>
-<p><strong>IO/BIO</strong></p>
-</blockquote>
-<p>BIO就是指IO，即传统的Blocking IO,即同步并阻塞的IO。这也是jdk1.4之前的唯一选择，依赖于ServerSocket实现，即一个请求对应一个线程，如果线程数不够连接则会等待空余线程或者拒绝连接。所以用这种方式，在高并发情况下效率是很低的，也不可靠，一般只应用于连接数比较小且固定架构的应用，但api也比较容易使用。</p>
-<blockquote>
-<p><strong>NIO</strong></p>
-</blockquote>
-<p>新的IO,即New IO或者Non-Blocking IO,即同步不阻塞的IO。jdk1.4之后提供了一系列的方法来操作流，定义在java.nio包下面。相比于传统的BIO,NIO 提供了高速的面向快的I/O,它加入了Buffer、Channel、Selector等概念。它是基于事件驱动的，采用了Reactor模式，它使用一个线程管理所有的socket通道，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理。它的特点是要不断主动地去询问数据有没有处理完，一般只适用于连接数目较大但连接时间短的应用，如聊天应用等。</p>
-<blockquote>
-<p><strong>AIO</strong></p>
-</blockquote>
-<p>新的IO2.0，即NIO2.0，jdk1.7开始应用，叫做异步不阻塞的IO。AIO引入异常通道的概念，采用了Proactor模式，简化了程序编写，一个有效的请求才启动一个线程，它的特点是先由操作系统完成后才通知服务端程序启动线程去处理，一般适用于连接数较多且连接时间长的应用。</p>
-<p>几种IO的综合对比：</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>BIO</th>
-<th>NIO</th>
-<th>AIO</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>客户端:线程数</td>
-<td>1:1</td>
-<td>M:1</td>
-<td>M:0</td>
-</tr>
-<tr>
-<td>阻塞类型</td>
-<td>阻塞</td>
-<td>非阻塞</td>
-<td>非阻塞</td>
-</tr>
-<tr>
-<td>同步类型</td>
-<td>同步</td>
-<td>同步</td>
-<td>异步</td>
-</tr>
-<tr>
-<td>编程难度</td>
-<td>简单</td>
-<td>非常复杂</td>
-<td>复杂</td>
-</tr>
-<tr>
-<td>调试难度</td>
-<td>简单</td>
-<td>复杂</td>
-<td>复杂</td>
-</tr>
-<tr>
-<td>可靠性</td>
-<td>非常差</td>
-<td>高</td>
-<td>高</td>
-</tr>
-<tr>
-<td>吞吐量</td>
-<td>低</td>
-<td>高</td>
-<td>高</td>
-</tr>
-</tbody></table>
-<p>java提供的NIO的api使用比较复杂，一般建议使用像netty这样的框架，而不要使用jdk自带的api。</p>
-<p>参考资料：<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1589383756&ver=2336&signature=NnEosAC2ZzCSQ8*vGWbXB91aszMNFn9lhC8kahomW3M6xDNKrl5M1qxxOMXbymBqqSn74DGOMLe-X9wApLLcz6mHB3e5Lpa55nqSu0xOkN71PZ2j8OGmXh4iy9jvDafQ&new=1" target="_blank" rel="noopener">关于java流的几个概念：IO、BIO、NIO、AIO，有几个人全知道？</a></p>
+      <p>在理解事务的概念之前，接触数据库系统的其他高级特性还言之过早。事务就是一组原子性的SQL查询，或者说一个独立的工作单元。如果数据库引擎能够成功地对数据库应用该组查询的全部语句，那么就执行该组查询。如果其中有任何一条语句因为崩溃或其他原因无法执行，那么所有的语句都不会执行。也就是说，事务内的语句，要么全部执行成功，要么全部执行失败。</p>
+<p>本节的内容并非专属于MySQL，如果读者已经熟悉了事务的ACID的概念，可以直接跳转到1.3.4节。<br>银行应用是解释事务必要性的一个经典例子。假设一个银行的数据库有两张表：支票（checking）表和储蓄（savings）表。现在要从用户Jane的支票账户转移200美元到她的储蓄账户，那么需要至少三个步骤：</p>
+<p>1.检查支票账户的余额高于200美元。<br>2.从支票账户余额中减去200美元。<br>3.在储蓄账户余额中增加200美元。<br>上述三个步骤的操作必须打包在一个事务中，任何一个步骤失败，则必须回滚所有的步骤。<br>可以用START TRANSACTION语句开始一个事务，然后要么使用COMMIT提交事务将修改的数据持久保留，要么使用ROLLBACK撤销所有的修改。事务SQL的样本如下：</p>
+<p><img src="https://note.youdao.com/yws/public/resource/c73fe14647eee0b91e81ce4dcbf5b045/xmlnote/02EAA60312F745B380B9BCB1A5086A68/5221" alt="sql"></p>
+<p>单纯的事务概念并不是故事的全部。试想一下，如果执行到第四条语句时服务器崩溃了，会发生什么？天知道，用户可能会损失200美元。再假如，在执行到第三条语句和第四条语句之间时，另外一个进程要删除支票账户的所有余额，那么结果可能就是银行在不知道这个逻辑的情况下白白给了Jane 200美元。<br>除非系统通过严格的ACID测试，否则空谈事务的概念是不够的。ACID表示原子性（atomicity）、一致性（consistency）、隔离性（isolation）和持久性（durability）。一个运行良好的事务处理系统，必须具备这些标准特征。</p>
+<ul>
+<li>原子性（atomicity）</li>
+</ul>
+<p>一个事务必须被视为一个不可分割的最小工作单元，整个事务中的所有操作要么全部提交成功，要么全部失败回滚，对于一个事务来说，不可能只执行其中的一部分操作，这就是事务的原子性。</p>
+<ul>
+<li>一致性（consistency）</li>
+</ul>
+<p>数据库总是从一个一致性的状态转换到另外一个一致性的状态。在前面的例子中，一致性确保了，即使在执行第三、四条语句之间时系统崩溃，支票账户中也不会损失200美元，因为事务最终没有提交，所以事务中所做的修改也不会保存到数据库中。</p>
+<ul>
+<li>隔离性（isolation）</li>
+</ul>
+<p>通常来说，一个事务所做的修改在最终提交以前，对其他事务是不可见的。在前面的例子中，当执行完第三条语句、第四条语句还未开始时，此时有另外一个账户汇总程序开始运行，则其看到的支票账户的余额并没有被减去200美元。后面我们讨论隔离级别（Isolation level）的时候，会发现为什么我们要说“通常来说”是不可见的。</p>
+<ul>
+<li>持久性（durability）</li>
+</ul>
+<p>一旦事务提交，则其所做的修改就会永久保存到数据库中。此时即使系统崩溃，修改的数据也不会丢失。持久性是个有点模糊的概念，因为实际上持久性也分很多不同的级别。有些持久性策略能够提供非常强的安全保障，而有些则未必。而且不可能有能做到100%的持久性保证的策略（如果数据库本身就能做到真正的持久性，那么备份又怎么能增加持久性呢？）。在后面的一些章节中，我们会继续讨论MySQL中持久性的真正含义。</p>
+<p>事务的ACID特性可以确保银行不会弄丢你的钱。而在应用逻辑中，要实现这一点非常难，甚至可以说是不可能完成的任务。一个兼容ACID的数据库系统，需要做很多复杂但可能用户并没有觉察到的工作，才能确保ACID的实现。<br>就像锁粒度的升级会增加系统开销一样，这种事务处理过程中额外的安全性，也会需要数据库系统做更多的额外工作。一个实现了ACID的数据库，相比没有实现ACID的数据库，通常会需要更强的CPU处理能力、更大的内存和更多的磁盘空间。正如本章不断重复的，这也正是MySQL的存储引擎架构可以发挥优势的地方。用户可以根据业务是否需要事务处理，来选择合适的存储引擎。对于一些不需要事务的查询类应用，选择一个非事务型的存储引擎，可以获得更高的性能。即使存储引擎不支持事务，也可以通过LOCK TABLES语句为应用提供一定程度的保护，这些选择用户都可以自主决定。</p>
+<p>1.3.1 隔离级别<br>隔离性其实比想象的要复杂。在SQL标准中定义了四种隔离级别，每一种级别都规定了一个事务中所做的修改，哪些在事务内和事务间是可见的，哪些是不可见的。较低级别的隔离通常可以执行更高的并发，系统的开销也更低。</p>
+<p>下面简单地介绍一下四种隔离级别。</p>
+<ul>
+<li>READ UNCOMMITTED（未提交读）</li>
+</ul>
+<p>在READ UNCOMMITTED级别，事务中的修改，即使没有提交，对其他事务也都是可见的。事务可以读取未提交的数据，这也被称为脏读（Dirty Read）。这个级别会导致很多问题，从性能上来说，READ UNCOMMITTED不会比其他的级别好太多，但却缺乏其他级别的很多好处，除非真的有非常必要的理由，在实际应用中一般很少使用。</p>
+<ul>
+<li>READ COMMITTED（提交读）</li>
+</ul>
+<p>大多数数据库系统的默认隔离级别都是READ COMMITTED（但MySQL不是）。READ COMMITTED满足前面提到的隔离性的简单定义：一个事务开始时，只能“看见”已经提交的事务所做的修改。换句话说，一个事务从开始直到提交之前，所做的任何修改对其他事务都是不可见的。这个级别有时候也叫做不可重复读（nonrepeatable read），因为两次执行同样的查询，可能会得到不一样的结果。</p>
+<ul>
+<li>REPEATABLE READ（可重复读）</li>
+</ul>
+<p>REPEATABLE READ解决了脏读的问题。该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是理论上，可重复读隔离级别还是无法解决另外一个幻读（Phantom Read）的问题。所谓幻读， 指的是当某个事务在读取某个范围内的记录时，另外一个事务又在该范围内插入了新的记录，当之前的事务再次读取该范围的记录时，会产生幻行（Phantom Row）。InnoDB和XtraDB存储引擎通过多版本并发控制（MVCC,Multiversion Concurrency Control）解决了幻读的问题。本章稍后会做进一步的讨论。</p>
+<ul>
+<li>REPEATABLE READ（可重复读）</li>
+</ul>
+<p>REPEATABLE READ解决了脏读的问题。该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是理论上，可重复读隔离级别还是无法解决另外一个幻读（Phantom Read）的问题。所谓幻读， 指的是当某个事务在读取某个范围内的记录时，另外一个事务又在该范围内插入了新的记录，当之前的事务再次读取该范围的记录时，会产生幻行（Phantom Row）。InnoDB和XtraDB存储引擎通过多版本并发控制（MVCC,Multiversion Concurrency Control）解决了幻读的问题。本章稍后会做进一步的讨论。</p>
+<p>表1-1：ANSI SQL隔离级别</p>
+<p><img src="https://note.youdao.com/yws/public/resource/c73fe14647eee0b91e81ce4dcbf5b045/xmlnote/9FF86F5771954561B6BBC84C9EFEBEB8/5225" alt="隔离级别"></p>
+<p>摘自：《高性能MySQL（第3版）》 — 〔美〕施瓦茨（Baron Schwartz）  〔美〕扎伊采夫（Peter Zaitsev）  〔美〕特卡琴科（Vadim Tkachenko）</p>
 
       
       <!-- reward -->
@@ -238,14 +212,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/14/%E9%AB%98%E6%80%A7%E8%83%BDMySQL-1-3%E4%BA%8B%E5%8A%A1/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/" rel="tag">IO</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%8B%E5%8A%A1/" rel="tag">事务</a></li></ul>
 
 
     </footer>
@@ -256,19 +230,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/05/14/%E9%AB%98%E6%80%A7%E8%83%BDMySQL-1-3%E4%BA%8B%E5%8A%A1/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            高性能MySQL--1.3事务
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="article-nav-link">
+      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Redis面试题汇总</div>
+        <div class="article-nav-title">关于Java流的几个概念：IO、BIO、NIO、AIO</div>
       </a>
     
   </nav>
