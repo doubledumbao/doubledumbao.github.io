@@ -1136,7 +1136,7 @@
 <p>第二种方式在添加英雄时，根据排名将英雄插入到指定位置 (如果有这个排名，则添加失败，并给出提示)</p>
 ]]></content>
       <categories>
-        <category>算法和数据结构</category>
+        <category>数据结构和算法</category>
       </categories>
       <tags>
         <tag>数据结构</tag>
@@ -1218,7 +1218,7 @@
 
 ]]></content>
       <categories>
-        <category>算法和数据结构</category>
+        <category>数据结构和算法</category>
       </categories>
       <tags>
         <tag>Java</tag>
