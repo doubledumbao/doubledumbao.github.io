@@ -74,7 +74,7 @@
     
     
     
-    <article id="post-docker-compose-例子" class="article article-type-post" itemscope
+    <article id="post-Redis面试题汇总" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -82,8 +82,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2020/05/11/docker-compose-%E4%BE%8B%E5%AD%90/"
-    >docker-compose 例子</a> 
+  <a class="article-title" href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/"
+    >Redis面试题汇总</a> 
 </h2>
  
 
@@ -92,12 +92,12 @@
 
     
     <div class="article-meta">
-      <a href="/2020/05/11/docker-compose-%E4%BE%8B%E5%AD%90/" class="article-date">
-  <time datetime="2020-05-11T08:40:11.000Z" itemprop="datePublished">2020-05-11</time>
+      <a href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="article-date">
+  <time datetime="2020-05-13T01:24:15.000Z" itemprop="datePublished">2020-05-13</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker/">Docker</a> / <a class="article-category-link" href="/categories/Docker/docker-compose/">docker-compose</a>
+    <a class="article-category-link" href="/categories/Redis/">Redis</a>
   </div>
 
       
@@ -114,12 +114,127 @@
       
 
       
-      <h2 id="Mysql-8-x"><a href="#Mysql-8-x" class="headerlink" title="Mysql 8.x"></a>Mysql 8.x</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123456</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="string">--default-authentication-plugin=mysql_native_password</span></span><br><span class="line">      <span class="string">--character-set-server=utf8mb4</span></span><br><span class="line">      <span class="string">--collation-server=utf8mb4_general_ci</span></span><br><span class="line">      <span class="string">--explicit_defaults_for_timestamp=true</span></span><br><span class="line">      <span class="string">--lower_case_table_names=1</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">3306</span><span class="string">:3306</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/var/lib/mysql</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">adminer:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">adminer</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">9090</span><span class="string">:8080</span></span><br></pre></td></tr></table></figure>
+      <h1 id="redis面试题汇总"><a href="#redis面试题汇总" class="headerlink" title="redis面试题汇总"></a>redis面试题汇总</h1><p>　　redis是一个基于内存的高性能key-value数据库，目前职场中对这方面的人才还是有较高的需求。今天W3Cschool为大家整理了一些关于Redis方面的经典面试题，希望可以帮到还在求职路上的童鞋们。</p>
+<p>　　<strong>相关阅读：</strong></p>
+<p>　　<a href="https://www.w3cschool.cn/redis/" target="_blank" rel="noopener">Reids教程</a></p>
+<p>　　<a href="https://www.w3cschool.cn/redis_all_about/" target="_blank" rel="noopener">Redis开发运维实践指南</a></p>
+<p>　　<a href="https://www.w3cschool.cn/hdclil/" target="_blank" rel="noopener">Redis 设计与实现</a></p>
+<p>　　<strong>1、redis是什么？</strong></p>
+<p>　　Redis是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。</p>
+<p>　　<strong>2、Redis有什么特点</strong></p>
+<p>　　Redis是一个Key-Value类型的内存数据库，和memcached有点像，整个数据库都是在内存当中进行加载操作，定期通过异步操作把数据库数据flush到硬盘上进行保存。Redis的性能很高，可以处理超过10万次/秒的读写操作，是目前已知性能最快的Key-Value DB。</p>
+<p>　　除了性能外，Redis还支持保存多种数据结构，此外单个value的最大限制是1GB，比memcached的1MB高太多了，因此Redis可以用来实现很多有用的功能，比方说用他的List来做FIFO双向链表，实现一个轻量级的高性 能消息队列服务，用他的Set可以做高性能的tag系统等等。另外Redis也可以对存入的Key-Value设置expire时间，因此也可以被当作一 个功能加强版的memcached来用。</p>
+<p>　　当然，Redis也有缺陷，那就是是数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，因此Redis比较适合那些局限在较小数据量的高性能操作和运算上。</p>
+<p>**<br>**</p>
+<p>　　<strong>3.使用redis有哪些好处？</strong></p>
+<p>　　(1) 速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</p>
+<p>　　(2) 支持丰富数据类型，支持string，list，set，sorted set，hash</p>
+<p>　　(3) 支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</p>
+<p>　　(4) 丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除</p>
+<p>　　<strong>4.redis相比memcached有哪些优势？</strong></p>
+<p>　　(1) memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</p>
+<p>　　(2) redis的速度比memcached快很多 (3) redis可以持久化其数据</p>
+<p>　　<strong>5.Memcache与Redis的区别都有哪些？</strong></p>
+<p>　　1)、存储方式 Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，这样能保证数据的持久性。</p>
+<p>　　2)、数据支持类型 Memcache对数据类型支持相对简单。 Redis有复杂的数据类型。</p>
+<p>　　3)、使用底层模型不同 它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。 Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。</p>
+<p>　　<strong>6.redis常见性能问题和解决方案：</strong></p>
+<p>　　1).Master写内存快照，save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。</p>
+<p>　　2).Master AOF持久化，如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久</p>
+<p>　　化,如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
+<p>　　3).Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
+<p>　　4). Redis主从复制的性能问题，为了主从复制的速度和连接的稳定性，Slave和Master最好在同一个局域网内</p>
+<p>　　<strong>7. mySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</strong></p>
+<p>　　相关知识：redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略（回收策略）。redis 提供 6种数据淘汰策略：</p>
+<p>　　volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</p>
+<p>　　volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</p>
+<p>　　volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</p>
+<p>　　allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰</p>
+<p>　　allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</p>
+<p>　　no-enviction（驱逐）：禁止驱逐数据</p>
+<p>　　<strong>8.请用Redis和任意语言实现一段恶意登录保护的代码，限制1小时内每用户Id最多只能登录5次。具体登录函数或功能用空函数即可，不用详细写出。</strong></p>
+<p>　　用列表实现:列表中每个元素代表登陆时间,只要最后的第5次登陆时间和现在时间差不超过1小时就禁止登陆.用Python写的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python3</span><br><span class="line">import redis  </span><br><span class="line">import sys  </span><br><span class="line">import time  </span><br><span class="line"> </span><br><span class="line">r &#x3D; redis.StrictRedis(host&#x3D;’127.0.0.1′, port&#x3D;6379, db&#x3D;0)  </span><br><span class="line">try:       </span><br><span class="line">    id &#x3D; sys.argv[1]</span><br><span class="line">except:      </span><br><span class="line">    print(‘input argument error’)    </span><br><span class="line">    sys.exit(0)  </span><br><span class="line">if r.llen(id) &gt;&#x3D; 5 and time.time() – float(r.lindex(id, 4)) &lt;&#x3D; 3600:      </span><br><span class="line">    print(“you are forbidden logining”)</span><br><span class="line">else:       </span><br><span class="line">    print(‘you are allowed to login’)    </span><br><span class="line">    r.lpush(id, time.time())    </span><br><span class="line">    # login_func()</span><br></pre></td></tr></table></figure>
 
-<h2 id="GitLab"><a href="#GitLab" class="headerlink" title="GitLab"></a>GitLab</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">web:</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">'twang2218/gitlab-ce-zh'</span></span><br><span class="line">      <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">      <span class="attr">hostname:</span> <span class="string">'192.168.0.120'</span></span><br><span class="line">      <span class="attr">environment:</span></span><br><span class="line">        <span class="attr">TZ:</span> <span class="string">'Asia/Shanghai'</span></span><br><span class="line">        <span class="attr">GITLAB_OMNIBUS_CONFIG:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">external_url</span> <span class="string">'http://192.168.0.120:8080'</span></span><br><span class="line">          <span class="string">gitlab_rails['gitlab_shell_ssh_port']</span> <span class="string">=</span> <span class="number">2222</span></span><br><span class="line">          <span class="string">unicorn['port']</span> <span class="string">=</span> <span class="number">8888</span></span><br><span class="line">          <span class="string">nginx['listen_port']</span> <span class="string">=</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'8080:8080'</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'8443:443'</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">'2222:22'</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./config:/etc/gitlab</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./data:/var/opt/gitlab</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">./logs:/var/log/gitlab</span></span><br></pre></td></tr></table></figure>
+<p>　　<strong>9.为什么redis需要把所有数据放到内存中?</strong></p>
+<p>　　Redis为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入磁盘。所以redis具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O速度为严重影响redis的性能。在内存越来越便宜的今天，redis将会越来越受欢迎。</p>
+<p>　　如果设置了最大使用的内存，则数据已有记录数达到内存限值后不能继续插入新值。</p>
+<p>　　<strong>10.Redis是单进程单线程的</strong></p>
+<p>　　redis利用队列技术将并发访问变为串行访问，消除了传统数据库串行控制的开销</p>
+<p>　　<strong>11.redis的并发竞争问题如何解决?</strong></p>
+<p>　　Redis为单进程单线程模式，采用队列模式将并发访问变为串行访问。Redis本身没有锁的概念，Redis对于多个客户端连接并不存在竞争，但是在Jedis客户端对Redis进行并发访问时会发生连接超时、数据转换错误、阻塞、客户端关闭连接等问题，这些问题均是</p>
+<p>　　由于客户端连接混乱造成。对此有2种解决方法：</p>
+<p>　　1.客户端角度，为保证每个客户端间正常有序与Redis进行通信，对连接进行池化，同时对客户端读写Redis操作采用内部锁synchronized。</p>
+<p>　　2.服务器角度，利用setnx实现锁。</p>
+<p>　　注：对于第一种，需要应用程序自己处理资源的同步，可以使用的方法比较通俗，可以使用synchronized也可以使用lock；第二种需要用到Redis的setnx命令，但是需要注意一些问题。</p>
+<p>　　<strong>12.redis事物的了解CAS(check-and-set 操作实现乐观锁 )?</strong></p>
+<p>　　和众多其它数据库一样，Redis作为NoSQL数据库也同样提供了事务机制。在Redis中，MULTI/EXEC/DISCARD/WATCH这四个命令是我们实现事务的基石。相信对有关系型数据库开发经验的开发者而言这一概念并不陌生，即便如此，我们还是会简要的列出</p>
+<p>　　Redis中</p>
+<p>　　事务的实现特征：</p>
+<p>　　1). 在事务中的所有命令都将会被串行化的顺序执行，事务执行期间，Redis不会再为其它客户端的请求提供任何服务，从而保证了事物中的所有命令被原子的执行。</p>
+<p>　　2). 和关系型数据库中的事务相比，在Redis事务中如果有某一条命令执行失败，其后的命令仍然会被继续执行。</p>
+<p>　　3). 我们可以通过MULTI命令开启一个事务，有关系型数据库开发经验的人可以将其理解为”BEGIN TRANSACTION”语句。在该语句之后执行的命令都将被视为事务之内的操作，最后我们可以通过执行EXEC/DISCARD命令来提交/回滚该事务内的所有操作。这两</p>
+<p>　　个Redis命令可被视为等同于关系型数据库中的COMMIT/ROLLBACK语句。</p>
+<p>　　4). 在事务开启之前，如果客户端与服务器之间出现通讯故障并导致网络断开，其后所有待执行的语句都将不会被服务器执行。然而如果网络中断事件是发生在客户端执行EXEC命令之后，那么该事务中的所有命令都会被服务器执行。</p>
+<p>　　5). 当使用Append-Only模式时，Redis会通过调用系统函数write将该事务内的所有写操作在本次调用中全部写入磁盘。然而如果在写入的过程中出现系统崩溃，如电源故障导致的宕机，那么此时也许只有部分数据被写入到磁盘，而另外一部分数据却已经丢失。</p>
+<p>　　Redis服务器会在重新启动时执行一系列必要的一致性检测，一旦发现类似问题，就会立即退出并给出相应的错误提示。此时，我们就要充分利用Redis工具包中提供的redis-check-aof工具，该工具可以帮助我们定位到数据不一致的错误，并将已经写入的部</p>
+<p>　　分数据进行回滚。修复之后我们就可以再次重新启动Redis服务器了。</p>
+<p>　　<strong>13.WATCH命令和基于CAS的乐观锁：</strong></p>
+<p>　　在Redis的事务中，WATCH命令可用于提供CAS(check-and-set)功能。假设我们通过WATCH命令在事务执行之前监控了多个Keys，倘若在WATCH之后有任何Key的值发生了变化，EXEC命令执行的事务都将被放弃，同时返回Null multi-bulk应答以通知调用者事务</p>
+<p>　　执行失败。例如，我们再次假设Redis中并未提供incr命令来完成键值的原子性递增，如果要实现该功能，我们只能自行编写相应的代码。其伪码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　val &#x3D; GET mykey</span><br><span class="line">　　val &#x3D; val + 1</span><br><span class="line">　　SET mykey $val</span><br></pre></td></tr></table></figure>
 
-<h2 id="Nexus"><a href="#Nexus" class="headerlink" title="Nexus"></a>Nexus</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nexus:</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">sonatype/nexus3</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nexus</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8081</span><span class="string">:8081</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">data:/nexus-data</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">data:</span></span><br></pre></td></tr></table></figure>
+<p>　　以上代码只有在单连接的情况下才可以保证执行结果是正确的，因为如果在同一时刻有多个客户端在同时执行该段代码，那么就会出现多线程程序中经常出现的一种错误场景–竞态争用(race condition)。比如，客户端A和B都在同一时刻读取了mykey的原有值，假设该值为10，此后两个客户端又均将该值加一后set回Redis服务器，这样就会导致mykey的结果为11，而不是我们认为的12。为了解决类似的问题，我们需要借助WATCH命令的帮助，见如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">　　WATCH mykey</span><br><span class="line">　　val &#x3D; GET mykey</span><br><span class="line">　　val &#x3D; val + 1</span><br><span class="line">　　MULTI</span><br><span class="line">　　SET mykey $val</span><br><span class="line">　　EXEC</span><br></pre></td></tr></table></figure>
 
+<p>　　和此前代码不同的是，新代码在获取mykey的值之前先通过WATCH命令监控了该键，此后又将set命令包围在事务中，这样就可以有效的保证每个连接在执行EXEC之前，如果当前连接获取的mykey的值被其它连接的客户端修改，那么当前连接的EXEC命令将执行失败。这样调用者在判断返回值后就可以获悉val是否被重新设置成功。</p>
+<p>**<br>**</p>
+<p>　　<strong>14.redis持久化的几种方式</strong></p>
+<p>　　1、快照（snapshots）</p>
+<p>　　缺省情况情况下，Redis把数据快照存放在磁盘上的二进制文件中，文件名为dump.rdb。你可以配置Redis的持久化策略，例如数据集中每N秒钟有超过M次更新，就将数据写入磁盘；或者你可以手工调用命令SAVE或BGSAVE。</p>
+<p>　　工作原理</p>
+<p>　　． Redis forks.</p>
+<p>　　． 子进程开始将数据写到临时RDB文件中。</p>
+<p>　　． 当子进程完成写RDB文件，用新文件替换老文件。</p>
+<p>　　． 这种方式可以使Redis使用copy-on-write技术。</p>
+<p>　　2、AOF</p>
+<p>　　快照模式并不十分健壮，当系统停止，或者无意中Redis被kill掉，最后写入Redis的数据就会丢失。这对某些应用也许不是大问题，但对于要求高可靠性的应用来说，</p>
+<p>　　Redis就不是一个合适的选择。</p>
+<p>　　Append-only文件模式是另一种选择。</p>
+<p>　　你可以在配置文件中打开AOF模式</p>
+<p>　　3、虚拟内存方式</p>
+<p>　　当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.</p>
+<p>　　当你的key不小时,可以考虑使用一些非常方法将很大的key变成很大的value,比如你可以考虑将key,value组合成一个新的value.</p>
+<p>　　vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.</p>
+<p>　　自己测试的时候发现用虚拟内存性能也不错。如果数据量很大，可以考虑分布式或者其他数据库</p>
+<p>　　<strong>15.redis的缓存失效策略和主键失效机制</strong></p>
+<p>　　作为缓存系统都要定期清理无效数据，就需要一个主键失效和淘汰策略.</p>
+<p>　　在Redis当中，有生存期的key被称为volatile。在创建缓存时，要为给定的key设置生存期，当key过期的时候（生存期为0），它可能会被删除。</p>
+<p>　　1、影响生存时间的一些操作</p>
+<p>　　生存时间可以通过使用 DEL 命令来删除整个 key 来移除，或者被 SET 和 GETSET 命令覆盖原来的数据，也就是说，修改key对应的value和使用另外相同的key和value来覆盖以后，当前数据的生存时间不同。</p>
+<p>　　比如说，对一个 key 执行INCR命令，对一个列表进行LPUSH命令，或者对一个哈希表执行HSET命令，这类操作都不会修改 key 本身的生存时间。另一方面，如果使用RENAME对一个 key 进行改名，那么改名后的 key的生存时间和改名前一样。</p>
+<p>　　RENAME命令的另一种可能是，尝试将一个带生存时间的 key 改名成另一个带生存时间的 another_key ，这时旧的 another_key (以及它的生存时间)会被删除，然后旧的 key 会改名为 another_key ，因此，新的 another_key 的生存时间也和原本的 key 一样。使用PERSIST命令可以在不删除 key 的情况下，移除 key 的生存时间，让 key 重新成为一个persistent key 。</p>
+<p>　　2、如何更新生存时间</p>
+<p>　　可以对一个已经带有生存时间的 key 执行EXPIRE命令，新指定的生存时间会取代旧的生存时间。过期时间的精度已经被控制在1ms之内，主键失效的时间复杂度是O（1），</p>
+<p>　　EXPIRE和TTL命令搭配使用，TTL可以查看key的当前生存时间。设置成功返回 1；当 key 不存在或者不能为 key 设置生存时间时，返回 0 。</p>
+<p>　　最大缓存配置</p>
+<p>　　在 redis 中，允许用户设置最大使用内存大小</p>
+<p>　　server.maxmemory</p>
+<p>　　默认为0，没有指定最大缓存，如果有新的数据添加，超过最大内存，则会使redis崩溃，所以一定要设置。redis 内存数据集大小上升到一定大小的时候，就会实行数据淘汰策略。</p>
+<p>　　redis 提供 6种数据淘汰策略：</p>
+<p>　　． volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</p>
+<p>　　． volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</p>
+<p>　　． volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</p>
+<p>　　． allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰</p>
+<p>　　． allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</p>
+<p>　　． no-enviction（驱逐）：禁止驱逐数据</p>
+<p>　　注意这里的6种机制，volatile和allkeys规定了是对已设置过期时间的数据集淘汰数据还是从全部数据集淘汰数据，后面的lru、ttl以及random是三种不同的淘汰策略，再加上一种no-enviction永不回收的策略。</p>
+<p>　  使用策略规则：</p>
+<p>　　1、如果数据呈现幂律分布，也就是一部分数据访问频率高，一部分数据访问频率低，则使用allkeys-lru</p>
+<p>　　2、如果数据呈现平等分布，也就是所有的数据访问频率都相同，则使用allkeys-random</p>
+<p>　　三种数据淘汰策略：</p>
+<p>　　ttl和random比较容易理解，实现也会比较简单。主要是Lru最近最少使用淘汰策略，设计上会对key 按失效时间排序，然后取最先失效的key进行淘汰。</p>
+<p>　　以上就是W3Cschool为大家带来的redis面试题汇总，希望对大家有所帮助。</p>
 
       
       <!-- reward -->
@@ -132,7 +247,7 @@
     <footer class="article-footer">
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker-compose/" rel="tag">docker-compose</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
 
 
     </footer>
@@ -149,7 +264,7 @@
 
 </article>
     
-    <article id="post-CentOS安装Docker" class="article article-type-post" itemscope
+    <article id="post-Redis分布式锁正确的实现方法" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -157,8 +272,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2020/05/11/CentOS%E5%AE%89%E8%A3%85Docker/"
-    >CentOS安装Docker</a> 
+  <a class="article-title" href="/2020/05/13/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95/"
+    >Redis分布式锁正确的实现方法</a> 
 </h2>
  
 
@@ -167,14 +282,10 @@
 
     
     <div class="article-meta">
-      <a href="/2020/05/11/CentOS%E5%AE%89%E8%A3%85Docker/" class="article-date">
-  <time datetime="2020-05-11T06:28:22.000Z" itemprop="datePublished">2020-05-11</time>
+      <a href="/2020/05/13/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95/" class="article-date">
+  <time datetime="2020-05-13T01:03:31.000Z" itemprop="datePublished">2020-05-13</time>
 </a>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker/">Docker</a>
-  </div>
-
       
       
       
@@ -189,924 +300,80 @@
       
 
       
-      <p>1.卸载Docker旧版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
-
-<p>2.使用存储库安装</p>
-<p>设置存储库</p>
-<p>安装<code>yum-utils</code>软件包（提供<code>yum-config-manager</code> 实用程序）并设置<strong>稳定的</strong>存储库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y yum-utils</span><br><span class="line"></span><br><span class="line">$ sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
-
-<p>3.安装Docker引擎</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
-
-<p>4.启动Docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
-
-<p>5.验证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
-
-
-
-<p>参考资料：</p>
-<p><a href="https://docs.docker.com/engine/install/centos/" target="_blank" rel="noopener">Docker官网</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CentOS/" rel="tag">CentOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Dockerfile初探" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/"
-    >Dockerfile初探</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/" class="article-date">
-  <time datetime="2020-05-11T04:52:40.000Z" itemprop="datePublished">2020-05-11</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker/">Docker</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h3 id="测试使用Dockerfile创建一个myshop镜像"><a href="#测试使用Dockerfile创建一个myshop镜像" class="headerlink" title="测试使用Dockerfile创建一个myshop镜像"></a>测试使用Dockerfile创建一个myshop镜像</h3><p>1.新建文件夹myshop</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir myshop</span><br><span class="line"><span class="comment">#查看当前目录</span></span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line">/Users/doubledumbao/docker-demo/202005/myshop</span><br></pre></td></tr></table></figure>
-
-<p>2.新建index.html文件，文件内容如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello docker <span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello docker!!!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.将index.html打包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf myshop.tar.gz index.html</span><br></pre></td></tr></table></figure>
-
-<p>4.编写Dockerfile文件</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FROM 指令用于指定其后构建新镜像所使用的基础镜像。FROM 指令必是 Dockerfile 文件中的首条命令，启动构建流程后，Docker 将会基于该镜像构建新镜像，FROM 后的命令也会基于这个基础镜像。</span></span><br><span class="line"><span class="keyword">FROM</span> tomcat:latest</span><br><span class="line"><span class="comment"># 删除/usr/local/tomcat/webapps/ROOT/目录下的内容</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> rm -rf /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/*</span></span><br><span class="line"><span class="comment"># COPY 指令将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的&amp;lt;目标路径&amp;gt;位置。</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> myshop.tar.gz /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># WORKDIR用于在容器内设置一个工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># RUN在镜像的构建过程中执行特定的命令，并生成一个中间镜像。</span></span><br><span class="line"><span class="comment"># 解压tar包并删除tar包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -zxvf myshop.tar.gz \</span></span><br><span class="line"><span class="bash">   &amp;&amp; rm -fr myshop.tar.gz</span></span><br><span class="line"><span class="comment"># 为构建的镜像设置监听端口，使容器在运行时监听。格式：EXPOSE &lt;port&gt; [&lt;port&gt;...]。EXPOSE 指令并不会让容器监听 host 的端口，如果需要，需要在 docker run 时使用 -p、-P 参数来发布容器端口到 host 的某个端口上。</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
-
-<p>5.编译Dockerfile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
-
-<p>6.运行容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
-
-<p>7.查看浏览器localhost:8080效果</p>
-<p>8.查看容器内目录结构，使用命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 11474d41fac5 /bin/bash</span><br></pre></td></tr></table></figure>
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-HashMap源码详解和面试题分析" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/09/HashMap%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/"
-    >HashMap源码详解和面试题分析</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/09/HashMap%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3%E5%92%8C%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/" class="article-date">
-  <time datetime="2020-05-09T01:47:30.000Z" itemprop="datePublished">2020-05-09</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HashMap/" rel="tag">HashMap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-docker服务编排" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/08/docker%E6%9C%8D%E5%8A%A1%E7%BC%96%E6%8E%92/"
-    >docker服务编排</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/08/docker%E6%9C%8D%E5%8A%A1%E7%BC%96%E6%8E%92/" class="article-date">
-  <time datetime="2020-05-08T09:06:41.000Z" itemprop="datePublished">2020-05-08</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker/">Docker</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p><strong><em>根据哔哩哔哩视频<a href="https://www.bilibili.com/video/BV1Wt411w72h/?spm_id_from=333.788.videocard.0" target="_blank" rel="noopener">【docker入门2】实战~如何组织一个多容器项目docker-compose</a>进行学习</em></strong></p>
-<h2 id="利用网站https-labs-play-with-docker-com-进行测试"><a href="#利用网站https-labs-play-with-docker-com-进行测试" class="headerlink" title="利用网站https://labs.play-with-docker.com/进行测试"></a>利用网站<a href="https://labs.play-with-docker.com/进行测试" target="_blank" rel="noopener">https://labs.play-with-docker.com/进行测试</a></h2><h3 id="第一步，安装nginx镜像"><a href="#第一步，安装nginx镜像" class="headerlink" title="第一步，安装nginx镜像"></a>第一步，安装nginx镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取nginx镜像</span></span><br><span class="line">docker pull nginx</span><br><span class="line"><span class="comment"># 运行nginx容器</span></span><br><span class="line">docker run -d -p80:80 --name mynginx nginx </span><br><span class="line"><span class="comment">#容器ID</span></span><br><span class="line">87702c4c192061036d731df8f533a82f20b972284b650a850adec3aba9580342</span><br><span class="line"><span class="comment"># 查看运行中的容器</span></span><br><span class="line">docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES</span><br><span class="line">87702c4c1920        nginx               <span class="string">"nginx -g 'daemon of…"</span>   24 seconds ago      Up 23 seconds       0.0.0.0:80-&gt;80/tcp   mynginx </span><br><span class="line"><span class="comment"># 在容器中进行交互操作</span></span><br><span class="line">docker <span class="built_in">exec</span> -it mynginx /bin/bash</span><br><span class="line"><span class="comment"># 查看容器IP地址</span></span><br><span class="line">cat /etc/hosts</span><br><span class="line"></span><br><span class="line">127.0.0.1	localhost</span><br><span class="line">::1	localhost ip6-localhost ip6-loopback</span><br><span class="line">fe00::0	ip6-localnet</span><br><span class="line">ff00::0	ip6-mcastprefix</span><br><span class="line">ff02::1	ip6-allnodes</span><br><span class="line">ff02::2	ip6-allrouters</span><br><span class="line">172.17.0.2	87702c4c1920</span><br></pre></td></tr></table></figure>
-<h3 id="第二步：安装最小化Linux镜像alpine"><a href="#第二步：安装最小化Linux镜像alpine" class="headerlink" title="第二步：安装最小化Linux镜像alpine"></a>第二步：安装最小化Linux镜像alpine</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取alpine镜像</span></span><br><span class="line">docker pull alpine</span><br><span class="line"><span class="comment"># 安装curl</span></span><br><span class="line">apk add curl</span><br><span class="line"><span class="comment"># curl nginx容器</span></span><br><span class="line">curl 172.17.0.2</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;For online documentation and support please refer to</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.org/"</span>&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;</span><br><span class="line">Commercial support is available at</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.com/"</span>&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;em&gt;Thank you <span class="keyword">for</span> using nginx.&lt;/em&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="另外一种方式-–link方式"><a href="#另外一种方式-–link方式" class="headerlink" title="另外一种方式 –link方式"></a>另外一种方式 –link方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#后台运行alpine,并将mynginx容器绑定域名myng</span></span><br><span class="line">docker run -dit --link mynginx:myng alpine   </span><br><span class="line">825d4b3d221238bda2f29411fcae6d72fafb97d5002986660aa8c3b7cc501d99</span><br><span class="line"><span class="comment"># 安装curl</span></span><br><span class="line">apk add curl</span><br><span class="line"></span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz</span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz</span><br><span class="line">(1/4) Installing ca-certificates (20191127-r1)</span><br><span class="line">(2/4) Installing nghttp2-libs (1.40.0-r0)</span><br><span class="line">(3/4) Installing libcurl (7.67.0-r0)</span><br><span class="line">(4/4) Installing curl (7.67.0-r0)</span><br><span class="line">Executing busybox-1.31.1-r9.trigger</span><br><span class="line">Executing ca-certificates-20191127-r1.trigger</span><br><span class="line">OK: 7 MiB <span class="keyword">in</span> 18 packages</span><br><span class="line"><span class="comment"># curl nginx镜像</span></span><br><span class="line">curl myng</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;If you see this page, the nginx web server is successfully installed and</span><br><span class="line">working. Further configuration is required.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;For online documentation and support please refer to</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.org/"</span>&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;</span><br><span class="line">Commercial support is available at</span><br><span class="line">&lt;a href=<span class="string">"http://nginx.com/"</span>&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&lt;p&gt;&lt;em&gt;Thank you <span class="keyword">for</span> using nginx.&lt;/em&gt;&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 原理，增加了172.17.0.2      myng d2d78de2ad2f</span></span><br><span class="line">cat /etc/hosts</span><br><span class="line">127.0.0.1       localhost</span><br><span class="line">::1     localhost ip6-localhost ip6-loopback</span><br><span class="line">fe00::0 ip6-localnet</span><br><span class="line">ff00::0 ip6-mcastprefix</span><br><span class="line">ff02::1 ip6-allnodes</span><br><span class="line">ff02::2 ip6-allrouters</span><br><span class="line">172.17.0.2      myng d2d78de2ad2f</span><br><span class="line">172.17.0.3      9688a42fec94</span><br></pre></td></tr></table></figure>
-
-<h3 id="docker-compose方式"><a href="#docker-compose方式" class="headerlink" title="docker-compose方式"></a>docker-compose方式</h3><h4 id="Users-doubledumbao-docker-demo-compose-demo目录下，新建html目录，添加index-html"><a href="#Users-doubledumbao-docker-demo-compose-demo目录下，新建html目录，添加index-html" class="headerlink" title="/Users/doubledumbao/docker-demo/compose-demo目录下，新建html目录，添加index.html"></a>/Users/doubledumbao/docker-demo/compose-demo目录下，新建html目录，添加index.html</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello world nginx<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello world nginx!!!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Users-doubledumbao-docker-demo-compose-demo-html目录下，添加test-php"><a href="#Users-doubledumbao-docker-demo-compose-demo-html目录下，添加test-php" class="headerlink" title="/Users/doubledumbao/docker-demo/compose-demo/html目录下，添加test.php"></a>/Users/doubledumbao/docker-demo/compose-demo/html目录下，添加test.php</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"Hello World PHP!!!"</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Users-doubledumbao-docker-demo-compose-demo-html目录下，添加mysql-php"><a href="#Users-doubledumbao-docker-demo-compose-demo-html目录下，添加mysql-php" class="headerlink" title="/Users/doubledumbao/docker-demo/compose-demo/html目录下，添加mysql.php"></a>/Users/doubledumbao/docker-demo/compose-demo/html目录下，添加mysql.php</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$servername = <span class="string">"mysql"</span>;</span><br><span class="line">$username = <span class="string">"root"</span>;</span><br><span class="line">$password = <span class="string">"123456"</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line">$conn = <span class="keyword">new</span> mysqli($servername, $username, $password);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> ($conn-&gt;connect_error) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"连接失败: "</span> . $conn-&gt;connect_error);</span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">echo</span> <span class="string">"connected success !!!!!"</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Users-doubledumbao-docker-demo-compose-demo目录下，新建conf目录"><a href="#Users-doubledumbao-docker-demo-compose-demo目录下，新建conf目录" class="headerlink" title="/Users/doubledumbao/docker-demo/compose-demo目录下，新建conf目录"></a>/Users/doubledumbao/docker-demo/compose-demo目录下，新建conf目录</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#user  nobody;</span></span><br><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">#error_log  logs/error.log;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  notice;</span></span><br><span class="line"><span class="comment">#error_log  logs/error.log  info;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#pid        logs/nginx.pid;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span></span><br><span class="line">    <span class="comment">#                  '$status $body_bytes_sent "$http_referer" '</span></span><br><span class="line">    <span class="comment">#                  '"$http_user_agent" "$http_x_forwarded_for"';</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#access_log  logs/access.log  main;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="comment">#tcp_nopush     on;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#keepalive_timeout  0;</span></span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#gzip  on;</span></span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">        <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#access_log  logs/host.access.log  main;</span></span><br><span class="line"></span><br><span class="line">        <span class="attribute">location</span> / &#123;</span><br><span class="line">            <span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">            <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">        <span class="attribute">location</span> = /50x.html &#123;</span><br><span class="line">            <span class="attribute">root</span>   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># proxy the PHP scripts to Apache listening on 127.0.0.1:80</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        <span class="comment"># location ~ \.php$ &#123;</span></span><br><span class="line">        <span class="comment">#    proxy_pass   http://127.0.0.1;</span></span><br><span class="line">        <span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        <span class="attribute">location</span> <span class="regexp">~ \.php$</span> &#123;</span><br><span class="line">           <span class="attribute">fastcgi_pass</span>   php:<span class="number">9000</span>;</span><br><span class="line">           <span class="attribute">fastcgi_index</span>  index.php;</span><br><span class="line">           <span class="attribute">fastcgi_param</span>  SCRIPT_FILENAME  /var/www/html/<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">           <span class="attribute">include</span>        fastcgi_params;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># deny access to .htaccess files, if Apache's document root</span></span><br><span class="line">        <span class="comment"># concurs with nginx's one</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        <span class="comment">#location ~ /\.ht &#123;</span></span><br><span class="line">        <span class="comment">#    deny  all;</span></span><br><span class="line">        <span class="comment">#&#125;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># another virtual host using mix of IP-, name-, and port-based configuration</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#server &#123;</span></span><br><span class="line">    <span class="comment">#    listen       8000;</span></span><br><span class="line">    <span class="comment">#    listen       somename:8080;</span></span><br><span class="line">    <span class="comment">#    server_name  somename  alias  another.alias;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#    location / &#123;</span></span><br><span class="line">    <span class="comment">#        root   html;</span></span><br><span class="line">    <span class="comment">#        index  index.html index.htm;</span></span><br><span class="line">    <span class="comment">#    &#125;</span></span><br><span class="line">    <span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># HTTPS server</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#server &#123;</span></span><br><span class="line">    <span class="comment">#    listen       443 ssl;</span></span><br><span class="line">    <span class="comment">#    server_name  localhost;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#    ssl_certificate      cert.pem;</span></span><br><span class="line">    <span class="comment">#    ssl_certificate_key  cert.key;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#    ssl_session_cache    shared:SSL:1m;</span></span><br><span class="line">    <span class="comment">#    ssl_session_timeout  5m;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#    ssl_ciphers  HIGH:!aNULL:!MD5;</span></span><br><span class="line">    <span class="comment">#    ssl_prefer_server_ciphers  on;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#    location / &#123;</span></span><br><span class="line">    <span class="comment">#        root   html;</span></span><br><span class="line">    <span class="comment">#        index  index.html index.htm;</span></span><br><span class="line">    <span class="comment">#    &#125;</span></span><br><span class="line">    <span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Users-doubledumbao-docker-demo-compose-demo目录下，添加docker-compose-yml"><a href="#Users-doubledumbao-docker-demo-compose-demo目录下，添加docker-compose-yml" class="headerlink" title="/Users/doubledumbao/docker-demo/compose-demo目录下，添加docker-compose.yml"></a>/Users/doubledumbao/docker-demo/compose-demo目录下，添加docker-compose.yml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span> </span><br><span class="line">    <span class="attr">nginx:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">nginx:alpine</span></span><br><span class="line">        <span class="attr">ports:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="number">80</span><span class="string">:80</span></span><br><span class="line">        <span class="attr">volumes:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="string">/Users/doubledumbao/docker-demo/compose-demo/html:/usr/share/nginx/html</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">/Users/doubledumbao/docker-demo/compose-demo/conf/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">    <span class="attr">php:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">devilbox/php-fpm:5.2-work-0.89</span></span><br><span class="line">        <span class="attr">volumes:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="string">/Users/doubledumbao/docker-demo/compose-demo/html:/var/www/html</span></span><br><span class="line">    <span class="attr">mysql:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">mysql:5.6</span></span><br><span class="line">        <span class="attr">environment:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="string">MYSQL_ROOT_PASSWORD=123456</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="启动docker-compose"><a href="#启动docker-compose" class="headerlink" title="启动docker-compose"></a>启动docker-compose</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up</span><br></pre></td></tr></table></figure>
-
-<h4 id="打开浏览器，查看效果"><a href="#打开浏览器，查看效果" class="headerlink" title="打开浏览器，查看效果"></a>打开浏览器，查看效果</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看nginx配置效果</span></span><br><span class="line">http://localhost</span><br><span class="line"><span class="comment"># 查看php配置效果</span></span><br><span class="line">http://localhost/test.php</span><br><span class="line"><span class="comment"># 查看mysql配置效果</span></span><br><span class="line">http://localhost/mysql.php</span><br></pre></td></tr></table></figure>
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-多线程问题整理" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/"
-    >多线程问题整理</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/" class="article-date">
-  <time datetime="2020-05-06T12:56:09.000Z" itemprop="datePublished">2020-05-06</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h2 id="1-如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）"><a href="#1-如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）" class="headerlink" title="1.如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）"></a>1.如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）</h2><p><a href="https://www.jianshu.com/p/66e8b5ab27f6" target="_blank" rel="noopener">Java生产者和消费者模型的5种实现方式</a></p>
-<h2 id="2-如何理解线程的同步和异步、阻塞和非阻塞？"><a href="#2-如何理解线程的同步和异步、阻塞和非阻塞？" class="headerlink" title="2.如何理解线程的同步和异步、阻塞和非阻塞？"></a>2.如何理解线程的同步和异步、阻塞和非阻塞？</h2><p>作者：Yi Lu<br>链接：<a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="noopener">https://www.zhihu.com/question/19732473/answer/20851256</a><br>来源：知乎</p>
-<p>“阻塞”与”非阻塞”与”同步”与“异步”不能简单的从字面理解，提供一个从分布式系统角度的回答。<br><strong>1.同步与异步</strong><br>    同步和异步关注的是<strong>消息通信机制</strong> (synchronous communication/ asynchronous communication)<br>所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。<br>换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。</p>
-<p>而异步则是相反，<strong><em>调用\</em>在发出之后，这个调用就直接返回了，所以没有返回结果</strong>。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，<em>被调用者</em>通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
-<p>典型的异步编程模型比如Node.js</p>
-<p>举个通俗的例子：<br>你打电话问书店老板有没有《分布式系统》这本书，如果是同步通信机制，书店老板会说，你稍等，”我查一下”，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。<br>而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。</p>
-<ol start="2">
-<li><p>阻塞与非阻塞</p>
-<p>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息，返回值）时的状态.</strong></p>
+      <h1 id="Redis分布式锁正确的实现方法"><a href="#Redis分布式锁正确的实现方法" class="headerlink" title="Redis分布式锁正确的实现方法"></a>Redis分布式锁正确的实现方法</h1><p>分布式锁一般有数据库乐观锁、基于Redis的分布式锁以及基于ZooKeeper的分布式锁三种实现方式，而本文将为大家带来的就是第二种基于Redis的分布式锁正确的实现方法，希望对大家会有所帮助。</p>
+<p><strong>可靠性</strong></p>
+<p>首先，想要保证分布式锁可以使用，下面这四个条件是必须要满足的：</p>
+<p>1、互斥性。在任意时刻，只有一个客户端能持有锁。</p>
+<p>2、不会发生死锁。即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续其他客户端能加锁。</p>
+<p>3、具有容错性。只要大部分的Redis节点正常运行，客户端就可以加锁和解锁。</p>
+<p>4、解铃还须系铃人。加锁和解锁必须是同一个客户端，客户端自己不能把别人加的锁给解了。</p>
+<p><strong>代码实现</strong></p>
+<p>引入Jedis开源组件</p>
+<p>首先我们要通过Maven引入Jedis开源组件，在pom.xml文件加入下面的代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>加锁代码</strong></p>
+<p><strong>正确代码</strong></p>
+<p>Talk is cheap, show me the code。先展示代码，再带大家慢慢解释为什么这样实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTool</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LOCK_SUCCESS = <span class="string">"OK"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SET_IF_NOT_EXIST = <span class="string">"NX"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SET_WITH_EXPIRE_TIME = <span class="string">"PX"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 尝试获取分布式锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey 锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId 请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> expireTime 超期时间 单位毫秒</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否获取成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">tryGetDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (LOCK_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们加锁就一行代码：jedis.set(String key, String value, String nxxx, String expx, int time)，这个set()方法一共有五个形参：</p>
+<p>第一个为key，我们使用key来当锁，因为key是唯一的。</p>
+<p>第二个为value，我们传的是requestId，很多童鞋可能不明白，有key作为锁不就够了吗，为什么还要用到value？原因就是我们在上面讲到可靠性时，分布式锁要满足第四个条件解铃还须系铃人，通过给value赋值为requestId，我们就知道这把锁是哪个请求加的了，在解锁的时候就可以有依据。requestId可以使用UUID.randomUUID().toString()方法生成。</p>
+<p>第三个为nxxx，这个参数我们填的是NX，意思是SET IF NOT EXIST，即当key不存在时，我们进行set操作；若key已经存在，则不做任何操作；</p>
+<p>第四个为expx，这个参数我们传的是PX，意思是我们要给这个key加一个过期的设置，具体时间由第五个参数决定。</p>
+<p>第五个为time，与第四个参数相呼应，代表key的过期时间。</p>
+<p>总的来说，执行上面的set()方法就只会导致两种结果：</p>
+<ol>
+<li><p>当前没有锁（key不存在），那么就进行加锁操作，并对锁设置个有效期，同时value表示加锁的客户端。</p>
+</li>
+<li><p>已有锁存在，不做任何操作。</p>
 </li>
 </ol>
-<p>阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。<br>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
-<p>还是上面的例子，<br>你打电话问书店老板有没有《分布式系统》这本书，你如果是阻塞式调用，你会一直把自己“挂起”，直到得到这本书有没有的结果，如果是非阻塞式调用，你不管老板有没有告诉你，你自己先一边去玩了， 当然你也要偶尔过几分钟check一下老板有没有返回结果。<br>在这里阻塞与非阻塞与是否同步异步无关。跟老板通过什么方式回答你结果无关。</p>
-<p>如果是关心阻塞 IO/ 异步 IO, 参考  Unix Network Programming <a href="https://link.zhihu.com/?target=http%3A//english.tebyan.net/newindex.aspx%3Fpid%3D31159%26BookID%3D23760%26PageIndex%3D92%26Language%3D3">View Book</a></p>
-<p>还是2014年写的以解释概念为主，主要是同步异步 阻塞和非阻塞会被用在不同层面上，可能会有不准确的地方，并没有针对 阻塞 IO/ 异步 IO 等进行讨论，大家可以后续看看这两个回答：</p>
-<p><a href="https://www.zhihu.com/question/19732473/answer/14413599" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
-<p><a href="https://www.zhihu.com/question/19732473/answer/241673170" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
-<h2 id="3-线程池处理任务的流程是怎样的？"><a href="#3-线程池处理任务的流程是怎样的？" class="headerlink" title="3.线程池处理任务的流程是怎样的？"></a>3.线程池处理任务的流程是怎样的？</h2><p>1，首先线程池判断基本线程池是否已满（&lt; corePoolSize ？）？没满，创建一个工作线程来执行任务。满了，则进入下个流程。</p>
-<p>2，其次线程池判断工作队列是否已满？没满，则将新提交的任务存储在工作队列里。满了，则进入下个流程。</p>
-<p>3，最后线程池判断整个线程池是否已满（&lt; maximumPoolSize ？）？没满，则创建一个新的工作线程来执行任务，满了，则交给饱和策略来处理这个任务。</p>
-<p>总结：线程池优先要创建出基本线程池大小（corePoolSize）的线程数量，没有达到这个数量时，每次提交新任务都会直接创建一个新线程，当达到了基本线程数量后，又有新任务到达，优先放入等待队列，如果队列满了，才去创建新的线程（不能超过线程池的最大数maxmumPoolSize）</p>
-<h2 id="4-wait和sleep有什么不同？"><a href="#4-wait和sleep有什么不同？" class="headerlink" title="4.wait和sleep有什么不同？"></a>4.wait和sleep有什么不同？</h2><h3 id="区别1：使用限制"><a href="#区别1：使用限制" class="headerlink" title="区别1：使用限制"></a>区别1：使用限制</h3><p>使用 sleep 方法可以让让当前线程休眠，时间一到当前线程继续往下执行，在任何地方都能使用，但需要捕获 InterruptedException 异常。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    Thread.sleep(3000L);</span><br><span class="line">&#125; catch (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>jedis版本号升级3.2.0后</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>而使用 wait 方法则必须放在 synchronized 块里面，同样需要捕获 InterruptedException 异常，并且需要获取对象的锁。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">synchronized (lock)&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        lock.wait();</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码修改为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 尝试获取分布式锁</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis      Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey    锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId  请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> expireTime 超期时间 单位毫秒</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否获取成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">tryGetDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">        SetParams setParams = SetParams.setParams().px(expireTime).nx();</span><br><span class="line">        <span class="comment">//String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);</span></span><br><span class="line">        String result = jedis.set(lockKey, requestId, setParams);</span><br><span class="line">        <span class="keyword">if</span> (LOCK_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<p>而且 wait 还需要额外的方法 notify/ notifyAll 进行唤醒，它们同样需要放在 synchronized 块里面，且获取对象的锁。。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">synchronized (lock) &#123;</span><br><span class="line">    &#x2F;&#x2F; 随机唤醒</span><br><span class="line">    lock.notify();</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 唤醒全部</span><br><span class="line">    lock.notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>错误示例1</strong></p>
+<p>比较常见的错误示例就是使用jedis.setnx()和jedis.expire()组合实现加锁，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongGetLock1</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">    Long result = jedis.setnx(lockKey, requestId);</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 若在这里程序突然崩溃，则无法设置过期时间，将发生死锁</span></span><br><span class="line">        jedis.expire(lockKey, expireTime);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>当然也可以使用带时间的 wait(long millis) 方法，时间一到，无需其他线程唤醒，也会重新竞争获取对象的锁继续执行。</p>
-<h3 id="区别2：使用场景"><a href="#区别2：使用场景" class="headerlink" title="区别2：使用场景"></a>区别2：使用场景</h3><p>sleep 一般用于当前线程休眠，或者轮循暂停操作，wait 则多用于多线程之间的通信。</p>
-<h3 id="区别3：所属类"><a href="#区别3：所属类" class="headerlink" title="区别3：所属类"></a>区别3：所属类</h3><p>sleep 是 Thread 类的静态本地方法，wait 则是 Object 类的本地方法。</p>
-<blockquote>
-<p>java.lang.Thread#sleep</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static native void sleep(long millis) throws InterruptedException;</span><br></pre></td></tr></table></figure>
+<p>setnx()方法作用就是SET IF NOT EXIST，expire()方法就是给锁加一个过期时间。乍一看好像和前面的set()方法结果一样，然而由于这是两条Redis命令，不具有原子性，如果程序在执行完setnx()之后突然崩溃，导致锁没有设置过期时间。那么将会发生死锁。网上之所以有人这样实现，是因为低版本的jedis并不支持多参数的set()方法。</p>
+<p><strong>错误示例2</strong></p>
+<p>这一种错误示例就比较难以发现问题，而且实现也比较复杂。实现思路：使用jedis.setnx()命令实现加锁，其中key是锁，value是锁的过期时间。执行过程：1. 通过setnx()方法尝试加锁，如果当前锁不存在，返回加锁成功。2. 如果锁已经存在则获取锁的过期时间，和当前时间比较，如果锁已经过期，则设置新的过期时间，返回加锁成功。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">wrongGetLock2</span><span class="params">(Jedis jedis, String lockKey, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> expires = System.currentTimeMillis() + expireTime;</span><br><span class="line">    String expiresStr = String.valueOf(expires);</span><br><span class="line">    <span class="comment">// 如果当前锁不存在，返回加锁成功</span></span><br><span class="line">    <span class="keyword">if</span> (jedis.setnx(lockKey, expiresStr) == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果锁存在，获取锁的过期时间</span></span><br><span class="line">    String currentValueStr = jedis.get(lockKey);</span><br><span class="line">    <span class="keyword">if</span> (currentValueStr != <span class="keyword">null</span> &amp;&amp; Long.parseLong(currentValueStr) &lt; System.currentTimeMillis()) &#123;</span><br><span class="line">        <span class="comment">// 锁已过期，获取上一个锁的过期时间，并设置现在锁的过期时间</span></span><br><span class="line">        String oldValueStr = jedis.getSet(lockKey, expiresStr);</span><br><span class="line">        <span class="keyword">if</span> (oldValueStr != <span class="keyword">null</span> &amp;&amp; oldValueStr.equals(currentValueStr)) &#123;</span><br><span class="line">            <span class="comment">// 考虑多线程并发的情况，只有一个线程的设置值和当前值相同，它才有权利加锁</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他情况，一律返回加锁失败</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>java.lang.Object#wait</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final native void wait(long timeout) throws InterruptedException;</span><br></pre></td></tr></table></figure>
-
-<p><strong>为什么要这样设计呢？</strong></p>
-<p>因为 sleep 是让当前线程休眠，不涉及到对象类，也不需要获得对象的锁，所以是线程类的方法。wait 是让获得对象锁的线程实现等待，前提是要楚获得对象的锁，所以是类的方法。</p>
-<h3 id="区别4：释放锁"><a href="#区别4：释放锁" class="headerlink" title="区别4：释放锁"></a>区别4：释放锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Object lock &#x3D; new Object();</span><br><span class="line">synchronized (lock) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        lock.wait(3000L);</span><br><span class="line">        Thread.sleep(2000L);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如上代码所示，wait 可以释放当前线程对 lock 对象锁的持有，而 sleep 则不会。</p>
-<h3 id="区别5：线程切换"><a href="#区别5：线程切换" class="headerlink" title="区别5：线程切换"></a>区别5：线程切换</h3><p>sleep 会让出 CPU 执行时间且强制上下文切换，而 wait 则不一定，wait 后可能还是有机会重新竞争到锁继续执行的。</p>
-<h2 id="5-Synchronized和ReentrantLock有什么不同？各适合什么场景？"><a href="#5-Synchronized和ReentrantLock有什么不同？各适合什么场景？" class="headerlink" title="5.Synchronized和ReentrantLock有什么不同？各适合什么场景？"></a>5.Synchronized和ReentrantLock有什么不同？各适合什么场景？</h2><h5 id="1、ReentrantLock-拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候"><a href="#1、ReentrantLock-拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候" class="headerlink" title="1、ReentrantLock 拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候"></a>1、ReentrantLock 拥有Synchronized相同的并发性和内存语义，此外还多了<strong>锁投票</strong>，<strong>定时锁等候</strong>和<strong>中断锁等候</strong></h5><h6 id="example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用-synchronized-，如果A不释放，B将一直等下去，不能被中断如果-使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情"><a href="#example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用-synchronized-，如果A不释放，B将一直等下去，不能被中断如果-使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情" class="headerlink" title="example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情"></a><em>example：</em>线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情</h6><h6 id="ReentrantLock获取锁定与三种方式："><a href="#ReentrantLock获取锁定与三种方式：" class="headerlink" title="ReentrantLock获取锁定与三种方式："></a>ReentrantLock获取锁定与三种方式：</h6><ul>
-<li><h6 id="lock-如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁"><a href="#lock-如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁" class="headerlink" title="lock(), 如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁"></a>lock(), 如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁</h6></li>
-<li><h6 id="tryLock-如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；"><a href="#tryLock-如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；" class="headerlink" title="tryLock(), 如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；"></a>tryLock(), 如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；</h6></li>
-<li><h6 id="tryLock-long-timeout-TimeUnit-unit-，-如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；"><a href="#tryLock-long-timeout-TimeUnit-unit-，-如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；" class="headerlink" title="tryLock(long timeout,TimeUnit unit)， 如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；"></a>tryLock(long timeout,TimeUnit unit)， 如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；</h6></li>
-<li><h6 id="lockInterruptibly-如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断"><a href="#lockInterruptibly-如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断" class="headerlink" title="lockInterruptibly:如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断"></a>lockInterruptibly:如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断</h6></li>
-</ul>
-<hr>
-<h5 id="2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock-放到finally-中"><a href="#2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock-放到finally-中" class="headerlink" title="2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock()放到finally{}中"></a>2、synchronized是在<a href="https://link.jianshu.com?t=https://www.baidu.com/s?wd=JVM&tn=44039180_cpr&fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1YkuWc1rHTdnWwbnH9-PW0z0ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3En1m3rjb1rH0Yn1fLnW01rj0Y" target="_blank" rel="noopener">JVM</a>层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，<a href="https://link.jianshu.com?t=http://baike.baidu.com/link?url=pUffiLWYkxesyD01y2WoXXiVVG988pvbc3GaaYXFW2TSZPhrH7_C8rRZBFwj7Prg_W8zn8p271NydxdolIh_U_" target="_blank" rel="noopener">JVM</a>会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock()放到finally{}中</h5><hr>
-<h5 id="3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；"><a href="#3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；" class="headerlink" title="3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；"></a>3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；</h5><p>作者：OverLight<br>链接：<a href="https://www.jianshu.com/p/4dbacf1cadcf" target="_blank" rel="noopener">https://www.jianshu.com/p/4dbacf1cadcf</a><br>来源：简书</p>
-<h2 id="6-读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？"><a href="#6-读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？" class="headerlink" title="6.读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？"></a>6.读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？</h2><p><a href="https://zhuanlan.zhihu.com/p/75879810" target="_blank" rel="noopener">ReentrantReadWriteLock读写锁详解</a></p>
-<h2 id="7-线程之间如何通信？"><a href="#7-线程之间如何通信？" class="headerlink" title="7.线程之间如何通信？"></a>7.线程之间如何通信？</h2><p><a href="https://www.cnblogs.com/hapjin/p/5492619.html" target="_blank" rel="noopener"><a href="https://www.cnblogs.com/hapjin/p/5492619.html" target="_blank" rel="noopener">JAVA多线程之线程间的通信方式</a></a></p>
-<h2 id="8-保证线程安全的方法有哪些？"><a href="#8-保证线程安全的方法有哪些？" class="headerlink" title="8.保证线程安全的方法有哪些？"></a>8.保证线程安全的方法有哪些？</h2><p><a href="https://www.nowcoder.com/questionTerminal/0e750e2953d144bd942bb1600b2a391e" target="_blank" rel="noopener">如何保证线程安全</a></p>
-<h2 id="9-如何尽可能提高多线程并发性能？"><a href="#9-如何尽可能提高多线程并发性能？" class="headerlink" title="9.如何尽可能提高多线程并发性能？"></a>9.如何尽可能提高多线程并发性能？</h2><p><a href="https://my.oschina.net/u/1011494/blog/534822" target="_blank" rel="noopener">如何提高Java并行程序性能</a></p>
-<h2 id="10-ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？"><a href="#10-ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？" class="headerlink" title="10.ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？"></a>10.ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？</h2><p><a href="https://baike.sogou.com/v54656329.htm?fromTitle=ThreadLocal" target="_blank" rel="noopener">ThreadLocal</a></p>
-<h2 id="11-死锁的产生条件？如何分析是否有线程死锁？"><a href="#11-死锁的产生条件？如何分析是否有线程死锁？" class="headerlink" title="11.死锁的产生条件？如何分析是否有线程死锁？"></a>11.死锁的产生条件？如何分析是否有线程死锁？</h2><p><a href="https://zhuanlan.zhihu.com/p/84490319" target="_blank" rel="noopener">Java 多线程死锁的产生以及如何避免死锁</a></p>
-<h2 id="12-在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？"><a href="#12-在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？" class="headerlink" title="12.在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？"></a>12.在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？</h2><p> <a href="https://www.cnblogs.com/koubeisi/p/10751035.html" target="_blank" rel="noopener"><a href="https://www.cnblogs.com/koubeisi/p/10751035.html" target="_blank" rel="noopener">Java面试 32个核心必考点完全解析</a></a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-桥接模式" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/"
-    >桥接模式</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/" class="article-date">
-  <time datetime="2020-05-03T11:21:10.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h1><p>桥接模式是将抽象部分与它的实现部分分离，使它们都可以独立地变化。它是一种对象<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=177096017&ss_c=ssc.citiao.link" target="_blank" rel="noopener">结构型模式</a>，又称为柄体(Handle and Body)模式或接口(Interfce)模式。</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在软件系统中，某些类型由于自身的逻辑，它具有两个或多个维度的变化，那么如何应对这种“多维度的变化”？如何利用面向对象的技术来使得该类型能够轻松的沿着多个方向进行变化，而又不引入额外的复杂度？这就要使用Bridge模式。</p>
-<h2 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h2><p>【GOF95】在提出桥梁模式的时候指出，桥梁模式的用意是”将<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=70235444&ss_c=ssc.citiao.link" target="_blank" rel="noopener">抽象化</a>(Abstraction)与实现化(Implementation)脱耦，使得二者可以独立地变化”。这句话有三个关键词，也就是抽象化、实现化和脱耦。</p>
-<h3 id="抽象化"><a href="#抽象化" class="headerlink" title="抽象化"></a>抽象化</h3><p>存在于多个实体中的共同的概念性联系，就是抽象化。作为一个过程，抽象化就是忽略一些信息，从而把不同的实体当做同样的实体对待。</p>
-<h3 id="实现化"><a href="#实现化" class="headerlink" title="实现化"></a>实现化</h3><p>抽象化给出的具体实现，就是实现化。</p>
-<h3 id="脱耦"><a href="#脱耦" class="headerlink" title="脱耦"></a>脱耦</h3><p>所谓耦合，就是两个实体的行为的某种强关联。而将它们的强关联去掉，就是耦合的解脱，或称脱耦。在这里，脱耦是指将<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=70235444&ss_c=ssc.citiao.link" target="_blank" rel="noopener">抽象化</a>和实现化之间的耦合解脱开，或者说是将它们之间的强关联改换成弱关联。</p>
-<p>将两个角色之间的继承关系改为<a href="https://baike.sogou.com/lemma/ShowInnerLink.htm?lemmaId=8918469&ss_c=ssc.citiao.link" target="_blank" rel="noopener">聚合关系</a>，就是将它们之间的强关联改换成为弱关联。因此，桥梁模式中的所谓脱耦，就是指在一个软件系统的抽象化和实现化之间使用组合/聚合关系而不是继承关系，从而使两者可以相对独立地变化。这就是桥梁模式的用意。</p>
-<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>可以看出，这个系统含有两个等级结构，也就是：</p>
-<p>由抽象化角色和修正抽象化角色组成的抽象化等级结构。</p>
-<p>由实现化角色和两个具体实现化角色所组成的实现化等级结构。</p>
-<p>桥梁模式所涉及的角色有：</p>
-<p>抽象化(Abstraction)角色：抽象化给出的定义，并保存一个对实现化对象的引用。</p>
-<p>修正抽象化(Refined Abstraction)角色：扩展抽象化角色，改变和修正父类对抽象化的定义。</p>
-<p>实现化(Implementor)角色：这个角色给出实现化角色的接口，但不给出具体的实现。必须指出的是，这个接口不一定和抽象化角色的接口定义相同，实际上，这两个接口可以非常不一样。实现化角色应当只给出底层操作，而抽象化角色应当只给出基于底层操作的更高一层的操作。</p>
-<p>具体实现化(Concrete Implementor)角色：这个角色给出实现化角色接口的具体实现。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 品牌</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Brand</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">info</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Lenovo</span> <span class="keyword">implements</span> <span class="title">Brand</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"联想"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 苹果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Apple</span>  <span class="keyword">implements</span>  <span class="title">Brand</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"苹果"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 电脑超类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Brand brand;<span class="comment">//组合品牌</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Computer</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.brand = brand;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span></span>&#123;</span><br><span class="line">        brand.info();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 笔记本电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Desktop</span> <span class="keyword">extends</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Desktop</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"台式机"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 笔记本电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Laptop</span> <span class="keyword">extends</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Laptop</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"笔记本电脑"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 平板电脑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tablat</span> <span class="keyword">extends</span> <span class="title">Computer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Tablat</span><span class="params">(Brand brand)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(brand);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.info();</span><br><span class="line">        System.out.println(<span class="string">"平板电脑"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Computer lenovo = <span class="keyword">new</span> Desktop(<span class="keyword">new</span> Lenovo());</span><br><span class="line">        lenovo.info();</span><br><span class="line"></span><br><span class="line">        Computer mac = <span class="keyword">new</span> Desktop(<span class="keyword">new</span> Apple());</span><br><span class="line">        mac.info();</span><br><span class="line"></span><br><span class="line">        Computer lenovo2 = <span class="keyword">new</span> Laptop(<span class="keyword">new</span> Lenovo());</span><br><span class="line">        lenovo2.info();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="模式优缺点"><a href="#模式优缺点" class="headerlink" title="模式优缺点"></a>模式优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>1、分离抽象接口及其实现部分。提高了比继承更好的解决方案。</li>
-<li>2、桥接模式提高了系统的可扩充性，在两个变化维度中任意扩展一个维度，都不需要修改原有系统。</li>
-<li>3、实现细节对客户透明，可以对用户隐藏实现细节。</li>
-</ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>1、桥接模式的引入会增加系统的理解与设计难度，由于聚合关联关系建立在抽象层，要求开发者针对抽象进行设计与编程。</li>
-<li>2、桥接模式要求正确识别出系统中两个独立变化的维度，因此其使用范围具有一定的局限性。</li>
-</ul>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-maven依赖范围" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/"
-    >maven依赖范围</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-date">
-  <time datetime="2020-05-03T02:34:09.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h1><blockquote>
-<p>上一节提到，JUnit依赖的测试范围是test，测试范围用元素scope表示。本节将详细解释什么是测试范围，以及各种测试范围的效果和用途。</p>
-<p>首先需要知道，Maven在编译项目主代码的时候需要使用一套classpath。在上例中，编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。其次，Maven在编译和执行测试的时候会使用另外一套classpath。上例中的JUnit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖范围是test。最后，实际运行Maven项目的时候，又会使用一套classpath，上例中的spring-core需要在该classpath中，而JUnit则不需要。</p>
-<p>依赖范围就是用来控制依赖与这三种classpath（编译classpath、测试classpath、运行classpath）的关系，Maven有以下几种依赖范围：</p>
-<p>compile：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
-<p>test：测试依赖范围。使用此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是JUnit，它只有在编译测试代码及运行测试的时候才需要。</p>
-<p>provided：已提供依赖范围。使用此依赖范围的Maven依赖，对于编译和测试class-path有效，但在运行时无效。典型的例子是servlet-api，编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要Maven重复地引入一遍。</p>
-<p>runtime：运行时依赖范围。使用此依赖范围的Maven依赖，对于测试和运行class-path有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述接口的具体JDBC驱动。</p>
-<p>system：系统依赖范围。该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围的依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建</p>
-<p>“的不可移植，因此应该谨慎使用。systemPath元素可以引用环境变量，如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜dependency＞</span><br><span class="line">    ＜groupId＞javax.sql＜/groupId＞</span><br><span class="line">    ＜artifactId＞jdbc-stdext＜/artifactId＞</span><br><span class="line">    ＜version＞2.0＜/version＞</span><br><span class="line">    ＜scope＞system＜/scope＞</span><br><span class="line">    ＜systemPath＞$&#123;java.home&#125;/lib/rt.jar＜/systemPath＞</span><br><span class="line">＜/dependency＞</span><br></pre></td></tr></table></figure>
-
-<p>import（Maven 2.0.9及以上）：导入依赖范围。该依赖范围不会对三种classpath产生实际的影响，本书将在8.3.3节介绍Maven依赖和dependencyManagement的时候详细介绍此依赖范围。</p>
-</blockquote>
-<p>摘录来自: 许晓斌. “Maven实战。” </p>
-<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope" target="_blank" rel="noopener">官网对scope的介绍</a></p>
-<h3 id="Dependency-Scope"><a href="#Dependency-Scope" class="headerlink" title="Dependency Scope"></a>Dependency Scope</h3><p>Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.</p>
-<p>There are 6 scopes available:</p>
-<ul>
-<li><strong>compile</strong><br>This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.</li>
-<li><strong>provided</strong><br>This is much like <code>compile</code>, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope <code>provided</code> because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.</li>
-<li><strong>runtime</strong><br>This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath.</li>
-<li><strong>test</strong><br>This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive.</li>
-<li><strong>system</strong><br>This scope is similar to <code>provided</code> except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository.</li>
-<li><strong>import</strong><br>This scope is only supported on a dependency of type <code>pom</code> in the <code>section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM&#39;s</code> section. Since they are replaced, dependencies with a scope of <code>import</code> do not actually participate in limiting the transitivity of a dependency.</li>
-</ul>
-<p>Each of the scopes (except for <code>import</code>) affects transitive dependencies in different ways, as is demonstrated in the table below. If a dependency is set to the scope in the left column, transitive dependencies of that dependency with the scope across the top row will result in a dependency in the main project with the scope listed at the intersection. If no scope is listed, it means the dependency will be omitted.</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>compile</th>
-<th>provided</th>
-<th>runtime</th>
-<th>test</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>compile</td>
-<td>compile(*)</td>
-<td>-</td>
-<td>runtime</td>
-<td>-</td>
-</tr>
-<tr>
-<td>provided</td>
-<td>provided</td>
-<td>-</td>
-<td>provided</td>
-<td>-</td>
-</tr>
-<tr>
-<td>runtime</td>
-<td>runtime</td>
-<td>-</td>
-<td>runtime</td>
-<td>-</td>
-</tr>
-<tr>
-<td>test</td>
-<td>test</td>
-<td>-</td>
-<td>test</td>
-<td>-</td>
-</tr>
-</tbody></table>
-<p><strong>(*) Note:</strong> it is intended that this should be runtime scope instead, so that all compile dependencies must be explicitly listed. However, if a library you depend on extends a class from another library, both must be available at compile time. For this reason, compile time dependencies remain as compile scope even when they are transitive.</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"
-    >linux打开文件数 too many open files 解决办法</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
-  <time datetime="2020-05-03T00:30:45.000Z" itemprop="datePublished">2020-05-03</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p><strong>阿里巴巴Java开发手册中规定：</strong></p>
-<blockquote>
-<p>调大服务器所支持的最大文件句柄数(File Descriptor，简写为fd)。 说明:主流操作系统的设计是将 TCP/UDP 连接采用与文件一样的方式去管理，即一个连接对 应于一个 fd。主流的 linux 服务器默认所支持最大 fd 数量为 1024，当并发连接数很大时很 容易因为 fd 不足而出现“open too many files”错误，导致新的连接无法建立。 建议将 linux 服务器所支持的最大句柄数调高数倍(与服务器的内存数量相关)。</p>
-</blockquote>
-<p><strong>查看每个用户最大允许打开文件数量</strong></p>
-<blockquote>
-<p>ulimit -a </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 20</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 16382</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) unlimited</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<p>查看某一进程的打开文件数量</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep java</span><br><span class="line">lsof -p 进程号 | wc -l</span><br></pre></td></tr></table></figure>
-
-<p>设置open files数值方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 2048</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>这样就可以把当前用户的最大允许打开文件数量设置为2048了，但这种设置方法在重启后会还原为默认值。</em></strong></p>
-<p><strong>永久设置方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在最后加入</span><br><span class="line">* soft nofile 4096</span><br><span class="line">* hard nofile 4096</span><br></pre></td></tr></table></figure>
-
-<p><strong><em>最前的表示所有用户，可根据需要设置某一用户，改完后注销一下就能生效。</em></strong></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-几个前端技术名词整理" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/"
-    >几个前端技术名词整理</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/01/%E5%87%A0%E4%B8%AA%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E5%90%8D%E8%AF%8D%E6%95%B4%E7%90%86/" class="article-date">
-  <time datetime="2020-05-01T02:40:37.000Z" itemprop="datePublished">2020-05-01</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="Babel-是什么？"><a href="#Babel-是什么？" class="headerlink" title="Babel 是什么？"></a>Babel 是什么？</h1><h2 id="Babel-是一个-JavaScript-编译器"><a href="#Babel-是一个-JavaScript-编译器" class="headerlink" title="Babel 是一个 JavaScript 编译器"></a>Babel 是一个 JavaScript 编译器</h2><p>Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：</p>
-<ul>
-<li>语法转换</li>
-<li>通过 Polyfill 方式在目标环境中添加缺失的特性 (通过 <a href="https://www.babeljs.cn/docs/babel-polyfill" target="_blank" rel="noopener">@babel/polyfill</a> 模块)</li>
-<li>源码转换 (codemods)</li>
-<li>更多！ (查看这些 <a href="https://www.babeljs.cn/videos.html" target="_blank" rel="noopener">视频</a> 获得启发)</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Babel 输入： ES2015 箭头函数</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function">(<span class="params">n</span>) =&gt;</span> n + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Babel 输出： ES5 语法实现的同等功能</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].map(<span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> n + <span class="number">1</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>参考地址：<a href="https://www.babeljs.cn/" target="_blank" rel="noopener">https://www.babeljs.cn/</a></p>
-<h1 id="ESLint"><a href="#ESLint" class="headerlink" title="ESLint"></a>ESLint</h1><h2 id="About"><a href="#About" class="headerlink" title="About"></a>About</h2><p>ESLint 是一个开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于2013年6月创建。代码检查是一种静态的分析，常用于寻找有问题的模式或者代码，并且不依赖于具体的编码风格。对大多数编程语言来说都会有代码检查，一般来说编译程序会内置检查工具。</p>
-<p>JavaScript 是一个动态的弱类型语言，在开发中比较容易出错。因为没有编译程序，为了寻找 JavaScript 代码错误通常需要在执行过程中不断调试。像 ESLint 这样的可以让程序员在编码的过程中发现问题而不是在执行的过程中。</p>
-<p>ESLint 的初衷是为了让程序员可以创建自己的检测规则。ESLint 的所有规则都被设计成可插入的。ESLint 的默认规则与其他的插件并没有什么区别，规则本身和测试可以依赖于同样的模式。为了便于人们使用，ESLint 内置了一些规则，当然，你可以在使用过程中自定义规则。</p>
-<p>ESLint 使用 Node.js 编写，这样既可以有一个快速的运行环境的同时也便于安装。</p>
-<h2 id="Philosophy"><a href="#Philosophy" class="headerlink" title="Philosophy"></a>Philosophy</h2><p>所有都是可拔插的</p>
-<ul>
-<li>内置规则和自定义规则共用一套规则 API</li>
-<li>内置的格式化方法和自定义的格式化方法共用一套格式化 API</li>
-<li>额外的规则和格式化方法能够在运行时指定</li>
-<li>规则和对应的格式化方法并不强制捆绑使用</li>
-</ul>
-<p>每条规则:</p>
-<ul>
-<li>各自独立</li>
-<li>可以开启或关闭（没有什么可以被认为“太重要所以不能关闭”）</li>
-<li>可以将结果设置成警告或者错误</li>
-</ul>
-<p>另外:</p>
-<ul>
-<li>ESLint 并不推荐任何编码风格，规则是自由的</li>
-<li>所有内置规则都是泛化的</li>
-</ul>
-<p>项目:</p>
-<ul>
-<li>通过丰富文档减少沟通成本</li>
-<li>尽可能的简单透明</li>
-<li>相信测试的重要性</li>
-</ul>
-<p>参考地址：<a href="http://eslint.cn/docs/user-guide/getting-started" target="_blank" rel="noopener">http://eslint.cn/docs/user-guide/getting-started</a></p>
-<h1 id="webpack"><a href="#webpack" class="headerlink" title="webpack"></a>webpack</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>本质上，<strong>webpack</strong> 是一个现代 JavaScript 应用程序的<em>静态模块打包工具</em>。当 webpack 处理应用程序时，它会在内部构建一个 <a href="https://webpack.docschina.org/concepts/dependency-graph/" target="_blank" rel="noopener">依赖图(dependency graph)</a>，此依赖图会映射项目所需的每个模块，并生成一个或多个 <em>bundle</em>。</p>
-<blockquote>
-<p>可以在 <a href="https://webpack.docschina.org/concepts/modules" target="_blank" rel="noopener">这里</a> 了解更多关于 JavaScript 模块和 webpack 模块的信息。</p>
-</blockquote>
-<p>从 v4.0.0 开始，<strong>webpack 可以不用再引入一个配置文件</strong>来打包项目，然而，但它仍然有着 <a href="https://webpack.docschina.org/configuration" target="_blank" rel="noopener">高度可配置性</a>，可以很好满足你的需求。</p>
-<p>在开始前你需要先理解一些<strong>核心概念</strong>：</p>
-<ul>
-<li><a href="https://webpack.docschina.org/concepts/#entry" target="_blank" rel="noopener">入口(entry)</a></li>
-<li><a href="https://webpack.docschina.org/concepts/#output" target="_blank" rel="noopener">输出(output)</a></li>
-<li><a href="https://webpack.docschina.org/concepts/#loaders" target="_blank" rel="noopener">loader</a></li>
-<li><a href="https://webpack.docschina.org/concepts/#plugins" target="_blank" rel="noopener">插件(plugin)</a></li>
-<li><a href="https://webpack.docschina.org/concepts/#mode" target="_blank" rel="noopener">模式(mode)</a></li>
-<li><a href="https://webpack.docschina.org/concepts/#browser-compatibility" target="_blank" rel="noopener">浏览器兼容性(browser compatibility)</a></li>
-</ul>
-<p>本文档旨在给出这些概念的<strong>高度</strong>概述，同时提供具体概念的详尽相关用例。</p>
-<p>为了更好地理解模块打包工具背后的理念，以及在底层它们是如何运作的，请参考以下资源：</p>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=UNMkLHzofQI" target="_blank" rel="noopener">手动打包一个应用程序</a></li>
-<li><a href="https://www.youtube.com/watch?v=Gc9-7PBqOC8" target="_blank" rel="noopener">实时创建一个简单打包工具</a></li>
-<li><a href="https://github.com/ronami/minipack" target="_blank" rel="noopener">一个简单打包工具的详细说明</a></li>
-</ul>
-<h2 id="入口-entry"><a href="#入口-entry" class="headerlink" title="入口(entry)"></a>入口(entry)</h2><p><strong>入口起点(entry point)</strong>指示 webpack 应该使用哪个模块，来作为构建其内部 <em><a href="https://webpack.docschina.org/concepts/dependency-graph/" target="_blank" rel="noopener">依赖图(dependency graph)</a></em> 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。</p>
-<p>默认值是 <code>./src/index.js</code>，但你可以通过在 <a href="https://webpack.docschina.org/configuration" target="_blank" rel="noopener">webpack configuration</a> 中配置 <strong>entry</strong> 属性，来指定一个（或多个）不同的入口起点。例如：</p>
-<p><strong>webpack.config.js</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">'./path/to/my/entry/file.js'</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在 <a href="https://webpack.docschina.org/concepts/entry-points" target="_blank" rel="noopener">入口起点</a> 章节可以了解更多信息。</p>
-</blockquote>
-<h2 id="输出-output"><a href="#输出-output" class="headerlink" title="输出(output)"></a>输出(output)</h2><p><strong>output</strong> 属性告诉 webpack 在哪里输出它所创建的 <em>bundle</em>，以及如何命名这些文件。主要输出文件的默认值是 <code>./dist/main.js</code>，其他生成文件默认放置在 <code>./dist</code> 文件夹中。</p>
-<p>你可以通过在配置中指定一个 <code>output</code> 字段，来配置这些处理过程：</p>
-<p><strong>webpack.config.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">'./path/to/my/entry/file.js'</span>,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">    filename: <span class="string">'my-first-webpack.bundle.js'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>在上面的示例中，我们通过 <code>output.filename</code> 和 <code>output.path</code> 属性，来告诉 webpack bundle 的名称，以及我们想要 bundle 生成(emit)到哪里。可能你想要了解在代码最上面导入的 path 模块是什么，它是一个 <a href="https://nodejs.org/api/modules.html" target="_blank" rel="noopener">Node.js 核心模块</a>，用于操作文件路径。</p>
-<blockquote>
-<p><code>output</code> 属性还有 <a href="https://webpack.docschina.org/configuration/output" target="_blank" rel="noopener">许多可配置的特性</a>，如果你想要了解更多其背后的概念，你可以通过 <a href="https://webpack.docschina.org/concepts/output" target="_blank" rel="noopener">阅读输出章节</a> 来了解。</p>
-</blockquote>
-<h2 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h2><p>webpack 只能理解 JavaScript 和 JSON 文件。<strong>loader</strong> 让 webpack 能够去处理其他类型的文件，并将它们转换为有效 <a href="https://webpack.docschina.org/concepts/modules" target="_blank" rel="noopener">模块</a>，以供应用程序使用，以及被添加到依赖图中。</p>
-<blockquote>
-<p>注意，loader 能够 <code>import</code> 导入任何类型的模块（例如 <code>.css</code> 文件），这是 webpack 特有的功能，其他打包程序或任务执行器的可能并不支持。我们认为这种语言扩展是很有必要的，因为这可以使开发人员创建出更准确的依赖关系图。</p>
-</blockquote>
-<p>在更高层面，在 webpack 的配置中 <strong>loader</strong> 有两个属性：</p>
+<p>这段代码的错误之处在于：</p>
 <ol>
-<li><code>test</code> 属性，用于标识出应该被对应的 loader 进行转换的某个或某些文件。</li>
-<li><code>use</code> 属性，表示进行转换时，应该使用哪个 loader。</li>
+<li><p>由于是客户端自己生成过期时间，所以需要强制要求分布式下每个客户端的时间必须同步。</p>
+</li>
+<li><p>当锁过期的时候，如果多个客户端同时执行jedis.getSet()方法，那么虽然最终只有一个客户端可以加锁，但是这个客户端的锁的过期时间可能被其他客户端覆盖。</p>
+</li>
+<li><p>锁不具备拥有者标识，即任何客户端都可以解锁。</p>
+</li>
 </ol>
-<p><strong>webpack.config.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: <span class="string">'my-first-webpack.bundle.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.txt$/</span>, <span class="attr">use</span>: <span class="string">'raw-loader'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>解锁代码</strong></p>
+<p><strong>正确代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTool</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Long RELEASE_SUCCESS = <span class="number">1L</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 释放分布式锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey 锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId 请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否释放成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">releaseDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId)</span> </span>&#123;</span><br><span class="line">        String script = <span class="string">"if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end"</span>;</span><br><span class="line">        Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));</span><br><span class="line">        <span class="keyword">if</span> (RELEASE_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>以上配置中，对一个单独的 module 对象定义了 <code>rules</code> 属性，里面包含两个必须属性：<code>test</code> 和 <code>use</code>。这告诉 webpack 编译器(compiler) 如下信息：</p>
-<blockquote>
-<p>“嘿，webpack 编译器，当你碰到「在 <code>require()</code>/<code>import</code> 语句中被解析为 ‘.txt’ 的路径」时，在你对它打包之前，先 <strong>使用</strong> <code>raw-loader</code> 转换一下。”</p>
-</blockquote>
-<blockquote>
-<p>重要的是要记住，在 webpack 配置中定义 rules 时，要定义在 <code>module.rules</code> 而不是 <code>rules</code> 中。为了使你受益于此，如果没有按照正确方式去做，webpack 会给出警告。</p>
-</blockquote>
-<blockquote>
-<p>请记住，使用正则表达式匹配文件时，你不要为它添加引号。也就是说，<code>/\.txt$/</code> 与 <code>&#39;/\.txt$/&#39;</code>/ <code>&quot;/\.txt$/&quot;</code> 不一样。前者指示 webpack 匹配任何以 .txt 结尾的文件，后者指示 webpack 匹配具有绝对路径 ‘.txt’ 的单个文件; 这可能不符合你的意图。</p>
-</blockquote>
-<p>在使用 loader 时，可以阅读 <a href="https://webpack.docschina.org/concepts/loaders" target="_blank" rel="noopener">loader 章节</a> 查看更深入的自定义配置。</p>
-<h2 id="插件-plugin"><a href="#插件-plugin" class="headerlink" title="插件(plugin)"></a>插件(plugin)</h2><p>loader 用于转换某些类型的模块，而插件则可以用于执行范围更广的任务。包括：打包优化，资源管理，注入环境变量。</p>
-<blockquote>
-<p><a href="https://webpack.docschina.org/api/plugins" target="_blank" rel="noopener">插件接口(plugin interface)</a> 功能极其强大，可以用来处理各种各样的任务。</p>
-</blockquote>
-<p>想要使用一个插件，你只需要 <code>require()</code> 它，然后把它添加到 <code>plugins</code> 数组中。多数插件可以通过选项(option)自定义。你也可以在一个配置文件中因为不同目的而多次使用同一个插件，这时需要通过使用 <code>new</code> 操作符来创建它的一个实例。</p>
-<p><strong>webpack.config.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>); <span class="comment">// 通过 npm 安装</span></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>); <span class="comment">// 用于访问内置插件</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.txt$/</span>, <span class="attr">use</span>: <span class="string">'raw-loader'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;<span class="attr">template</span>: <span class="string">'./src/index.html'</span>&#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看到，我们解锁只需要两行代码就搞定了！第一行代码，我们写了一个简单的Lua脚本代码，上一次见到这个编程语言还是在《黑客与画家》里，没想到这次居然用上了。第二行代码，我们将Lua代码传到jedis.eval()方法里，并使参数KEYS[1]赋值为lockKey，ARGV[1]赋值为requestId。eval()方法是将Lua代码交给Redis服务端执行。</p>
+<p>那么这段Lua代码的功能是什么呢？其实很简单，首先获取锁对应的value值，检查是否与requestId相等，如果相等则删除锁（解锁）。那么为什么要使用Lua语言来实现呢？因为要确保上述操作是原子性的。关于非原子性会带来什么问题，可以阅读【解锁代码-错误示例2】 。那么为什么执行eval()方法可以确保原子性，源于Redis的特性，简单来说，就是在eval命令执行Lua代码的时候，Lua代码将被当成一个命令去执行，并且直到eval命令执行完成，Redis才会执行其他命令。</p>
+<p><strong>错误示例1</strong></p>
+<p>最常见的解锁代码就是直接使用jedis.del()方法删除锁，这种不先判断锁的拥有者而直接解锁的方式，会导致任何客户端都可以随时进行解锁，即使这把锁不是它的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongReleaseLock1</span><span class="params">(Jedis jedis, String lockKey)</span> </span>&#123;</span><br><span class="line">    jedis.del(lockKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在上面的示例中，<code>html-webpack-plugin</code> 为应用程序生成 HTML 一个文件，并自动注入所有生成的 bundle。</p>
-<blockquote>
-<p>webpack 提供许多开箱可用的插件！查阅 <a href="https://webpack.docschina.org/plugins" target="_blank" rel="noopener">插件列表</a> 获取更多。</p>
-</blockquote>
-<p>在 webpack 配置中使用插件是简单直接的，然而也有很多值得我们进一步探讨的用例。<a href="https://webpack.docschina.org/concepts/plugins" target="_blank" rel="noopener">查看这里了解更多</a>。</p>
-<h2 id="模式-mode"><a href="#模式-mode" class="headerlink" title="模式(mode)"></a>模式(mode)</h2><p>通过选择 <code>development</code>, <code>production</code> 或 <code>none</code> 之中的一个，来设置 <code>mode</code> 参数，你可以启用 webpack 内置在相应环境下的优化。其默认值为 <code>production</code>。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">'production'</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>查看 <a href="https://webpack.docschina.org/concepts/mode" target="_blank" rel="noopener">模式配置</a> 章节了解其详细内容和每个值所作的优化。</p>
-<h2 id="浏览器兼容性-browser-compatibility"><a href="#浏览器兼容性-browser-compatibility" class="headerlink" title="浏览器兼容性(browser compatibility)"></a>浏览器兼容性(browser compatibility)</h2><p>webpack 支持所有符合 <a href="https://kangax.github.io/compat-table/es5/" target="_blank" rel="noopener">ES5 标准</a> 的浏览器（不支持 IE8 及以下版本）。webpack 的 <code>import()</code> 和 <code>require.ensure()</code> 需要 <code>Promise</code>。如果你想要支持旧版本浏览器，在使用这些表达式之前，还需要 <a href="https://webpack.docschina.org/guides/shimming/" target="_blank" rel="noopener">提前加载 polyfill</a>。</p>
+
+<p><strong>错误示例2</strong></p>
+<p>这种解锁代码乍一看也是没问题，甚至我之前也差点这样实现，与正确姿势差不多，唯一区别的是分成两条命令去执行，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongReleaseLock2</span><span class="params">(Jedis jedis, String lockKey, String requestId)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 判断加锁与解锁是不是同一个客户端</span></span><br><span class="line">    <span class="keyword">if</span> (requestId.equals(jedis.get(lockKey))) &#123;</span><br><span class="line">        <span class="comment">// 若在此时，这把锁突然不是这个客户端的，则会误解锁</span></span><br><span class="line">        jedis.del(lockKey);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如代码注释，这个代码的问题在于如果调用jedis.del()方法的时候，这把锁已经不属于当前客户端的时候会解除他人加的锁。那么是否真的有这种场景？答案是肯定的，比如客户端A加锁，一段时间之后客户端A解锁，在执行jedis.del()之前，锁突然过期了，此时客户端B尝试加锁成功，然后客户端A再执行del()方法，则将客户端B的锁给解除了。</p>
+<p><strong>总结</strong></p>
+<p>本文介绍的Redis分布式锁都是用JAVA实现，对于加锁和解锁的方法也分别给出了错误示例供大家参考。其实想要通过Redis实现分布式锁难度并不高，只要能满足上面给出的十个可靠性条件即可。</p>
+<p>参考资料：<a href="https://www.w3cschool.cn/redis/redis-yj3f2p0c.html" target="_blank" rel="noopener">Redis分布式锁正确的实现方法</a></p>
 
       
       <!-- reward -->
@@ -1119,7 +386,108 @@
     <footer class="article-footer">
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Babel/" rel="tag">Babel</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-排序算法" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/12/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"
+    >排序算法</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/12/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-05-12T03:33:55.000Z" itemprop="datePublished">2020-05-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">算法与数据结构</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>​    排序算法是最经典的算法知识。因为其实现代码短，应该广，在面试中经常会问到排序算法及其相关的问题。一般在面试中最常考的是快速排序和归并排序等基本的排序算法，并且经常要求现场手写基本的排序算法。如果这些问题回答不好，估计面试就凉凉了。所以熟练掌握排序算法思想及其特点并能够熟练地手写代码至关重要。</p>
+<p>​    下面介绍几种常见的排序算法：冒泡排序、选择排序、插入排序、归并排序、快速排序、希尔排序、堆排序、计数排序、桶排序、基数排序的思想，其代码均采用Java实现。</p>
+<h2 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a><strong>1. 冒泡排序</strong></h2><p>冒泡排序是一种简单的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。</p>
+<h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
+<li>比较相邻的元素。如果第一个比第二个大，就交换它们两个；</li>
+<li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；</li>
+<li>针对所有的元素重复以上的步骤，除了最后一个；</li>
+<li>重复步骤1~3，直到排序完成。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 冒泡排序是一种简单的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。</span></span><br><span class="line"><span class="comment">     * 走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 比较相邻的元素。如果第一个比第二个大，就交换它们两个；</span></span><br><span class="line"><span class="comment">     * 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；</span></span><br><span class="line"><span class="comment">     * 针对所有的元素重复以上的步骤，除了最后一个；</span></span><br><span class="line"><span class="comment">     * 重复步骤1~3，直到排序完成。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 在相邻元素相等时，它们并不会交换位置，所以，冒泡排序是稳定排序。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 冒泡排序思路简单，代码也简单，特别适合小数据的排序。但是，由于算法复杂度较高，在数据量大的时候不适合使用。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = arr.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                    temp = arr[j + <span class="number">1</span>];</span><br><span class="line">                    arr[j + <span class="number">1</span>] = arr[j];</span><br><span class="line">                    arr[j] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="稳定性"><a href="#稳定性" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>在相邻元素相等时，它们并不会交换位置，所以，冒泡排序是稳定排序。</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>冒泡排序思路简单，代码也简单，特别适合小数据的排序。但是，由于算法复杂度较高，在数据量大的时候不适合使用。</p>
+<h2 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2. 选择排序"></a><strong>2. 选择排序</strong></h2><p>选择排序是一种简单直观的排序算法，它也是一种交换排序算法，和冒泡排序有一定的相似度，可以认为选择排序是冒泡排序的一种改进。</p>
+<h2 id="算法描述-1"><a href="#算法描述-1" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
+<li>在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</li>
+<li>从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</li>
+<li>重复第二步，直到所有元素均排序完毕。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 选择排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 选择排序是一种简单直观的排序算法，它也是一种交换排序算法，和冒泡排序有一定的相似度，可以认为选择排序是冒泡排序的一种改进。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</span></span><br><span class="line"><span class="comment">     * 从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</span></span><br><span class="line"><span class="comment">     * 重复第二步，直到所有元素均排序完毕。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 用数组实现的选择排序是不稳定的，用链表实现的选择排序是稳定的。</span></span><br><span class="line"><span class="comment">     * 不过，一般提到排序算法时，大家往往会默认是数组实现，所以选择排序是不稳定的。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 选择排序实现也比较简单，并且由于在各种情况下复杂度波动小，因此一般是优于冒泡排序的。</span></span><br><span class="line"><span class="comment">     * 在所有的完全交换排序中，选择排序也是比较不错的一种算法。</span></span><br><span class="line"><span class="comment">     * 但是，由于固有的O(n2)复杂度，选择排序在海量数据面前显得力不从心。因此，它适用于简单数据排序。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//临时变量，交换值时临时存储数据</span></span><br><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//最小数值对应的坐标</span></span><br><span class="line">        <span class="keyword">int</span> min = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            min = i;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; arr.length; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[min] &gt; arr[j]) &#123;</span><br><span class="line">                    min = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i != min) &#123;</span><br><span class="line">                temp = arr[min];</span><br><span class="line">                arr[min] = arr[i];</span><br><span class="line">                arr[i] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="稳定性-1"><a href="#稳定性-1" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>用数组实现的选择排序是不稳定的，用链表实现的选择排序是稳定的。<br>不过，一般提到排序算法时，大家往往会默认是数组实现，所以选择排序是不稳定的。</p>
+<h2 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>选择排序实现也比较简单，并且由于在各种情况下复杂度波动小，因此一般是优于冒泡排序的。在所有的完全交换排序中，选择排序也是比较不错的一种算法。但是，由于固有的O(n2)复杂度，选择排序在海量数据面前显得力不从心。因此，它适用于简单数据排序。</p>
+<h2 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3. 插入排序"></a><strong>3. 插入排序</strong></h2><p>插入排序是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
+<h2 id="算法描述-2"><a href="#算法描述-2" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
+<li>把待排序的数组分成已排序和未排序两部分，初始的时候把第一个元素认为是已排好序的。</li>
+<li>从第二个元素开始，在已排好序的子数组中寻找到该元素合适的位置并插入该位置。</li>
+<li>重复上述过程直到最后一个元素被插入有序子数组中。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 插入排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 插入排序是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 把待排序的数组分成已排序和未排序两部分，初始的时候把第一个元素认为是已排好序的。</span></span><br><span class="line"><span class="comment">     * 从第二个元素开始，在已排好序的子数组中寻找到该元素合适的位置并插入该位置。</span></span><br><span class="line"><span class="comment">     * 重复上述过程直到最后一个元素被插入有序子数组中。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 由于只需要找到不大于当前数的位置而并不需要交换，因此，直接插入排序是稳定的排序方法。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 插入排序由于O( n2 )的复杂度，在数组较大的时候不适用。但是，在数据比较少的时候，是一个不错的选择，一般做为快速排序的扩充。</span></span><br><span class="line"><span class="comment">     * 例如，在STL的sort算法和stdlib的qsort算法中，都将插入排序作为快速排序的补充，用于少量元素的排序。</span></span><br><span class="line"><span class="comment">     * 又如，在JDK 7 java.util.Arrays所用的sort方法的实现中，当待排数组长度小于47时，会使用插入排序。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="comment">//当前带排序的值</span></span><br><span class="line">            <span class="keyword">int</span> value = arr[i];</span><br><span class="line">            <span class="comment">//位置指针，初始指向当前位置</span></span><br><span class="line">            <span class="keyword">int</span> position = i;</span><br><span class="line">            <span class="keyword">while</span> (position &gt; <span class="number">0</span> &amp;&amp; arr[position - <span class="number">1</span>] &gt; value) &#123;</span><br><span class="line">                arr[position] = arr[position - <span class="number">1</span>];</span><br><span class="line">                position--;</span><br><span class="line">            &#125;</span><br><span class="line">            arr[position] = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="稳定性-2"><a href="#稳定性-2" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>由于只需要找到不大于当前数的位置而并不需要交换，因此，直接插入排序是稳定的排序方法。</p>
+<h2 id="适用场景-2"><a href="#适用场景-2" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>插入排序由于O( n2 )的复杂度，在数组较大的时候不适用。但是，在数据比较少的时候，是一个不错的选择，一般做为快速排序的扩充。例如，在STL的sort算法和stdlib的qsort算法中，都将插入排序作为快速排序的补充，用于少量元素的排序。又如，在JDK 7 java.util.Arrays所用的sort方法的实现中，当待排数组长度小于47时，会使用插入排序。</p>
+<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/42586566" target="_blank" rel="noopener">[算法总结] 十大排序算法</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">算法与数据结构</a></li></ul>
 
 
     </footer>
@@ -1142,7 +510,7 @@
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
   </nav>
   
 </section>
