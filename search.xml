@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Sentinel初体验</title>
+    <url>/2020/05/16/Sentinel%E5%88%9D%E4%BD%93%E9%AA%8C/</url>
+    <content><![CDATA[<p>Sentinel官网：<a href="https://sentinelguard.io/zh-cn/index.html" target="_blank" rel="noopener">https://sentinelguard.io/zh-cn/index.html</a></p>
+<p>Sentinel中文文档：<a href="https://github.com/alibaba/Sentinel/wiki/介绍" target="_blank" rel="noopener">https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D</a></p>
+<h2 id="1-下载Sentinel"><a href="#1-下载Sentinel" class="headerlink" title="1.下载Sentinel"></a>1.下载Sentinel</h2><p>github下载地址：<a href="https://github.com/alibaba/Sentinel/releases" target="_blank" rel="noopener">https://github.com/alibaba/Sentinel/releases</a></p>
+<p>gitee下载地址：<a href="https://gitee.com/mirrors/Sentinel/tags" target="_blank" rel="noopener">https://gitee.com/mirrors/Sentinel/tags</a></p>
+<h2 id="2-编译打包Sentinel"><a href="#2-编译打包Sentinel" class="headerlink" title="2.编译打包Sentinel"></a>2.编译打包Sentinel</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mvn clean  package -Dmaven.test.skip=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-启动Sentinel"><a href="#3-启动Sentinel" class="headerlink" title="3.启动Sentinel"></a>3.启动Sentinel</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /Users/doubledumbao/software/Sentinel/sentinel-dashboard/target</span><br><span class="line">java -jar sentinel-dashboard.jar</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-查看页面"><a href="#4-查看页面" class="headerlink" title="4.查看页面"></a>4.查看页面</h3><p>localhost:8080</p>
+]]></content>
+      <categories>
+        <category>SpringCloud</category>
+      </categories>
+      <tags>
+        <tag>Sentinel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>nacos集群初探</title>
     <url>/2020/05/16/nacos%E9%9B%86%E7%BE%A4%E5%88%9D%E6%8E%A2/</url>
     <content><![CDATA[<h2 id="1-下载nacos"><a href="#1-下载nacos" class="headerlink" title="1.下载nacos"></a>1.下载nacos</h2><p>github下载地址：<a href="https://github.com/alibaba/nacos/releases" target="_blank" rel="noopener">https://github.com/alibaba/nacos/releases</a></p>
