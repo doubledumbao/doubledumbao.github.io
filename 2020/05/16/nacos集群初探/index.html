@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="Java" />
+   
+  <meta name="description" content="我不服" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    nacos集群初探 |  正念编程自习室
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-nacos集群初探" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  nacos集群初探
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/16/nacos%E9%9B%86%E7%BE%A4%E5%88%9D%E6%8E%A2/" class="article-date">
+  <time datetime="2020-05-16T08:19:13.000Z" itemprop="datePublished">2020-05-16</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringCloud/">SpringCloud</a> / <a class="article-category-link" href="/categories/SpringCloud/nacos/">nacos</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">625字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">3分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h2 id="1-下载nacos"><a href="#1-下载nacos" class="headerlink" title="1.下载nacos"></a>1.下载nacos</h2><p>github下载地址：<a href="https://github.com/alibaba/nacos/releases" target="_blank" rel="noopener">https://github.com/alibaba/nacos/releases</a></p>
+<p>下载速度是在太慢了，换成gitee下载吧</p>
+<p>下载地址：<a href="https://gitee.com/mirrors/Nacos" target="_blank" rel="noopener">https://gitee.com/mirrors/Nacos</a></p>
+<p>下载并解压到本地目录，我的目录是/Users/doubledumbao/software</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压文件</span></span><br><span class="line">unzip mirrors-Nacos-1.1.4.zip</span><br><span class="line"><span class="comment"># 进入解压后目录Nacos</span></span><br><span class="line"><span class="built_in">cd</span> Nacos</span><br><span class="line"><span class="comment"># 使用maven进行编译打包</span></span><br><span class="line">mvn -Prelease-nacos clean install -U</span><br><span class="line"><span class="comment"># 进入编译后的目录</span></span><br><span class="line"><span class="built_in">cd</span>  /Users/doubledumbao/software/Nacos/distribution/target</span><br><span class="line"><span class="comment"># 目录下nacos-server-1.1.4.tar.gz就是我们需要的压缩包</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-将压缩包上传到Linux服务器，步骤略"><a href="#2-将压缩包上传到Linux服务器，步骤略" class="headerlink" title="2.将压缩包上传到Linux服务器，步骤略"></a>2.将压缩包上传到Linux服务器，步骤略</h2><h2 id="3-配置集群模式"><a href="#3-配置集群模式" class="headerlink" title="3.配置集群模式"></a>3.配置集群模式</h2><h3 id="3-1-修改集群配置文件"><a href="#3-1-修改集群配置文件" class="headerlink" title="3.1 修改集群配置文件"></a>3.1 修改集群配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入/opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf nacos-server-1.1.4.tar.gz </span><br><span class="line"><span class="comment"># 进入conf目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt/nacos/conf</span><br><span class="line"><span class="comment"># 修改集群配置文件</span></span><br><span class="line">cp cluster.conf.example cluster.conf</span><br><span class="line">vim cluster.conf</span><br><span class="line"><span class="comment"># 内容修改为ip:port形式</span></span><br><span class="line">192.168.0.119:3333</span><br><span class="line">192.168.0.119:4444</span><br><span class="line">192.168.0.119:5555</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-修改application-properties"><a href="#3-2-修改application-properties" class="headerlink" title="3.2 修改application.properties"></a>3.2 修改application.properties</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份application.properties</span></span><br><span class="line">cp application.properties application.properties.bak</span><br><span class="line">vim application.properties</span><br><span class="line"><span class="comment"># 添加如下内容(黏贴模式 set paste)</span></span><br><span class="line">spring.datasource.platform=mysql </span><br><span class="line">db.num=1</span><br><span class="line">db.url.0=jdbc:mysql://192.168.0.119:3306/nacos_config?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=<span class="literal">true</span></span><br><span class="line">db.user=root</span><br><span class="line">db.password=123456</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-执行nacos-mysql-sql中的语句"><a href="#3-3-执行nacos-mysql-sql中的语句" class="headerlink" title="3.3 执行nacos-mysql.sql中的语句"></a>3.3 执行nacos-mysql.sql中的语句</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行nacos-mysql.sql中的语句</span></span><br><span class="line">mysql -uroot -p</span><br><span class="line"><span class="comment">## 创建数据库</span></span><br><span class="line">create database nacos_config;</span><br><span class="line"><span class="comment">## 使用nacos_config数据库</span></span><br><span class="line">use nacos_config;</span><br><span class="line"><span class="comment">## 执行nacos-mysql.sql中的语句</span></span><br><span class="line"><span class="built_in">source</span> /opt/nacos/conf/nacos-mysql.sql</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-修改启动文件"><a href="#3-4-修改启动文件" class="headerlink" title="3.4 修改启动文件"></a>3.4 修改启动文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改启动文件</span></span><br><span class="line"><span class="comment">## 进入/opt/nacos/bin目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt/nacos/bin</span><br><span class="line"><span class="comment">## 修改启动文件</span></span><br><span class="line">vim startup.sh</span><br><span class="line"><span class="comment">### 修改两处地方，第一处</span></span><br><span class="line"> 57 <span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">":m:f:s:p:"</span> opt</span><br><span class="line"> 58 <span class="keyword">do</span></span><br><span class="line"> 59     <span class="keyword">case</span> <span class="variable">$opt</span> <span class="keyword">in</span></span><br><span class="line"> 60         m)</span><br><span class="line"> 61             MODE=<span class="variable">$OPTARG</span>;;</span><br><span class="line"> 62         f)</span><br><span class="line"> 63             FUNCTION_MODE=<span class="variable">$OPTARG</span>;;</span><br><span class="line"> 64         s)</span><br><span class="line"> 65             SERVER=<span class="variable">$OPTARG</span>;;</span><br><span class="line"> 66         p)</span><br><span class="line"> 67             PORT=<span class="variable">$OPTARG</span>;;</span><br><span class="line"> 68         ?)</span><br><span class="line"> 69         <span class="built_in">echo</span> <span class="string">"Unknown parameter"</span></span><br><span class="line"> 70         <span class="built_in">exit</span> 1;;</span><br><span class="line"> 71     <span class="keyword">esac</span></span><br><span class="line"> 72 <span class="keyword">done</span></span><br><span class="line"> <span class="comment">### 修改第二处地方</span></span><br><span class="line"> 135 nohup <span class="variable">$JAVA</span> -Dserver.port=<span class="variable">$&#123;PORT&#125;</span>  <span class="variable">$&#123;JAVA_OPT&#125;</span>  nacos.nacos &gt;&gt; <span class="variable">$&#123;BASE_DIR&#125;</span>/logs/start.out 2&gt;&amp;1 &amp;</span><br><span class="line"> <span class="comment">### 注释掉一处地方（非常重要） </span></span><br><span class="line"> <span class="comment">#JAVA_OPT="$&#123;JAVA_OPT&#125; -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"</span></span><br><span class="line"> <span class="comment"># 否则会报错如下：</span></span><br><span class="line"> ERROR: transport error 202: <span class="built_in">bind</span> failed: 地址已在使用</span><br><span class="line"> ERROR: JDWP Transport dt_socket failed to initialize, TRANSPORT_INIT(510)</span><br><span class="line"> JDWP <span class="built_in">exit</span> error AGENT_ERROR_TRANSPORT_INIT(197): No transports initialized [debugInit.c:750]</span><br><span class="line"> FATAL ERROR <span class="keyword">in</span> native method: JDWP No transports initialized,   jvmtiError=AGENT_ERROR_TRANSPORT_INIT(197)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-启动"><a href="#3-5-启动" class="headerlink" title="3.5 启动"></a>3.5 启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./startup.sh -p 3333</span><br><span class="line">./startup.sh -p 4444</span><br><span class="line">./startup.sh -p 5555</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-6-查看启动结果"><a href="#3-6-查看启动结果" class="headerlink" title="3.6 查看启动结果"></a>3.6 查看启动结果</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lsof -i:3333</span><br><span class="line">lsof -i:4444</span><br><span class="line">lsof -i:5555</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-7-配置nginx"><a href="#3-7-配置nginx" class="headerlink" title="3.7 配置nginx"></a>3.7 配置nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改nginx.conf</span></span><br><span class="line">upstream nacos&#123;</span><br><span class="line">  server 192.168.0.119:3333;</span><br><span class="line">  server 192.168.0.119:4444;</span><br><span class="line">  server 192.168.0.119:5555;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">  listen         8848;</span><br><span class="line">  location  / &#123;</span><br><span class="line">  	proxy_pass http://nacos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-8-验证"><a href="#3-8-验证" class="headerlink" title="3.8 验证"></a>3.8 验证</h3><p>浏览器访问192.168.0.119:8848/nacos</p>
+<p>架构图如下：</p>
+<p><img src="https://note.youdao.com/yws/public/resource/adcfc73ce82209eac9c749c8e762f8e6/xmlnote/73A215E93E9146D79166A3ED3FE01252/5228" alt="nacos集群"></p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong s>
+              本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow"
+                target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.lxcourse.cn/2020/05/16/nacos%E9%9B%86%E7%BE%A4%E5%88%9D%E6%8E%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nacos/" rel="tag">nacos</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/05/15/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Redis主从复制</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2020
+        doubledumbao
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="正念编程自习室"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['一个非科班程序员的不服之路', '双倍的快乐来自正念和冥想', '记录成长点点滴滴'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
