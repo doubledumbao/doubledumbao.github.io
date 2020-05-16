@@ -4,7 +4,7 @@
     <title>nacos集群初探</title>
     <url>/2020/05/16/nacos%E9%9B%86%E7%BE%A4%E5%88%9D%E6%8E%A2/</url>
     <content><![CDATA[<h2 id="1-下载nacos"><a href="#1-下载nacos" class="headerlink" title="1.下载nacos"></a>1.下载nacos</h2><p>github下载地址：<a href="https://github.com/alibaba/nacos/releases" target="_blank" rel="noopener">https://github.com/alibaba/nacos/releases</a></p>
-<p>下载速度是在太慢了，换成gitee下载吧</p>
+<p>下载速度实在太慢了，换成gitee下载吧</p>
 <p>下载地址：<a href="https://gitee.com/mirrors/Nacos" target="_blank" rel="noopener">https://gitee.com/mirrors/Nacos</a></p>
 <p>下载并解压到本地目录，我的目录是/Users/doubledumbao/software</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 解压文件</span></span><br><span class="line">unzip mirrors-Nacos-1.1.4.zip</span><br><span class="line"><span class="comment"># 进入解压后目录Nacos</span></span><br><span class="line"><span class="built_in">cd</span> Nacos</span><br><span class="line"><span class="comment"># 使用maven进行编译打包</span></span><br><span class="line">mvn -Prelease-nacos clean install -U</span><br><span class="line"><span class="comment"># 进入编译后的目录</span></span><br><span class="line"><span class="built_in">cd</span>  /Users/doubledumbao/software/Nacos/distribution/target</span><br><span class="line"><span class="comment"># 目录下nacos-server-1.1.4.tar.gz就是我们需要的压缩包</span></span><br></pre></td></tr></table></figure>
