@@ -74,6 +74,97 @@
     
     
     
+    <article id="post-Dockerfile初探" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/"
+    >Dockerfile初探</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/11/Dockerfile%E5%88%9D%E6%8E%A2/" class="article-date">
+  <time datetime="2020-05-11T04:52:40.000Z" itemprop="datePublished">2020-05-11</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Docker/">Docker</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="测试使用Dockerfile创建一个myshop镜像"><a href="#测试使用Dockerfile创建一个myshop镜像" class="headerlink" title="测试使用Dockerfile创建一个myshop镜像"></a>测试使用Dockerfile创建一个myshop镜像</h3><p>1.新建文件夹myshop</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir myshop</span><br><span class="line"><span class="comment">#查看当前目录</span></span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line">/Users/doubledumbao/docker-demo/202005/myshop</span><br></pre></td></tr></table></figure>
+
+<p>2.新建index.html文件，文件内容如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>hello docker <span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello docker!!!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3.将index.html打包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zcvf myshop.tar.gz index.html</span><br></pre></td></tr></table></figure>
+
+<p>4.编写Dockerfile文件</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FROM 指令用于指定其后构建新镜像所使用的基础镜像。FROM 指令必是 Dockerfile 文件中的首条命令，启动构建流程后，Docker 将会基于该镜像构建新镜像，FROM 后的命令也会基于这个基础镜像。</span></span><br><span class="line"><span class="keyword">FROM</span> tomcat:latest</span><br><span class="line"><span class="comment"># 删除/usr/local/tomcat/webapps/ROOT/目录下的内容</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> rm -rf /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/*</span></span><br><span class="line"><span class="comment"># COPY 指令将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的&amp;lt;目标路径&amp;gt;位置。</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> myshop.tar.gz /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># WORKDIR用于在容器内设置一个工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /usr/<span class="built_in">local</span>/tomcat/webapps/ROOT/</span></span><br><span class="line"><span class="comment"># RUN在镜像的构建过程中执行特定的命令，并生成一个中间镜像。</span></span><br><span class="line"><span class="comment"># 解压tar包并删除tar包</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> tar -zxvf myshop.tar.gz \</span></span><br><span class="line"><span class="bash">   &amp;&amp; rm -fr myshop.tar.gz</span></span><br><span class="line"><span class="comment"># 为构建的镜像设置监听端口，使容器在运行时监听。格式：EXPOSE &lt;port&gt; [&lt;port&gt;...]。EXPOSE 指令并不会让容器监听 host 的端口，如果需要，需要在 docker run 时使用 -p、-P 参数来发布容器端口到 host 的某个端口上。</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>5.编译Dockerfile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
+
+<p>6.运行容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myshop .</span><br></pre></td></tr></table></figure>
+
+<p>7.查看浏览器localhost:8080效果</p>
+<p>8.查看容器内目录结构，使用命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 11474d41fac5 /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-HashMap源码详解和面试题分析" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -217,138 +308,6 @@
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
 
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-多线程问题整理" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/"
-    >多线程问题整理</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/06/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/" class="article-date">
-  <time datetime="2020-05-06T12:56:09.000Z" itemprop="datePublished">2020-05-06</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h2 id="1-如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）"><a href="#1-如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）" class="headerlink" title="1.如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）"></a>1.如何实现一个生产者和消费者模型？（锁、信号量、线程通信、阻塞队列等）</h2><p><a href="https://www.jianshu.com/p/66e8b5ab27f6" target="_blank" rel="noopener">Java生产者和消费者模型的5种实现方式</a></p>
-<h2 id="2-如何理解线程的同步和异步、阻塞和非阻塞？"><a href="#2-如何理解线程的同步和异步、阻塞和非阻塞？" class="headerlink" title="2.如何理解线程的同步和异步、阻塞和非阻塞？"></a>2.如何理解线程的同步和异步、阻塞和非阻塞？</h2><p>作者：Yi Lu<br>链接：<a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="noopener">https://www.zhihu.com/question/19732473/answer/20851256</a><br>来源：知乎</p>
-<p>“阻塞”与”非阻塞”与”同步”与“异步”不能简单的从字面理解，提供一个从分布式系统角度的回答。<br><strong>1.同步与异步</strong><br>    同步和异步关注的是<strong>消息通信机制</strong> (synchronous communication/ asynchronous communication)<br>所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。<br>换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。</p>
-<p>而异步则是相反，<strong><em>调用\</em>在发出之后，这个调用就直接返回了，所以没有返回结果</strong>。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，<em>被调用者</em>通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
-<p>典型的异步编程模型比如Node.js</p>
-<p>举个通俗的例子：<br>你打电话问书店老板有没有《分布式系统》这本书，如果是同步通信机制，书店老板会说，你稍等，”我查一下”，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。<br>而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。</p>
-<ol start="2">
-<li><p>阻塞与非阻塞</p>
-<p>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息，返回值）时的状态.</strong></p>
-</li>
-</ol>
-<p>阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。<br>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
-<p>还是上面的例子，<br>你打电话问书店老板有没有《分布式系统》这本书，你如果是阻塞式调用，你会一直把自己“挂起”，直到得到这本书有没有的结果，如果是非阻塞式调用，你不管老板有没有告诉你，你自己先一边去玩了， 当然你也要偶尔过几分钟check一下老板有没有返回结果。<br>在这里阻塞与非阻塞与是否同步异步无关。跟老板通过什么方式回答你结果无关。</p>
-<p>如果是关心阻塞 IO/ 异步 IO, 参考  Unix Network Programming <a href="https://link.zhihu.com/?target=http%3A//english.tebyan.net/newindex.aspx%3Fpid%3D31159%26BookID%3D23760%26PageIndex%3D92%26Language%3D3">View Book</a></p>
-<p>还是2014年写的以解释概念为主，主要是同步异步 阻塞和非阻塞会被用在不同层面上，可能会有不准确的地方，并没有针对 阻塞 IO/ 异步 IO 等进行讨论，大家可以后续看看这两个回答：</p>
-<p><a href="https://www.zhihu.com/question/19732473/answer/14413599" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
-<p><a href="https://www.zhihu.com/question/19732473/answer/241673170" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
-<h2 id="3-线程池处理任务的流程是怎样的？"><a href="#3-线程池处理任务的流程是怎样的？" class="headerlink" title="3.线程池处理任务的流程是怎样的？"></a>3.线程池处理任务的流程是怎样的？</h2><p>1，首先线程池判断基本线程池是否已满（&lt; corePoolSize ？）？没满，创建一个工作线程来执行任务。满了，则进入下个流程。</p>
-<p>2，其次线程池判断工作队列是否已满？没满，则将新提交的任务存储在工作队列里。满了，则进入下个流程。</p>
-<p>3，最后线程池判断整个线程池是否已满（&lt; maximumPoolSize ？）？没满，则创建一个新的工作线程来执行任务，满了，则交给饱和策略来处理这个任务。</p>
-<p>总结：线程池优先要创建出基本线程池大小（corePoolSize）的线程数量，没有达到这个数量时，每次提交新任务都会直接创建一个新线程，当达到了基本线程数量后，又有新任务到达，优先放入等待队列，如果队列满了，才去创建新的线程（不能超过线程池的最大数maxmumPoolSize）</p>
-<h2 id="4-wait和sleep有什么不同？"><a href="#4-wait和sleep有什么不同？" class="headerlink" title="4.wait和sleep有什么不同？"></a>4.wait和sleep有什么不同？</h2><h3 id="区别1：使用限制"><a href="#区别1：使用限制" class="headerlink" title="区别1：使用限制"></a>区别1：使用限制</h3><p>使用 sleep 方法可以让让当前线程休眠，时间一到当前线程继续往下执行，在任何地方都能使用，但需要捕获 InterruptedException 异常。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    Thread.sleep(3000L);</span><br><span class="line">&#125; catch (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>而使用 wait 方法则必须放在 synchronized 块里面，同样需要捕获 InterruptedException 异常，并且需要获取对象的锁。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">synchronized (lock)&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        lock.wait();</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>而且 wait 还需要额外的方法 notify/ notifyAll 进行唤醒，它们同样需要放在 synchronized 块里面，且获取对象的锁。。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">synchronized (lock) &#123;</span><br><span class="line">    &#x2F;&#x2F; 随机唤醒</span><br><span class="line">    lock.notify();</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 唤醒全部</span><br><span class="line">    lock.notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然也可以使用带时间的 wait(long millis) 方法，时间一到，无需其他线程唤醒，也会重新竞争获取对象的锁继续执行。</p>
-<h3 id="区别2：使用场景"><a href="#区别2：使用场景" class="headerlink" title="区别2：使用场景"></a>区别2：使用场景</h3><p>sleep 一般用于当前线程休眠，或者轮循暂停操作，wait 则多用于多线程之间的通信。</p>
-<h3 id="区别3：所属类"><a href="#区别3：所属类" class="headerlink" title="区别3：所属类"></a>区别3：所属类</h3><p>sleep 是 Thread 类的静态本地方法，wait 则是 Object 类的本地方法。</p>
-<blockquote>
-<p>java.lang.Thread#sleep</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static native void sleep(long millis) throws InterruptedException;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>java.lang.Object#wait</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final native void wait(long timeout) throws InterruptedException;</span><br></pre></td></tr></table></figure>
-
-<p><strong>为什么要这样设计呢？</strong></p>
-<p>因为 sleep 是让当前线程休眠，不涉及到对象类，也不需要获得对象的锁，所以是线程类的方法。wait 是让获得对象锁的线程实现等待，前提是要楚获得对象的锁，所以是类的方法。</p>
-<h3 id="区别4：释放锁"><a href="#区别4：释放锁" class="headerlink" title="区别4：释放锁"></a>区别4：释放锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Object lock &#x3D; new Object();</span><br><span class="line">synchronized (lock) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        lock.wait(3000L);</span><br><span class="line">        Thread.sleep(2000L);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如上代码所示，wait 可以释放当前线程对 lock 对象锁的持有，而 sleep 则不会。</p>
-<h3 id="区别5：线程切换"><a href="#区别5：线程切换" class="headerlink" title="区别5：线程切换"></a>区别5：线程切换</h3><p>sleep 会让出 CPU 执行时间且强制上下文切换，而 wait 则不一定，wait 后可能还是有机会重新竞争到锁继续执行的。</p>
-<h2 id="5-Synchronized和ReentrantLock有什么不同？各适合什么场景？"><a href="#5-Synchronized和ReentrantLock有什么不同？各适合什么场景？" class="headerlink" title="5.Synchronized和ReentrantLock有什么不同？各适合什么场景？"></a>5.Synchronized和ReentrantLock有什么不同？各适合什么场景？</h2><h5 id="1、ReentrantLock-拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候"><a href="#1、ReentrantLock-拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候" class="headerlink" title="1、ReentrantLock 拥有Synchronized相同的并发性和内存语义，此外还多了锁投票，定时锁等候和中断锁等候"></a>1、ReentrantLock 拥有Synchronized相同的并发性和内存语义，此外还多了<strong>锁投票</strong>，<strong>定时锁等候</strong>和<strong>中断锁等候</strong></h5><h6 id="example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用-synchronized-，如果A不释放，B将一直等下去，不能被中断如果-使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情"><a href="#example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用-synchronized-，如果A不释放，B将一直等下去，不能被中断如果-使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情" class="headerlink" title="example：线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情"></a><em>example：</em>线程A和B都要获取对象O的锁定，假设A获取了对象O锁，B将等待A释放对O的锁定，如果使用 synchronized ，如果A不释放，B将一直等下去，不能被中断如果 使用ReentrantLock，如果A不释放，可以使B在等待了足够长的时间以后，中断等待，而干别的事情</h6><h6 id="ReentrantLock获取锁定与三种方式："><a href="#ReentrantLock获取锁定与三种方式：" class="headerlink" title="ReentrantLock获取锁定与三种方式："></a>ReentrantLock获取锁定与三种方式：</h6><ul>
-<li><h6 id="lock-如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁"><a href="#lock-如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁" class="headerlink" title="lock(), 如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁"></a>lock(), 如果获取了锁立即返回，如果别的线程持有锁，当前线程则一直处于休眠状态，直到获取锁</h6></li>
-<li><h6 id="tryLock-如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；"><a href="#tryLock-如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；" class="headerlink" title="tryLock(), 如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；"></a>tryLock(), 如果获取了锁立即返回true，如果别的线程正持有锁，立即返回false；</h6></li>
-<li><h6 id="tryLock-long-timeout-TimeUnit-unit-，-如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；"><a href="#tryLock-long-timeout-TimeUnit-unit-，-如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；" class="headerlink" title="tryLock(long timeout,TimeUnit unit)， 如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；"></a>tryLock(long timeout,TimeUnit unit)， 如果获取了锁定立即返回true，如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false；</h6></li>
-<li><h6 id="lockInterruptibly-如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断"><a href="#lockInterruptibly-如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断" class="headerlink" title="lockInterruptibly:如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断"></a>lockInterruptibly:如果获取了锁定立即返回，如果没有获取锁定，当前线程处于休眠状态，直到或者锁定，或者当前线程被别的线程中断</h6></li>
-</ul>
-<hr>
-<h5 id="2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock-放到finally-中"><a href="#2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock-放到finally-中" class="headerlink" title="2、synchronized是在JVM层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，JVM会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock()放到finally{}中"></a>2、synchronized是在<a href="https://link.jianshu.com?t=https://www.baidu.com/s?wd=JVM&tn=44039180_cpr&fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1YkuWc1rHTdnWwbnH9-PW0z0ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3En1m3rjb1rH0Yn1fLnW01rj0Y" target="_blank" rel="noopener">JVM</a>层面上实现的，不但可以通过一些监控工具监控synchronized的锁定，而且在代码执行时出现异常，<a href="https://link.jianshu.com?t=http://baike.baidu.com/link?url=pUffiLWYkxesyD01y2WoXXiVVG988pvbc3GaaYXFW2TSZPhrH7_C8rRZBFwj7Prg_W8zn8p271NydxdolIh_U_" target="_blank" rel="noopener">JVM</a>会自动释放锁定，但是使用Lock则不行，lock是通过代码实现的，要保证锁定一定会被释放，就必须将unLock()放到finally{}中</h5><hr>
-<h5 id="3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；"><a href="#3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；" class="headerlink" title="3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；"></a>3、在资源竞争不是很激烈的情况下，Synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，Synchronized的性能会下降几十倍，但是ReetrantLock的性能能维持常态；</h5><p>作者：OverLight<br>链接：<a href="https://www.jianshu.com/p/4dbacf1cadcf" target="_blank" rel="noopener">https://www.jianshu.com/p/4dbacf1cadcf</a><br>来源：简书</p>
-<h2 id="6-读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？"><a href="#6-读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？" class="headerlink" title="6.读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？"></a>6.读写锁适用于什么场景？ReentrantReadWriteLock是如何实现的？</h2><p><a href="https://zhuanlan.zhihu.com/p/75879810" target="_blank" rel="noopener">ReentrantReadWriteLock读写锁详解</a></p>
-<h2 id="7-线程之间如何通信？"><a href="#7-线程之间如何通信？" class="headerlink" title="7.线程之间如何通信？"></a>7.线程之间如何通信？</h2><p><a href="https://www.cnblogs.com/hapjin/p/5492619.html" target="_blank" rel="noopener"><a href="https://www.cnblogs.com/hapjin/p/5492619.html" target="_blank" rel="noopener">JAVA多线程之线程间的通信方式</a></a></p>
-<h2 id="8-保证线程安全的方法有哪些？"><a href="#8-保证线程安全的方法有哪些？" class="headerlink" title="8.保证线程安全的方法有哪些？"></a>8.保证线程安全的方法有哪些？</h2><p><a href="https://www.nowcoder.com/questionTerminal/0e750e2953d144bd942bb1600b2a391e" target="_blank" rel="noopener">如何保证线程安全</a></p>
-<h2 id="9-如何尽可能提高多线程并发性能？"><a href="#9-如何尽可能提高多线程并发性能？" class="headerlink" title="9.如何尽可能提高多线程并发性能？"></a>9.如何尽可能提高多线程并发性能？</h2><p><a href="https://my.oschina.net/u/1011494/blog/534822" target="_blank" rel="noopener">如何提高Java并行程序性能</a></p>
-<h2 id="10-ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？"><a href="#10-ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？" class="headerlink" title="10.ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？"></a>10.ThreadLocal用来解决什么问题？ThreadLocal是如何实现的？</h2><p><a href="https://baike.sogou.com/v54656329.htm?fromTitle=ThreadLocal" target="_blank" rel="noopener">ThreadLocal</a></p>
-<h2 id="11-死锁的产生条件？如何分析是否有线程死锁？"><a href="#11-死锁的产生条件？如何分析是否有线程死锁？" class="headerlink" title="11.死锁的产生条件？如何分析是否有线程死锁？"></a>11.死锁的产生条件？如何分析是否有线程死锁？</h2><p><a href="https://zhuanlan.zhihu.com/p/84490319" target="_blank" rel="noopener">Java 多线程死锁的产生以及如何避免死锁</a></p>
-<h2 id="12-在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？"><a href="#12-在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？" class="headerlink" title="12.在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？"></a>12.在实际工作中遇到过什么样的并发问题，如何发现（排查）并解决的？</h2><p> <a href="https://www.cnblogs.com/koubeisi/p/10751035.html" target="_blank" rel="noopener"><a href="https://www.cnblogs.com/koubeisi/p/10751035.html" target="_blank" rel="noopener">Java面试 32个核心必考点完全解析</a></a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
 
     </footer>
 
