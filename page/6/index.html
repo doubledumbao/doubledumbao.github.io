@@ -74,6 +74,193 @@
     
     
     
+    <article id="post-Redis主从复制" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/15/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/"
+    >Redis主从复制</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/15/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="article-date">
+  <time datetime="2020-05-15T07:14:13.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Redis/">Redis</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h1 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h1><p>在 Redis 复制的基础上，使用和配置主从复制非常简单，能使得从 Redis 服务器（下文称 slave）能精确得复制主 Redis 服务器（下文称 master）的内容。每次当 slave 和 master 之间的连接断开时， slave 会自动重连到 master 上，并且无论这期间 master 发生了什么， slave 都将尝试让自身成为 master 的精确副本。</p>
+<p>这个系统的运行依靠三个主要的机制：</p>
+<ul>
+<li>当一个 master 实例和一个 slave 实例连接正常时， master 会发送一连串的命令流来保持对 slave 的更新，以便于将自身数据集的改变复制给 slave ， ：包括客户端的写入、key 的过期或被逐出等等。</li>
+<li>当 master 和 slave 之间的连接断开之后，因为网络问题、或者是主从意识到连接超时， slave 重新连接上 master 并会尝试进行部分重同步：这意味着它会尝试只获取在断开连接期间内丢失的命令流。</li>
+<li>当无法进行部分重同步时， slave 会请求进行全量重同步。这会涉及到一个更复杂的过程，例如 master 需要创建所有数据的快照，将之发送给 slave ，之后在数据集更改时持续发送命令流到 slave 。</li>
+</ul>
+<p>Redis使用默认的异步复制，其特点是低延迟和高性能，是绝大多数 Redis 用例的自然复制模式。但是，从 Redis 服务器会异步地确认其从主 Redis 服务器周期接收到的数据量。</p>
+<p>客户端可以使用 <a href="https://redis.io/commands/wait" target="_blank" rel="noopener">WAIT</a> 命令来请求同步复制某些特定的数据。但是，WAIT 命令只能确保在其他 Redis 实例中有指定数量的已确认的副本：在故障转移期间，由于不同原因的故障转移或是由于 Redis 持久性的实际配置，故障转移期间确认的写入操作可能仍然会丢失。你可以查看 Sentinel 或 Redis 集群文档，了解关于高可用性和故障转移的更多信息。本文的其余部分主要描述 Redis 基本复制功能的基本特性。</p>
+<p>接下来的是一些关于 Redis 复制的非常重要的事实：</p>
+<ul>
+<li>Redis 使用异步复制，slave 和 master 之间异步地确认处理的数据量</li>
+<li>一个 master 可以拥有多个 slave</li>
+<li>slave 可以接受其他 slave 的连接。除了多个 slave 可以连接到同一个 master 之外， slave 之间也可以像层叠状的结构（cascading-like structure）连接到其他 slave 。自 Redis 4.0 起，所有的 sub-slave 将会从 master 收到完全一样的复制流。</li>
+<li>Redis 复制在 master 侧是非阻塞的。这意味着 master 在一个或多个 slave 进行初次同步或者是部分重同步时，可以继续处理查询请求。</li>
+<li>复制在 slave 侧大部分也是非阻塞的。当 slave 进行初次同步时，它可以使用旧数据集处理查询请求，假设你在 redis.conf 中配置了让 Redis 这样做的话。否则，你可以配置如果复制流断开， Redis slave 会返回一个 error 给客户端。但是，在初次同步之后，旧数据集必须被删除，同时加载新的数据集。 slave 在这个短暂的时间窗口内（如果数据集很大，会持续较长时间），会阻塞到来的连接请求。自 Redis 4.0 开始，可以配置 Redis 使删除旧数据集的操作在另一个不同的线程中进行，但是，加载新数据集的操作依然需要在主线程中进行并且会阻塞 slave 。</li>
+<li>复制既可以被用在可伸缩性，以便只读查询可以有多个 slave 进行（例如 O(N) 复杂度的慢操作可以被下放到 slave ），或者仅用于数据安全。</li>
+<li>可以使用复制来避免 master 将全部数据集写入磁盘造成的开销：一种典型的技术是配置你的 master Redis.conf 以避免对磁盘进行持久化，然后连接一个 slave ，其配置为不定期保存或是启用 AOF。但是，这个设置必须小心处理，因为重新启动的 master 程序将从一个空数据集开始：如果一个 slave 试图与它同步，那么这个 slave 也会被清空。</li>
+</ul>
+<h2 id="当-master-关闭持久化时，复制的安全性"><a href="#当-master-关闭持久化时，复制的安全性" class="headerlink" title="当 master 关闭持久化时，复制的安全性"></a>当 master 关闭持久化时，复制的安全性</h2><p>在使用 Redis 复制功能时的设置中，强烈建议在 master 和在 slave 中启用持久化。当不可能启用时，例如由于非常慢的磁盘性能而导致的延迟问题，<strong>应该配置实例来避免重置后自动重启</strong>。</p>
+<p>为了更好地理解为什么关闭了持久化并配置了自动重启的 master 是危险的，检查以下故障模式，这些故障模式中数据会从 master 和所有 slave 中被删除：</p>
+<ol>
+<li>我们设置节点 A 为 master 并关闭它的持久化设置，节点 B 和 C 从 节点 A 复制数据。</li>
+<li>节点 A 崩溃，但是他有一些自动重启的系统可以重启进程。但是由于持久化被关闭了，节点重启后其数据集合为空。</li>
+<li>节点 B 和 节点 C 会从节点 A 复制数据，但是节点 A 的数据集是空的，因此复制的结果是它们会销毁自身之前的数据副本。</li>
+</ol>
+<p>当 Redis Sentinel 被用于高可用并且 master 关闭持久化，这时如果允许自动重启进程也是很危险的。例如， master 可以重启的足够快以致于 Sentinel 没有探测到故障，因此上述的故障模式也会发生。</p>
+<p>任何时候数据安全性都是很重要的，所以如果 master 使用复制功能的同时未配置持久化，那么自动重启进程这项应该被禁用。</p>
+<h2 id="Redis-复制功能是如何工作的"><a href="#Redis-复制功能是如何工作的" class="headerlink" title="Redis 复制功能是如何工作的"></a>Redis 复制功能是如何工作的</h2><p>每一个 Redis master 都有一个 replication ID ：这是一个较大的伪随机字符串，标记了一个给定的数据集。每个 master 也持有一个偏移量，master 将自己产生的复制流发送给 slave 时，发送多少个字节的数据，自身的偏移量就会增加多少，目的是当有新的操作修改自己的数据集时，它可以以此更新 slave 的状态。复制偏移量即使在没有一个 slave 连接到 master 时，也会自增，所以基本上每一对给定的</p>
+<blockquote>
+<p>Replication ID, offset</p>
+</blockquote>
+<p>都会标识一个 master 数据集的确切版本。</p>
+<p>当 slave 连接到 master 时，它们使用 PSYNC 命令来发送它们记录的旧的 master replication ID 和它们至今为止处理的偏移量。通过这种方式， master 能够仅发送 slave 所需的增量部分。但是如果 master 的缓冲区中没有足够的命令积压缓冲记录，或者如果 slave 引用了不再知道的历史记录（replication ID），则会转而进行一个全量重同步：在这种情况下， slave 会得到一个完整的数据集副本，从头开始。</p>
+<p>下面是一个全量同步的工作细节：</p>
+<p>master 开启一个后台保存进程，以便于生产一个 RDB 文件。同时它开始缓冲所有从客户端接收到的新的写入命令。当后台保存完成时， master 将数据集文件传输给 slave， slave将之保存在磁盘上，然后加载文件到内存。再然后 master 会发送所有缓冲的命令发给 slave。这个过程以指令流的形式完成并且和 Redis 协议本身的格式相同。</p>
+<p>你可以用 telnet 自己进行尝试。在服务器正在做一些工作的同时连接到 Redis 端口并发出 <a href="https://redis.io/commands/sync" target="_blank" rel="noopener">SYNC</a> 命令。你将会看到一个批量传输，并且之后每一个 master 接收到的命令都将在 telnet 回话中被重新发出。事实上 SYNC 是一个旧协议，在新的 Redis 实例中已经不再被使用，但是其仍然向后兼容：但它不允许部分重同步，所以现在 <strong>PSYNC</strong> 被用来替代 SYNC。</p>
+<p>之前说过，当主从之间的连接因为一些原因崩溃之后， slave 能够自动重连。如果 master 收到了多个 slave 要求同步的请求，它会执行一个单独的后台保存，以便于为多个 slave 服务。</p>
+<h2 id="无需磁盘参与的复制"><a href="#无需磁盘参与的复制" class="headerlink" title="无需磁盘参与的复制"></a>无需磁盘参与的复制</h2><p>正常情况下，一个全量重同步要求在磁盘上创建一个 RDB 文件，然后将它从磁盘加载进内存，然后 slave以此进行数据同步。</p>
+<p>如果磁盘性能很低的话，这对 master 是一个压力很大的操作。Redis 2.8.18 是第一个支持无磁盘复制的版本。在此设置中，子进程直接发送 RDB 文件给 slave，无需使用磁盘作为中间储存介质。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>配置基本的 Redis 复制功能是很简单的：只需要将以下内容加进 slave 的配置文件：</p>
+<blockquote>
+<p>slaveof 192.168.1.1 6379</p>
+</blockquote>
+<p>当然你需要用你自己的 master IP 地址（或者主机名）和端口替换掉 192.168.1.1 6379。另一种方法，你也可以使用 <a href="https://redis.io/commands/slaveof" target="_blank" rel="noopener">SLAVEOF</a> 命令， master 会开启一个跟 slave 间的同步。</p>
+<p>还有一些参数用于调节内存中保存的缓冲积压部分（replication backlog），以便执行部分重同步。详见 redis.conf 和 Redis Distribution 了解更多信息。</p>
+<p>无磁盘复制可以使用 repl-diskless-sync 配置参数。repl-diskless-sync-delay 参数可以延迟启动数据传输，目的可以在第一个 slave就绪后，等待更多的 slave就绪。可以在 Redis Distribution 例子中的 redis.conf 中看到更多细节信息。</p>
+<h2 id="只读性质的-slave"><a href="#只读性质的-slave" class="headerlink" title="只读性质的 slave"></a>只读性质的 slave</h2><p>自从 Redis 2.6 之后， slave 支持只读模式且默认开启。redis.conf 文件中的 slave-read-only 变量控制这个行为，且可以在运行时使用 <a href="https://redis.io/commands/config-set" target="_blank" rel="noopener">CONFIG SET</a> 来随时开启或者关闭。</p>
+<p>只读模式下的 slave 将会拒绝所有写入命令，因此实践中不可能由于某种出错而将数据写入 slave 。但这并不意味着该特性旨在将一个 slave 实例暴露到 Internet ，或者更广泛地说，将之暴露在存在不可信客户端的网络，因为像 <strong>DEBUG</strong> 或者 <strong>CONFIG</strong> 这样的管理员命令仍在启用。但是，在 redis.conf 文件中使用 rename-command 指令可以禁用上述管理员命令以提高只读实例的安全性。</p>
+<p>您也许想知道为什么可以还原只读设置，并有可以通过写入操作来设置 slave 实例。如果 slave 跟 master 在同步或者 slave 在重启，那么这些写操作将会无效，但是将短暂数据存储在 writable slave 中还是有一些合理的用例的。</p>
+<p>例如，计算 slow Set 或者 Sorted Set 的操作并将它们存储在本地 key 中是多次观察到的使用 writable slave 的用例。</p>
+<p>但是注意，4.0 版本之前的 writable slaves 不能用生存时间来淘汰 key 。这意味着，如果你使用 <a href="https://redis.io/commands/expire" target="_blank" rel="noopener">EXPIRE</a> 或者其他命令为 key 设置了最大 TTL 的话，你将会在键值计数（count of keys）中看到这个 key ，并且它还在内存中。所以总的来说，将 writable slaves 和设置过 TTL 的 key 混用将会导致问题。</p>
+<p>Redis 4.0 RC3 及更高版本彻底解决了这个问题，现在 writable slaves 能够像 master 一样驱逐 TTL 设置过的 key 了，但 DB 编号大于 63（但默认情况下，Redis实例只有16个数据库）的 key 除外。</p>
+<p>另请注意，由于 Redis 4.0 writable slaves 仅能本地，并且不会将数据传播到与该实例相连的 sub-slave 上。sub-slave 将总是接收与最顶层 master 向 intermediate slaves 发送的复制流相同的复制流。所以例如在以下设置中：</p>
+<blockquote>
+<p>A —&gt; B —-&gt; C</p>
+</blockquote>
+<p>及时节点 B 是可写的，C 也不会看到 B 的写入，而是将拥有和 master 实例 A 相同的数据集。</p>
+<h2 id="设置一个-slave-对-master-进行验证"><a href="#设置一个-slave-对-master-进行验证" class="headerlink" title="设置一个 slave 对 master 进行验证"></a>设置一个 slave 对 master 进行验证</h2><p>如果你的 master 通过 requirepass 设置了密码，则在所有同步操作中配置 slave 使用该密码是很简单的。</p>
+<p>要在正在运行的实例上执行此操作，请使用 redis-cli 并输入：</p>
+<blockquote>
+<p>config set masterauth <password></p>
+</blockquote>
+<p>要永久设置的话，请将其添加到您的配置文件中：</p>
+<blockquote>
+<p>masterauth <password></p>
+</blockquote>
+<h2 id="允许只写入-N-个附加的副本"><a href="#允许只写入-N-个附加的副本" class="headerlink" title="允许只写入 N 个附加的副本"></a>允许只写入 N 个附加的副本</h2><p>从Redis 2.8开始，只有当至少有 N 个 slave 连接到 master 时，才有可能配置 Redis master 接受写查询。</p>
+<p>但是，由于 Redis 使用异步复制，因此无法确保 slave 是否实际接收到给定的写命令，因此总会有一个数据丢失窗口。</p>
+<p>以下是该特性的工作原理：</p>
+<ul>
+<li>Redis slave 每秒钟都会 ping master，确认已处理的复制流的数量。</li>
+<li>Redis master 会记得上一次从每个 slave 都收到 ping 的时间。</li>
+<li>用户可以配置一个最小的 slave 数量，使得它滞后 &lt;= 最大秒数。</li>
+</ul>
+<p>如果至少有 N 个 slave ，并且滞后小于 M 秒，则写入将被接受。</p>
+<p>你可能认为这是一个尽力而为的数据安全机制，对于给定的写入来说，不能保证一致性，但至少数据丢失的时间窗限制在给定的秒数内。一般来说，绑定的数据丢失比不绑定的更好。</p>
+<p>如果条件不满足，master 将会回复一个 error 并且写入将不被接受。</p>
+<p>这个特性有两个配置参数：</p>
+<ul>
+<li>min-slaves-to-write &lt;slave 数量&gt;</li>
+<li>min-slaves-max-lag &lt;秒数&gt;</li>
+</ul>
+<p>有关更多信息，请查看随 Redis 源代码发行版一起提供的示例 redis.conf 文件。</p>
+<h2 id="Redis-复制如何处理-key-的过期"><a href="#Redis-复制如何处理-key-的过期" class="headerlink" title="Redis 复制如何处理 key 的过期"></a>Redis 复制如何处理 key 的过期</h2><p>Redis 的过期机制可以限制 key 的生存时间。此功能取决于 Redis 实例计算时间的能力，但是，即使使用 Lua 脚本更改了这些 key，Redis slaves 也能正确地复制具有过期时间的 key。</p>
+<p>为了实现这样的功能，Redis 不能依靠主从使用同步时钟，因为这是一个无法解决的并且会导致 race condition 和数据集不一致的问题，所以 Redis 使用三种主要的技术使过期的 key 的复制能够正确工作：</p>
+<ul>
+<li>slave 不会让 key 过期，而是等待 master 让 key 过期。当一个 master 让一个 key 到期（或由于 LRU 算法将之驱逐）时，它会合成一个 DEL 命令并传输到所有的 slave。</li>
+<li>但是，由于这是 master 驱动的 key 过期行为，master 无法及时提供 DEL 命令，所以有时候 slave 的内存中仍然可能存在在逻辑上已经过期的 key 。为了处理这个问题，slave 使用它的逻辑时钟以报告只有在不违反数据集的一致性的读取操作（从主机的新命令到达）中才存在 key。用这种方法，slave 避免报告逻辑过期的 key 仍然存在。在实际应用中，使用 slave 程序进行缩放的 HTML 碎片缓存，将避免返回已经比期望的时间更早的数据项。</li>
+<li>在Lua脚本执行期间，不执行任何 key 过期操作。当一个Lua脚本运行时，从概念上讲，master 中的时间是被冻结的，这样脚本运行的时候，一个给定的键要么存在要么不存在。这可以防止 key 在脚本中间过期，保证将相同的脚本发送到 slave ，从而在二者的数据集中产生相同的效果。</li>
+</ul>
+<p>一旦一个 slave 被提升为一个 master ，它将开始独立地过期 key，而不需要任何旧 master 的帮助。</p>
+<h2 id="在-Docker-和-NAT-中配置复制"><a href="#在-Docker-和-NAT-中配置复制" class="headerlink" title="在 Docker 和 NAT 中配置复制"></a>在 Docker 和 NAT 中配置复制</h2><p>当使用 Docker 或其他类型的容器使用端口转发或网络地址转换时，Redis 复制需要特别小心，特别是在使用 Redis Sentinel 或其他系统（其中扫描 master INFO 或 ROLE 命令的输出情况以便于发现 slave 地址的）。</p>
+<p>问题是 ROLE 命令和 INFO 输出的复制部分在发布到 master 实例中时，将显示 slave 具有的用于连接到 master 的 IP 地址，而在使用 NAT 的环境中，和 slave 实例的逻辑地址（客户机用来连接 slave 的地址）相比较可能会不同。</p>
+<p>类似地，slaves 将以 redis.conf 文件中监听的端口为序列出，在重新映射端口的情况下，该端口可能与转发的端口不同。</p>
+<p>为了解决这两个问题，从 Redis 3.2.2 开始，可以强制一个 slave 向 master 通告一对任意的 IP 和端口。使用的两个配置指令是：</p>
+<blockquote>
+<p>slave-announce-ip 5.5.5.5</p>
+</blockquote>
+<blockquote>
+<p>slave-announce-port 1234</p>
+</blockquote>
+<p>在近期 Redis distributions 中的 redis.conf 的样例中可以找到记录。</p>
+<h2 id="INFO-和-ROLE-命令"><a href="#INFO-和-ROLE-命令" class="headerlink" title="INFO 和 ROLE 命令"></a>INFO 和 ROLE 命令</h2><p>有两个 Redis 命令可以提供有关主从实例当前复制参数的很多信息。一个是INFO。如果使用复制参数像 INFO replication 调用该命令，，则只显示与复制相关的信息。另一个更加 computer-friendly 的命令是 ROLE，它提供 master 和 slave 的复制状态以及它们的复制偏移量，连接的 slaves 列表等等。</p>
+<h2 id="重新启动和故障转移后的部分重同步"><a href="#重新启动和故障转移后的部分重同步" class="headerlink" title="重新启动和故障转移后的部分重同步"></a>重新启动和故障转移后的部分重同步</h2><p>从 Redis 4.0 开始，当一个实例在故障转移后被提升为 master 时，它仍然能够与旧 master 的 slaves 进行部分重同步。为此，slave 会记住旧 master 的旧 replication ID 和复制偏移量，因此即使询问旧的 replication ID，其也可以将部分复制缓冲提供给连接的 slave 。</p>
+<p>但是，升级的 slave 的新 replication ID 将不同，因为它构成了数据集的不同历史记录。例如，master 可以返回可用，并且可以在一段时间内继续接受写入命令，因此在被提升的 slave 中使用相同的 replication ID 将违反一对复制标识和偏移对只能标识单一数据集的规则。</p>
+<p>另外，slave 在关机并重新启动后，能够在 RDB 文件中存储所需信息，以便与 master 进行重同步。这在升级的情况下很有用。当需要时，最好使用 SHUTDOWN 命令来执行 slave 的保存和退出操作。</p>
+<h2 id="Docker搭建主从复制环境"><a href="#Docker搭建主从复制环境" class="headerlink" title="Docker搭建主从复制环境"></a>Docker搭建主从复制环境</h2><p>编写docker-compose.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">master:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">        <span class="attr">container_name:</span> <span class="string">redis-master</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">        <span class="attr">command:</span> <span class="string">redis-server</span> <span class="string">--port</span> <span class="number">6379</span> <span class="string">--requirepass</span> <span class="string">master123</span> <span class="string">--appendonly</span> <span class="literal">yes</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="number">6379</span><span class="string">:6379</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">./data/master:/data</span></span><br><span class="line">    <span class="attr">slave1:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">        <span class="attr">container_name:</span> <span class="string">redis-slave-1</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">        <span class="attr">command:</span> <span class="string">redis-server</span> <span class="string">--slaveof</span> <span class="string">master</span> <span class="number">6379</span> <span class="string">--port</span> <span class="number">6380</span> <span class="string">--requirepass</span> <span class="string">slave123</span> <span class="string">--masterauth</span> <span class="string">master123</span> <span class="string">--appendonly</span> <span class="literal">yes</span></span><br><span class="line">        <span class="attr">ports:</span> </span><br><span class="line">            <span class="bullet">-</span> <span class="number">6380</span><span class="string">:6380</span></span><br><span class="line">        <span class="attr">volumes:</span> </span><br><span class="line">            <span class="bullet">-</span> <span class="string">./data/slave1:/data</span></span><br><span class="line">    <span class="attr">slave2:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">redis</span></span><br><span class="line">        <span class="attr">container_name:</span> <span class="string">redis-slave-2</span></span><br><span class="line">        <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">        <span class="attr">command:</span> <span class="string">redis-server</span> <span class="string">--slaveof</span> <span class="string">master</span> <span class="number">6379</span> <span class="string">--port</span> <span class="number">6381</span> <span class="string">--requirepass</span> <span class="string">slave123</span> <span class="string">--masterauth</span> <span class="string">master123</span> <span class="string">--appendonly</span> <span class="literal">yes</span></span><br><span class="line">        <span class="attr">ports:</span> </span><br><span class="line">            <span class="bullet">-</span> <span class="number">6381</span><span class="string">:6381</span></span><br><span class="line">        <span class="attr">volumes:</span> </span><br><span class="line">            <span class="bullet">-</span> <span class="string">./data/slave2:/data</span></span><br></pre></td></tr></table></figure>
+
+<p>启动主从复制服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up</span><br></pre></td></tr></table></figure>
+
+<p>关闭主从复制服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose down</span><br></pre></td></tr></table></figure>
+
+<p>参考文档：</p>
+<p><a href="http://redis.cn/topics/replication.html" target="_blank" rel="noopener">Redis中文官网-复制</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-高性能MySQL-1-3事务" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -308,196 +495,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/" rel="tag">IO</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Redis面试题汇总" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/"
-    >Redis面试题汇总</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/13/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="article-date">
-  <time datetime="2020-05-13T01:24:15.000Z" itemprop="datePublished">2020-05-13</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Redis/">Redis</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="redis面试题汇总"><a href="#redis面试题汇总" class="headerlink" title="redis面试题汇总"></a>redis面试题汇总</h1><p>　　redis是一个基于内存的高性能key-value数据库，目前职场中对这方面的人才还是有较高的需求。今天W3Cschool为大家整理了一些关于Redis方面的经典面试题，希望可以帮到还在求职路上的童鞋们。</p>
-<p>　　<strong>相关阅读：</strong></p>
-<p>　　<a href="https://www.w3cschool.cn/redis/" target="_blank" rel="noopener">Reids教程</a></p>
-<p>　　<a href="https://www.w3cschool.cn/redis_all_about/" target="_blank" rel="noopener">Redis开发运维实践指南</a></p>
-<p>　　<a href="https://www.w3cschool.cn/hdclil/" target="_blank" rel="noopener">Redis 设计与实现</a></p>
-<p>　　<strong>1、redis是什么？</strong></p>
-<p>　　Redis是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。</p>
-<p>　　<strong>2、Redis有什么特点</strong></p>
-<p>　　Redis是一个Key-Value类型的内存数据库，和memcached有点像，整个数据库都是在内存当中进行加载操作，定期通过异步操作把数据库数据flush到硬盘上进行保存。Redis的性能很高，可以处理超过10万次/秒的读写操作，是目前已知性能最快的Key-Value DB。</p>
-<p>　　除了性能外，Redis还支持保存多种数据结构，此外单个value的最大限制是1GB，比memcached的1MB高太多了，因此Redis可以用来实现很多有用的功能，比方说用他的List来做FIFO双向链表，实现一个轻量级的高性 能消息队列服务，用他的Set可以做高性能的tag系统等等。另外Redis也可以对存入的Key-Value设置expire时间，因此也可以被当作一 个功能加强版的memcached来用。</p>
-<p>　　当然，Redis也有缺陷，那就是是数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，因此Redis比较适合那些局限在较小数据量的高性能操作和运算上。</p>
-<p>**<br>**</p>
-<p>　　<strong>3.使用redis有哪些好处？</strong></p>
-<p>　　(1) 速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</p>
-<p>　　(2) 支持丰富数据类型，支持string，list，set，sorted set，hash</p>
-<p>　　(3) 支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</p>
-<p>　　(4) 丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除</p>
-<p>　　<strong>4.redis相比memcached有哪些优势？</strong></p>
-<p>　　(1) memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</p>
-<p>　　(2) redis的速度比memcached快很多 (3) redis可以持久化其数据</p>
-<p>　　<strong>5.Memcache与Redis的区别都有哪些？</strong></p>
-<p>　　1)、存储方式 Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，这样能保证数据的持久性。</p>
-<p>　　2)、数据支持类型 Memcache对数据类型支持相对简单。 Redis有复杂的数据类型。</p>
-<p>　　3)、使用底层模型不同 它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。 Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。</p>
-<p>　　<strong>6.redis常见性能问题和解决方案：</strong></p>
-<p>　　1).Master写内存快照，save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。</p>
-<p>　　2).Master AOF持久化，如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久</p>
-<p>　　化,如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
-<p>　　3).Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
-<p>　　4). Redis主从复制的性能问题，为了主从复制的速度和连接的稳定性，Slave和Master最好在同一个局域网内</p>
-<p>　　<strong>7. mySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</strong></p>
-<p>　　相关知识：redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略（回收策略）。redis 提供 6种数据淘汰策略：</p>
-<p>　　volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</p>
-<p>　　volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</p>
-<p>　　volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</p>
-<p>　　allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰</p>
-<p>　　allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</p>
-<p>　　no-enviction（驱逐）：禁止驱逐数据</p>
-<p>　　<strong>8.请用Redis和任意语言实现一段恶意登录保护的代码，限制1小时内每用户Id最多只能登录5次。具体登录函数或功能用空函数即可，不用详细写出。</strong></p>
-<p>　　用列表实现:列表中每个元素代表登陆时间,只要最后的第5次登陆时间和现在时间差不超过1小时就禁止登陆.用Python写的代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python3</span><br><span class="line">import redis  </span><br><span class="line">import sys  </span><br><span class="line">import time  </span><br><span class="line"> </span><br><span class="line">r &#x3D; redis.StrictRedis(host&#x3D;’127.0.0.1′, port&#x3D;6379, db&#x3D;0)  </span><br><span class="line">try:       </span><br><span class="line">    id &#x3D; sys.argv[1]</span><br><span class="line">except:      </span><br><span class="line">    print(‘input argument error’)    </span><br><span class="line">    sys.exit(0)  </span><br><span class="line">if r.llen(id) &gt;&#x3D; 5 and time.time() – float(r.lindex(id, 4)) &lt;&#x3D; 3600:      </span><br><span class="line">    print(“you are forbidden logining”)</span><br><span class="line">else:       </span><br><span class="line">    print(‘you are allowed to login’)    </span><br><span class="line">    r.lpush(id, time.time())    </span><br><span class="line">    # login_func()</span><br></pre></td></tr></table></figure>
-
-<p>　　<strong>9.为什么redis需要把所有数据放到内存中?</strong></p>
-<p>　　Redis为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入磁盘。所以redis具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O速度为严重影响redis的性能。在内存越来越便宜的今天，redis将会越来越受欢迎。</p>
-<p>　　如果设置了最大使用的内存，则数据已有记录数达到内存限值后不能继续插入新值。</p>
-<p>　　<strong>10.Redis是单进程单线程的</strong></p>
-<p>　　redis利用队列技术将并发访问变为串行访问，消除了传统数据库串行控制的开销</p>
-<p>　　<strong>11.redis的并发竞争问题如何解决?</strong></p>
-<p>　　Redis为单进程单线程模式，采用队列模式将并发访问变为串行访问。Redis本身没有锁的概念，Redis对于多个客户端连接并不存在竞争，但是在Jedis客户端对Redis进行并发访问时会发生连接超时、数据转换错误、阻塞、客户端关闭连接等问题，这些问题均是</p>
-<p>　　由于客户端连接混乱造成。对此有2种解决方法：</p>
-<p>　　1.客户端角度，为保证每个客户端间正常有序与Redis进行通信，对连接进行池化，同时对客户端读写Redis操作采用内部锁synchronized。</p>
-<p>　　2.服务器角度，利用setnx实现锁。</p>
-<p>　　注：对于第一种，需要应用程序自己处理资源的同步，可以使用的方法比较通俗，可以使用synchronized也可以使用lock；第二种需要用到Redis的setnx命令，但是需要注意一些问题。</p>
-<p>　　<strong>12.redis事物的了解CAS(check-and-set 操作实现乐观锁 )?</strong></p>
-<p>　　和众多其它数据库一样，Redis作为NoSQL数据库也同样提供了事务机制。在Redis中，MULTI/EXEC/DISCARD/WATCH这四个命令是我们实现事务的基石。相信对有关系型数据库开发经验的开发者而言这一概念并不陌生，即便如此，我们还是会简要的列出</p>
-<p>　　Redis中</p>
-<p>　　事务的实现特征：</p>
-<p>　　1). 在事务中的所有命令都将会被串行化的顺序执行，事务执行期间，Redis不会再为其它客户端的请求提供任何服务，从而保证了事物中的所有命令被原子的执行。</p>
-<p>　　2). 和关系型数据库中的事务相比，在Redis事务中如果有某一条命令执行失败，其后的命令仍然会被继续执行。</p>
-<p>　　3). 我们可以通过MULTI命令开启一个事务，有关系型数据库开发经验的人可以将其理解为”BEGIN TRANSACTION”语句。在该语句之后执行的命令都将被视为事务之内的操作，最后我们可以通过执行EXEC/DISCARD命令来提交/回滚该事务内的所有操作。这两</p>
-<p>　　个Redis命令可被视为等同于关系型数据库中的COMMIT/ROLLBACK语句。</p>
-<p>　　4). 在事务开启之前，如果客户端与服务器之间出现通讯故障并导致网络断开，其后所有待执行的语句都将不会被服务器执行。然而如果网络中断事件是发生在客户端执行EXEC命令之后，那么该事务中的所有命令都会被服务器执行。</p>
-<p>　　5). 当使用Append-Only模式时，Redis会通过调用系统函数write将该事务内的所有写操作在本次调用中全部写入磁盘。然而如果在写入的过程中出现系统崩溃，如电源故障导致的宕机，那么此时也许只有部分数据被写入到磁盘，而另外一部分数据却已经丢失。</p>
-<p>　　Redis服务器会在重新启动时执行一系列必要的一致性检测，一旦发现类似问题，就会立即退出并给出相应的错误提示。此时，我们就要充分利用Redis工具包中提供的redis-check-aof工具，该工具可以帮助我们定位到数据不一致的错误，并将已经写入的部</p>
-<p>　　分数据进行回滚。修复之后我们就可以再次重新启动Redis服务器了。</p>
-<p>　　<strong>13.WATCH命令和基于CAS的乐观锁：</strong></p>
-<p>　　在Redis的事务中，WATCH命令可用于提供CAS(check-and-set)功能。假设我们通过WATCH命令在事务执行之前监控了多个Keys，倘若在WATCH之后有任何Key的值发生了变化，EXEC命令执行的事务都将被放弃，同时返回Null multi-bulk应答以通知调用者事务</p>
-<p>　　执行失败。例如，我们再次假设Redis中并未提供incr命令来完成键值的原子性递增，如果要实现该功能，我们只能自行编写相应的代码。其伪码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　val &#x3D; GET mykey</span><br><span class="line">　　val &#x3D; val + 1</span><br><span class="line">　　SET mykey $val</span><br></pre></td></tr></table></figure>
-
-<p>　　以上代码只有在单连接的情况下才可以保证执行结果是正确的，因为如果在同一时刻有多个客户端在同时执行该段代码，那么就会出现多线程程序中经常出现的一种错误场景–竞态争用(race condition)。比如，客户端A和B都在同一时刻读取了mykey的原有值，假设该值为10，此后两个客户端又均将该值加一后set回Redis服务器，这样就会导致mykey的结果为11，而不是我们认为的12。为了解决类似的问题，我们需要借助WATCH命令的帮助，见如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">　　WATCH mykey</span><br><span class="line">　　val &#x3D; GET mykey</span><br><span class="line">　　val &#x3D; val + 1</span><br><span class="line">　　MULTI</span><br><span class="line">　　SET mykey $val</span><br><span class="line">　　EXEC</span><br></pre></td></tr></table></figure>
-
-<p>　　和此前代码不同的是，新代码在获取mykey的值之前先通过WATCH命令监控了该键，此后又将set命令包围在事务中，这样就可以有效的保证每个连接在执行EXEC之前，如果当前连接获取的mykey的值被其它连接的客户端修改，那么当前连接的EXEC命令将执行失败。这样调用者在判断返回值后就可以获悉val是否被重新设置成功。</p>
-<p>**<br>**</p>
-<p>　　<strong>14.redis持久化的几种方式</strong></p>
-<p>　　1、快照（snapshots）</p>
-<p>　　缺省情况情况下，Redis把数据快照存放在磁盘上的二进制文件中，文件名为dump.rdb。你可以配置Redis的持久化策略，例如数据集中每N秒钟有超过M次更新，就将数据写入磁盘；或者你可以手工调用命令SAVE或BGSAVE。</p>
-<p>　　工作原理</p>
-<p>　　． Redis forks.</p>
-<p>　　． 子进程开始将数据写到临时RDB文件中。</p>
-<p>　　． 当子进程完成写RDB文件，用新文件替换老文件。</p>
-<p>　　． 这种方式可以使Redis使用copy-on-write技术。</p>
-<p>　　2、AOF</p>
-<p>　　快照模式并不十分健壮，当系统停止，或者无意中Redis被kill掉，最后写入Redis的数据就会丢失。这对某些应用也许不是大问题，但对于要求高可靠性的应用来说，</p>
-<p>　　Redis就不是一个合适的选择。</p>
-<p>　　Append-only文件模式是另一种选择。</p>
-<p>　　你可以在配置文件中打开AOF模式</p>
-<p>　　3、虚拟内存方式</p>
-<p>　　当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.</p>
-<p>　　当你的key不小时,可以考虑使用一些非常方法将很大的key变成很大的value,比如你可以考虑将key,value组合成一个新的value.</p>
-<p>　　vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.</p>
-<p>　　自己测试的时候发现用虚拟内存性能也不错。如果数据量很大，可以考虑分布式或者其他数据库</p>
-<p>　　<strong>15.redis的缓存失效策略和主键失效机制</strong></p>
-<p>　　作为缓存系统都要定期清理无效数据，就需要一个主键失效和淘汰策略.</p>
-<p>　　在Redis当中，有生存期的key被称为volatile。在创建缓存时，要为给定的key设置生存期，当key过期的时候（生存期为0），它可能会被删除。</p>
-<p>　　1、影响生存时间的一些操作</p>
-<p>　　生存时间可以通过使用 DEL 命令来删除整个 key 来移除，或者被 SET 和 GETSET 命令覆盖原来的数据，也就是说，修改key对应的value和使用另外相同的key和value来覆盖以后，当前数据的生存时间不同。</p>
-<p>　　比如说，对一个 key 执行INCR命令，对一个列表进行LPUSH命令，或者对一个哈希表执行HSET命令，这类操作都不会修改 key 本身的生存时间。另一方面，如果使用RENAME对一个 key 进行改名，那么改名后的 key的生存时间和改名前一样。</p>
-<p>　　RENAME命令的另一种可能是，尝试将一个带生存时间的 key 改名成另一个带生存时间的 another_key ，这时旧的 another_key (以及它的生存时间)会被删除，然后旧的 key 会改名为 another_key ，因此，新的 another_key 的生存时间也和原本的 key 一样。使用PERSIST命令可以在不删除 key 的情况下，移除 key 的生存时间，让 key 重新成为一个persistent key 。</p>
-<p>　　2、如何更新生存时间</p>
-<p>　　可以对一个已经带有生存时间的 key 执行EXPIRE命令，新指定的生存时间会取代旧的生存时间。过期时间的精度已经被控制在1ms之内，主键失效的时间复杂度是O（1），</p>
-<p>　　EXPIRE和TTL命令搭配使用，TTL可以查看key的当前生存时间。设置成功返回 1；当 key 不存在或者不能为 key 设置生存时间时，返回 0 。</p>
-<p>　　最大缓存配置</p>
-<p>　　在 redis 中，允许用户设置最大使用内存大小</p>
-<p>　　server.maxmemory</p>
-<p>　　默认为0，没有指定最大缓存，如果有新的数据添加，超过最大内存，则会使redis崩溃，所以一定要设置。redis 内存数据集大小上升到一定大小的时候，就会实行数据淘汰策略。</p>
-<p>　　redis 提供 6种数据淘汰策略：</p>
-<p>　　． volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</p>
-<p>　　． volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</p>
-<p>　　． volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</p>
-<p>　　． allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰</p>
-<p>　　． allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</p>
-<p>　　． no-enviction（驱逐）：禁止驱逐数据</p>
-<p>　　注意这里的6种机制，volatile和allkeys规定了是对已设置过期时间的数据集淘汰数据还是从全部数据集淘汰数据，后面的lru、ttl以及random是三种不同的淘汰策略，再加上一种no-enviction永不回收的策略。</p>
-<p>　  使用策略规则：</p>
-<p>　　1、如果数据呈现幂律分布，也就是一部分数据访问频率高，一部分数据访问频率低，则使用allkeys-lru</p>
-<p>　　2、如果数据呈现平等分布，也就是所有的数据访问频率都相同，则使用allkeys-random</p>
-<p>　　三种数据淘汰策略：</p>
-<p>　　ttl和random比较容易理解，实现也会比较简单。主要是Lru最近最少使用淘汰策略，设计上会对key 按失效时间排序，然后取最先失效的key进行淘汰。</p>
-<p>　　以上就是W3Cschool为大家带来的redis面试题汇总，希望对大家有所帮助。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
 
 
     </footer>
