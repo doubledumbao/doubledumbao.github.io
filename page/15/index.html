@@ -74,6 +74,96 @@
     
     
     
+    <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"
+    >linux打开文件数 too many open files 解决办法</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/03/linux%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%E6%95%B0-too-many-open-files-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
+  <time datetime="2020-05-03T00:30:45.000Z" itemprop="datePublished">2020-05-03</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p><strong>阿里巴巴Java开发手册中规定：</strong></p>
+<blockquote>
+<p>调大服务器所支持的最大文件句柄数(File Descriptor，简写为fd)。 说明:主流操作系统的设计是将 TCP/UDP 连接采用与文件一样的方式去管理，即一个连接对 应于一个 fd。主流的 linux 服务器默认所支持最大 fd 数量为 1024，当并发连接数很大时很 容易因为 fd 不足而出现“open too many files”错误，导致新的连接无法建立。 建议将 linux 服务器所支持的最大句柄数调高数倍(与服务器的内存数量相关)。</p>
+</blockquote>
+<p><strong>查看每个用户最大允许打开文件数量</strong></p>
+<blockquote>
+<p>ulimit -a </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 20</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 16382</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) unlimited</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<p>查看某一进程的打开文件数量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep java</span><br><span class="line">lsof -p 进程号 | wc -l</span><br></pre></td></tr></table></figure>
+
+<p>设置open files数值方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 2048</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>这样就可以把当前用户的最大允许打开文件数量设置为2048了，但这种设置方法在重启后会还原为默认值。</em></strong></p>
+<p><strong>永久设置方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在最后加入</span><br><span class="line">* soft nofile 4096</span><br><span class="line">* hard nofile 4096</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>最前的表示所有用户，可根据需要设置某一用户，改完后注销一下就能生效。</em></strong></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-几个前端技术名词整理" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -316,88 +406,6 @@
     <footer class="article-footer">
       
       
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-单向链表" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/27/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8/"
-    >单向链表</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/27/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8/" class="article-date">
-  <time datetime="2020-04-27T13:04:09.000Z" itemprop="datePublished">2020-04-27</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h2 id="链表-Linked-List-介绍"><a href="#链表-Linked-List-介绍" class="headerlink" title="链表(Linked List)介绍"></a>链表(Linked List)介绍</h2><p>链表是有序的列表，但是它在内存中是存储如下</p>
-<p><img src="https://note.youdao.com/yws/public/resource/00fa35539db96d9324497e53f7f7bab4/xmlnote/250B078E564E4853A677EC5EA904AD41/5151" alt="链表"></p>
-<p>小结:</p>
-<p>1)链表是以节点的方式来存储,是链式存储</p>
-<p>2)每个节点包含 data 域， next 域：指向下一个节点.</p>
-<p>3)如图：发现链表的<strong>各个节点不一定是连续存储</strong>.</p>
-<p>链表分带头节点的链表和没有头节点的链表，根据实际的需求来确定</p>
-<h2 id="单链表介绍"><a href="#单链表介绍" class="headerlink" title="单链表介绍"></a>单链表介绍</h2><p>单链表(带头结点) 逻辑结构示意图如下</p>
-<p><img src="https://note.youdao.com/yws/public/resource/00fa35539db96d9324497e53f7f7bab4/xmlnote/B8A4B86BC6844789AE8953161922B3F3/5154" alt="单链表"></p>
-<h2 id="单链表的应用实例"><a href="#单链表的应用实例" class="headerlink" title="单链表的应用实例"></a>单链表的应用实例</h2><p>使用带head头的<strong>单向链表</strong>实现 –水浒英雄排行榜管理</p>
-<p>1)完成对英雄人物的<strong>增删改查</strong>操作， 注: 删除和修改,查找可以考虑学员独立完成，也可带学员完成</p>
-<p>2)第一种方法在添加英雄时，直接添加到链表的尾部</p>
-<p>第二种方式在添加英雄时，根据排名将英雄插入到指定位置 (如果有这个排名，则添加失败，并给出提示)</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
-
 
     </footer>
 

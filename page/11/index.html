@@ -74,6 +74,105 @@
     
     
     
+    <article id="post-CAP定理和BASE理论" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/12/CAP%E5%AE%9A%E7%90%86%E5%92%8CBASE%E7%90%86%E8%AE%BA/"
+    >CAP定理和BASE理论</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/12/CAP%E5%AE%9A%E7%90%86%E5%92%8CBASE%E7%90%86%E8%AE%BA/" class="article-date">
+  <time datetime="2020-05-12T00:37:37.000Z" itemprop="datePublished">2020-05-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="CAP定理"><a href="#CAP定理" class="headerlink" title="CAP定理"></a>CAP定理</h3><blockquote>
+<p>2000 年 7 月，加州大学伯克利分校的 Eric Brewer 教授在 ACM PODC 会议上提出 CAP 猜想。2年后，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 从理论上证明了 CAP。之后，CAP 理论正式成为分布式计算领域的公认定理。</p>
+</blockquote>
+<blockquote>
+<p>CAP 理论为：一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+</blockquote>
+<ul>
+<li><strong>一致性(Consistency)</strong>： 一致性指 (all nodes see the same data at the same time)，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。</li>
+<li><strong>可用性(Availability)</strong>： 可用性指(Reads and writes always succeed)，即服务一直可用，而且是正常响应时间。</li>
+<li><strong>分区容错性(Partition tolerance)</strong>： 分区容错性指(the system continues to operate despite arbitrary message loss or failure of part of the system)，即分布式系统在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。</li>
+</ul>
+<h3 id="CAP-权衡"><a href="#CAP-权衡" class="headerlink" title="CAP 权衡"></a>CAP 权衡</h3><blockquote>
+<p>通过 CAP 理论，我们知道无法同时满足一致性、可用性和分区容错性这三个特性，那要舍弃哪个呢？</p>
+</blockquote>
+<p>对于多数大型互联网应用的场景，主机众多、部署分散，而且现在的集群规模越来越大，所以节点故障、网络故障是常态，而且要保证服务可用性达到 N 个 9，即保证 P 和 A，舍弃C（退而求其次保证最终一致性）。虽然某些地方会影响客户体验，但没达到造成用户流程的严重程度。</p>
+<p>对于涉及到钱财这样不能有一丝让步的场景，C 必须保证。网络发生故障宁可停止服务，这是保证 CA，舍弃 P。貌似这几年国内银行业发生了不下 10 起事故，但影响面不大，报道也不多，广大群众知道的少。还有一种是保证 CP，舍弃 A。例如网络故障是只读不写。</p>
+<p>孰优孰略，没有定论，只能根据场景定夺，适合的才是最好的。</p>
+<h3 id="BASE-理论"><a href="#BASE-理论" class="headerlink" title="BASE 理论"></a>BASE 理论</h3><blockquote>
+<p>eBay 的架构师 Dan Pritchett 源于对大规模分布式系统的实践总结，在 ACM 上发表文章提出 BASE 理论，BASE 理论是对 CAP 理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP 的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
+</blockquote>
+<ul>
+<li><p><strong>基本可用(Basically Available)</strong>： 基本可用是指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。这就是损失部分可用性的体现。</p>
+</li>
+<li><p><strong>软状态(Soft State)</strong>： 软状态是指允许系统存在中间状态，而该中间状态不会影响系统整体可用性。分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。MySQL Replication 的异步复制也是一种体现。</p>
+</li>
+<li><p><strong>最终一致性(Eventual Consistency)</strong>： 最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</p>
+<h3 id="ACID-和-BASE-的区别与联系"><a href="#ACID-和-BASE-的区别与联系" class="headerlink" title="ACID 和 BASE 的区别与联系"></a>ACID 和 BASE 的区别与联系</h3><p>ACID 是传统数据库常用的设计理念，追求强一致性模型。BASE 支持的是大型分布式系统，提出通过牺牲强一致性获得高可用性。</p>
+</li>
+</ul>
+<p>ACID 和 BASE 代表了两种截然相反的设计哲学，在分布式系统设计的场景中，系统组件对一致性要求是不同的，因此 ACID 和 BASE 又会结合使用。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Java脑图整理" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -219,77 +318,6 @@
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" rel="tag">数据结构和算法</a></li></ul>
 
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-虚拟机栈的5道面试题" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/11/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E7%9A%845%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/"
-    >虚拟机栈的5道面试题</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/11/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E7%9A%845%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/" class="article-date">
-  <time datetime="2020-05-11T10:40:45.154Z" itemprop="datePublished">2020-05-11</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p>举例栈溢出的情况（StackOverflowError）</p>
-<ul>
-<li>通过-Xss设置栈的大小；OOM</li>
-</ul>
-<p>调整栈大小，就能保证不出现溢出吗？不能</p>
-<p>分配的栈内存越大越好吗？不是</p>
-<p>垃圾回收是否会涉及到虚拟机栈？不会</p>
-<p>方法中定义的局部变量是否线程安全？具体情况具体分析</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
 
     </footer>
 
