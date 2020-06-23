@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>18个Linux Shell脚本经典案例</title>
+    <url>/2020/06/23/18%E4%B8%AALinux-Shell%E8%84%9A%E6%9C%AC%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B/</url>
+    <content><![CDATA[<p>一、服务器系统配置初始化</p>
+<p>背景：新购买10台服务器并已安装Linux操作</p>
+<p>需求：</p>
+<p>1）设置时区并同步时间</p>
+<p>2）禁用selinux</p>
+<p>3）清空防火墙默认策略</p>
+<p>4）历史命令显示操作时间</p>
+<p>5）禁用root远程登录</p>
+<p>6）禁止定时任务发送邮件</p>
+<p>7）设置最大打开文件数</p>
+<p>8）减少Swap使用</p>
+<p>9）系统内核参数优化</p>
+<p>10）安装系统性能分析工具及其他</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 设置时区并同步时间</span></span><br><span class="line">ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br><span class="line"><span class="keyword">if</span> ! crontab -l |grep ntpdate &amp;&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    (<span class="built_in">echo</span> <span class="string">"* 1 * * * ntpdate time.windows.com &gt;/dev/null 2&gt;&amp;1"</span>;crontab -l) |crontab</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#禁用selinux</span></span><br><span class="line">sed -i <span class="string">'/SELINUX/&#123;s/permissive/disabled/&#125;'</span> /etc/selinux/config</span><br><span class="line"></span><br><span class="line"><span class="comment">#关闭防火墙</span></span><br><span class="line"><span class="keyword">if</span> egrep <span class="string">"7.[0-9]"</span> /etc/redhat-release &amp;&gt;/dev/null;<span class="keyword">then</span></span><br><span class="line">    systemctl stop firewalld</span><br><span class="line">    systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="keyword">elif</span> egrep <span class="string">"6.[0-9]"</span> /etc/redhat-release &amp;&gt;/dev/null;<span class="keyword">then</span></span><br><span class="line">    service iptables stop</span><br><span class="line">    chkconfig iptables off</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">#历史命令显示操作时间</span></span><br><span class="line"><span class="keyword">if</span> ! grep HISTTIMEFORMAT /etc/bashrc;<span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'export HISTTIMEFORMAT="%F %T `whoami` "'</span> &gt;&gt; /etc/bashrc</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#SSH超时时间</span></span><br><span class="line"><span class="keyword">if</span> ! grep <span class="string">"TMOUT=600"</span> /etc/profile &amp;&gt; /dev/null;<span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"export TMOUT=600"</span> &gt;&gt; /etc/profile</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止root远程登录</span></span><br><span class="line">sed -i <span class="string">'s/#PermitRootLogin yes/PermitRootLogin no/'</span> /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止定时任务发送邮件</span></span><br><span class="line">sed -i <span class="string">'s/^MAILTO=root/MAILTO=""/'</span> /etc/crontab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置最大打开文件数</span></span><br><span class="line"><span class="keyword">if</span> ! grep <span class="string">"* soft nofile 65535"</span> /etc/security/limits.conf &amp;&gt;/dev/null;<span class="keyword">then</span></span><br><span class="line">    cat &gt;&gt; /etc/security/limits.conf &lt;&lt; EOF</span><br><span class="line">    * soft nofile 65535</span><br><span class="line">    * hard nofile 65535</span><br><span class="line">EOF</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统内核优化</span></span><br><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt; EOF</span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 20480</span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 20480</span><br><span class="line">net.core.netdev_max_backlog = 262144</span><br><span class="line">net.ipv4.tcp_fin_timeout = 20</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 减少SWAP使用</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"0"</span> &gt; /proc/sys/vm/swappiness</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装系统性能分析工具及其他</span></span><br><span class="line">yum install gcc make autoconf vim sysstat net-tools iostat iftop iotp lrzsz -y</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Shell</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2012年考研英语（完形填空）</title>
     <url>/2020/06/23/2012%E5%B9%B4%E8%80%83%E7%A0%94%E8%8B%B1%E8%AF%AD%EF%BC%88%E5%AE%8C%E5%BD%A2%E5%A1%AB%E7%A9%BA%EF%BC%89/</url>
     <content><![CDATA[<p>The ethical judgments of the Supreme Court justices have become an important issue recently. The court cannot 1 its legitimacy as guardian of the rule of law 2 justices behave like politicians. Yet, in several instances, justices acted in ways that 3 the court’s reputation for being independent and impartial.</p>
