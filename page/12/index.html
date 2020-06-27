@@ -74,6 +74,144 @@
     
     
     
+    <article id="post-关于Java流的几个概念：IO、BIO、NIO、AIO" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/"
+    >关于Java流的几个概念：IO、BIO、NIO、AIO</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/13/%E5%85%B3%E4%BA%8EJava%E6%B5%81%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5%EF%BC%9AIO%E3%80%81BIO%E3%80%81NIO%E3%80%81AIO/" class="article-date">
+  <time datetime="2020-05-13T15:32:41.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/IO/">IO</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>关于同步、阻塞的知识我之前的文章有介绍，所以关于流用到这些概念与之前多线程用的概念一样。</p>
+<p>下面具体来看看java中的几种流</p>
+<blockquote>
+<p><strong>IO/BIO</strong></p>
+</blockquote>
+<p>BIO就是指IO，即传统的Blocking IO,即同步并阻塞的IO。这也是jdk1.4之前的唯一选择，依赖于ServerSocket实现，即一个请求对应一个线程，如果线程数不够连接则会等待空余线程或者拒绝连接。所以用这种方式，在高并发情况下效率是很低的，也不可靠，一般只应用于连接数比较小且固定架构的应用，但api也比较容易使用。</p>
+<blockquote>
+<p><strong>NIO</strong></p>
+</blockquote>
+<p>新的IO,即New IO或者Non-Blocking IO,即同步不阻塞的IO。jdk1.4之后提供了一系列的方法来操作流，定义在java.nio包下面。相比于传统的BIO,NIO 提供了高速的面向快的I/O,它加入了Buffer、Channel、Selector等概念。它是基于事件驱动的，采用了Reactor模式，它使用一个线程管理所有的socket通道，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理。它的特点是要不断主动地去询问数据有没有处理完，一般只适用于连接数目较大但连接时间短的应用，如聊天应用等。</p>
+<blockquote>
+<p><strong>AIO</strong></p>
+</blockquote>
+<p>新的IO2.0，即NIO2.0，jdk1.7开始应用，叫做异步不阻塞的IO。AIO引入异常通道的概念，采用了Proactor模式，简化了程序编写，一个有效的请求才启动一个线程，它的特点是先由操作系统完成后才通知服务端程序启动线程去处理，一般适用于连接数较多且连接时间长的应用。</p>
+<p>几种IO的综合对比：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BIO</th>
+<th>NIO</th>
+<th>AIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端:线程数</td>
+<td>1:1</td>
+<td>M:1</td>
+<td>M:0</td>
+</tr>
+<tr>
+<td>阻塞类型</td>
+<td>阻塞</td>
+<td>非阻塞</td>
+<td>非阻塞</td>
+</tr>
+<tr>
+<td>同步类型</td>
+<td>同步</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>编程难度</td>
+<td>简单</td>
+<td>非常复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>调试难度</td>
+<td>简单</td>
+<td>复杂</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>非常差</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>吞吐量</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>java提供的NIO的api使用比较复杂，一般建议使用像netty这样的框架，而不要使用jdk自带的api。</p>
+<p>参考资料：<a href="https://mp.weixin.qq.com/s?src=11&timestamp=1589383756&ver=2336&signature=NnEosAC2ZzCSQ8*vGWbXB91aszMNFn9lhC8kahomW3M6xDNKrl5M1qxxOMXbymBqqSn74DGOMLe-X9wApLLcz6mHB3e5Lpa55nqSu0xOkN71PZ2j8OGmXh4iy9jvDafQ&new=1" target="_blank" rel="noopener">关于java流的几个概念：IO、BIO、NIO、AIO，有几个人全知道？</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/" rel="tag">IO</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Redis面试题汇总" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -401,116 +539,13 @@
 
 </article>
     
-    <article id="post-排序算法" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/12/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"
-    >排序算法</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/12/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="article-date">
-  <time datetime="2020-05-12T03:33:55.000Z" itemprop="datePublished">2020-05-12</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">算法与数据结构</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p>​    排序算法是最经典的算法知识。因为其实现代码短，应该广，在面试中经常会问到排序算法及其相关的问题。一般在面试中最常考的是快速排序和归并排序等基本的排序算法，并且经常要求现场手写基本的排序算法。如果这些问题回答不好，估计面试就凉凉了。所以熟练掌握排序算法思想及其特点并能够熟练地手写代码至关重要。</p>
-<p>​    下面介绍几种常见的排序算法：冒泡排序、选择排序、插入排序、归并排序、快速排序、希尔排序、堆排序、计数排序、桶排序、基数排序的思想，其代码均采用Java实现。</p>
-<h2 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a><strong>1. 冒泡排序</strong></h2><p>冒泡排序是一种简单的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。</p>
-<h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
-<li>比较相邻的元素。如果第一个比第二个大，就交换它们两个；</li>
-<li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；</li>
-<li>针对所有的元素重复以上的步骤，除了最后一个；</li>
-<li>重复步骤1~3，直到排序完成。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 冒泡排序是一种简单的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。</span></span><br><span class="line"><span class="comment">     * 走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 比较相邻的元素。如果第一个比第二个大，就交换它们两个；</span></span><br><span class="line"><span class="comment">     * 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；</span></span><br><span class="line"><span class="comment">     * 针对所有的元素重复以上的步骤，除了最后一个；</span></span><br><span class="line"><span class="comment">     * 重复步骤1~3，直到排序完成。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 在相邻元素相等时，它们并不会交换位置，所以，冒泡排序是稳定排序。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 冒泡排序思路简单，代码也简单，特别适合小数据的排序。但是，由于算法复杂度较高，在数据量大的时候不适合使用。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = arr.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                    temp = arr[j + <span class="number">1</span>];</span><br><span class="line">                    arr[j + <span class="number">1</span>] = arr[j];</span><br><span class="line">                    arr[j] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="稳定性"><a href="#稳定性" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>在相邻元素相等时，它们并不会交换位置，所以，冒泡排序是稳定排序。</p>
-<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>冒泡排序思路简单，代码也简单，特别适合小数据的排序。但是，由于算法复杂度较高，在数据量大的时候不适合使用。</p>
-<h2 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2. 选择排序"></a><strong>2. 选择排序</strong></h2><p>选择排序是一种简单直观的排序算法，它也是一种交换排序算法，和冒泡排序有一定的相似度，可以认为选择排序是冒泡排序的一种改进。</p>
-<h2 id="算法描述-1"><a href="#算法描述-1" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
-<li>在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</li>
-<li>从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</li>
-<li>重复第二步，直到所有元素均排序完毕。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 选择排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 选择排序是一种简单直观的排序算法，它也是一种交换排序算法，和冒泡排序有一定的相似度，可以认为选择排序是冒泡排序的一种改进。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</span></span><br><span class="line"><span class="comment">     * 从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</span></span><br><span class="line"><span class="comment">     * 重复第二步，直到所有元素均排序完毕。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 用数组实现的选择排序是不稳定的，用链表实现的选择排序是稳定的。</span></span><br><span class="line"><span class="comment">     * 不过，一般提到排序算法时，大家往往会默认是数组实现，所以选择排序是不稳定的。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 选择排序实现也比较简单，并且由于在各种情况下复杂度波动小，因此一般是优于冒泡排序的。</span></span><br><span class="line"><span class="comment">     * 在所有的完全交换排序中，选择排序也是比较不错的一种算法。</span></span><br><span class="line"><span class="comment">     * 但是，由于固有的O(n2)复杂度，选择排序在海量数据面前显得力不从心。因此，它适用于简单数据排序。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//临时变量，交换值时临时存储数据</span></span><br><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//最小数值对应的坐标</span></span><br><span class="line">        <span class="keyword">int</span> min = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            min = i;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; arr.length; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (arr[min] &gt; arr[j]) &#123;</span><br><span class="line">                    min = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i != min) &#123;</span><br><span class="line">                temp = arr[min];</span><br><span class="line">                arr[min] = arr[i];</span><br><span class="line">                arr[i] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="稳定性-1"><a href="#稳定性-1" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>用数组实现的选择排序是不稳定的，用链表实现的选择排序是稳定的。<br>不过，一般提到排序算法时，大家往往会默认是数组实现，所以选择排序是不稳定的。</p>
-<h2 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>选择排序实现也比较简单，并且由于在各种情况下复杂度波动小，因此一般是优于冒泡排序的。在所有的完全交换排序中，选择排序也是比较不错的一种算法。但是，由于固有的O(n2)复杂度，选择排序在海量数据面前显得力不从心。因此，它适用于简单数据排序。</p>
-<h2 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3. 插入排序"></a><strong>3. 插入排序</strong></h2><p>插入排序是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
-<h2 id="算法描述-2"><a href="#算法描述-2" class="headerlink" title="算法描述"></a><strong>算法描述</strong></h2><ol>
-<li>把待排序的数组分成已排序和未排序两部分，初始的时候把第一个元素认为是已排好序的。</li>
-<li>从第二个元素开始，在已排好序的子数组中寻找到该元素合适的位置并插入该位置。</li>
-<li>重复上述过程直到最后一个元素被插入有序子数组中。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 插入排序</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 插入排序是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 算法描述</span></span><br><span class="line"><span class="comment">     * 把待排序的数组分成已排序和未排序两部分，初始的时候把第一个元素认为是已排好序的。</span></span><br><span class="line"><span class="comment">     * 从第二个元素开始，在已排好序的子数组中寻找到该元素合适的位置并插入该位置。</span></span><br><span class="line"><span class="comment">     * 重复上述过程直到最后一个元素被插入有序子数组中。</span></span><br><span class="line"><span class="comment">     * 稳定性</span></span><br><span class="line"><span class="comment">     * 由于只需要找到不大于当前数的位置而并不需要交换，因此，直接插入排序是稳定的排序方法。</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * 适用场景</span></span><br><span class="line"><span class="comment">     * 插入排序由于O( n2 )的复杂度，在数组较大的时候不适用。但是，在数据比较少的时候，是一个不错的选择，一般做为快速排序的扩充。</span></span><br><span class="line"><span class="comment">     * 例如，在STL的sort算法和stdlib的qsort算法中，都将插入排序作为快速排序的补充，用于少量元素的排序。</span></span><br><span class="line"><span class="comment">     * 又如，在JDK 7 java.util.Arrays所用的sort方法的实现中，当待排数组长度小于47时，会使用插入排序。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="comment">//当前带排序的值</span></span><br><span class="line">            <span class="keyword">int</span> value = arr[i];</span><br><span class="line">            <span class="comment">//位置指针，初始指向当前位置</span></span><br><span class="line">            <span class="keyword">int</span> position = i;</span><br><span class="line">            <span class="keyword">while</span> (position &gt; <span class="number">0</span> &amp;&amp; arr[position - <span class="number">1</span>] &gt; value) &#123;</span><br><span class="line">                arr[position] = arr[position - <span class="number">1</span>];</span><br><span class="line">                position--;</span><br><span class="line">            &#125;</span><br><span class="line">            arr[position] = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="稳定性-2"><a href="#稳定性-2" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h2><p>由于只需要找到不大于当前数的位置而并不需要交换，因此，直接插入排序是稳定的排序方法。</p>
-<h2 id="适用场景-2"><a href="#适用场景-2" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h2><p>插入排序由于O( n2 )的复杂度，在数组较大的时候不适用。但是，在数据比较少的时候，是一个不错的选择，一般做为快速排序的扩充。例如，在STL的sort算法和stdlib的qsort算法中，都将插入排序作为快速排序的补充，用于少量元素的排序。又如，在JDK 7 java.util.Arrays所用的sort方法的实现中，当待排数组长度小于47时，会使用插入排序。</p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/42586566" target="_blank" rel="noopener">[算法总结] 十大排序算法</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">算法与数据结构</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/11/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/13/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/11/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/13/">下一页</a>
   </nav>
   
 </section>

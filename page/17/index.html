@@ -74,6 +74,136 @@
     
     
     
+    <article id="post-maven依赖范围" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/"
+    >maven依赖范围</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/03/maven%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4/" class="article-date">
+  <time datetime="2020-05-03T02:34:09.000Z" itemprop="datePublished">2020-05-03</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h1 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h1><blockquote>
+<p>上一节提到，JUnit依赖的测试范围是test，测试范围用元素scope表示。本节将详细解释什么是测试范围，以及各种测试范围的效果和用途。</p>
+<p>首先需要知道，Maven在编译项目主代码的时候需要使用一套classpath。在上例中，编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。其次，Maven在编译和执行测试的时候会使用另外一套classpath。上例中的JUnit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖范围是test。最后，实际运行Maven项目的时候，又会使用一套classpath，上例中的spring-core需要在该classpath中，而JUnit则不需要。</p>
+<p>依赖范围就是用来控制依赖与这三种classpath（编译classpath、测试classpath、运行classpath）的关系，Maven有以下几种依赖范围：</p>
+<p>compile：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的Maven依赖，对于编译、测试、运行三种classpath都有效。典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
+<p>test：测试依赖范围。使用此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是JUnit，它只有在编译测试代码及运行测试的时候才需要。</p>
+<p>provided：已提供依赖范围。使用此依赖范围的Maven依赖，对于编译和测试class-path有效，但在运行时无效。典型的例子是servlet-api，编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要Maven重复地引入一遍。</p>
+<p>runtime：运行时依赖范围。使用此依赖范围的Maven依赖，对于测试和运行class-path有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述接口的具体JDBC驱动。</p>
+<p>system：系统依赖范围。该依赖与三种classpath的关系，和provided依赖范围完全一致。但是，使用system范围的依赖时必须通过systemPath元素显式地指定依赖文件的路径。由于此类依赖不是通过Maven仓库解析的，而且往往与本机系统绑定，可能造成构建</p>
+<p>“的不可移植，因此应该谨慎使用。systemPath元素可以引用环境变量，如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜dependency＞</span><br><span class="line">    ＜groupId＞javax.sql＜/groupId＞</span><br><span class="line">    ＜artifactId＞jdbc-stdext＜/artifactId＞</span><br><span class="line">    ＜version＞2.0＜/version＞</span><br><span class="line">    ＜scope＞system＜/scope＞</span><br><span class="line">    ＜systemPath＞$&#123;java.home&#125;/lib/rt.jar＜/systemPath＞</span><br><span class="line">＜/dependency＞</span><br></pre></td></tr></table></figure>
+
+<p>import（Maven 2.0.9及以上）：导入依赖范围。该依赖范围不会对三种classpath产生实际的影响，本书将在8.3.3节介绍Maven依赖和dependencyManagement的时候详细介绍此依赖范围。</p>
+</blockquote>
+<p>摘录来自: 许晓斌. “Maven实战。” </p>
+<p><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope" target="_blank" rel="noopener">官网对scope的介绍</a></p>
+<h3 id="Dependency-Scope"><a href="#Dependency-Scope" class="headerlink" title="Dependency Scope"></a>Dependency Scope</h3><p>Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.</p>
+<p>There are 6 scopes available:</p>
+<ul>
+<li><strong>compile</strong><br>This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.</li>
+<li><strong>provided</strong><br>This is much like <code>compile</code>, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope <code>provided</code> because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.</li>
+<li><strong>runtime</strong><br>This scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath.</li>
+<li><strong>test</strong><br>This scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases. This scope is not transitive.</li>
+<li><strong>system</strong><br>This scope is similar to <code>provided</code> except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository.</li>
+<li><strong>import</strong><br>This scope is only supported on a dependency of type <code>pom</code> in the <code>section. It indicates the dependency to be replaced with the effective list of dependencies in the specified POM&#39;s</code> section. Since they are replaced, dependencies with a scope of <code>import</code> do not actually participate in limiting the transitivity of a dependency.</li>
+</ul>
+<p>Each of the scopes (except for <code>import</code>) affects transitive dependencies in different ways, as is demonstrated in the table below. If a dependency is set to the scope in the left column, transitive dependencies of that dependency with the scope across the top row will result in a dependency in the main project with the scope listed at the intersection. If no scope is listed, it means the dependency will be omitted.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>compile</th>
+<th>provided</th>
+<th>runtime</th>
+<th>test</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>compile(*)</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>provided</td>
+<td>-</td>
+<td>provided</td>
+<td>-</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td>runtime</td>
+<td>-</td>
+<td>runtime</td>
+<td>-</td>
+</tr>
+<tr>
+<td>test</td>
+<td>test</td>
+<td>-</td>
+<td>test</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p><strong>(*) Note:</strong> it is intended that this should be runtime scope instead, so that all compile dependencies must be explicitly listed. However, if a library you depend on extends a class from another library, both must be available at compile time. For this reason, compile time dependencies remain as compile scope even when they are transitive.</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-linux打开文件数-too-many-open-files-解决办法" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -351,83 +481,13 @@
 
 </article>
     
-    <article id="post-开源项目领课试玩" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/30/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E9%A2%86%E8%AF%BE%E8%AF%95%E7%8E%A9/"
-    >开源项目领课试玩</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/30/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E9%A2%86%E8%AF%BE%E8%AF%95%E7%8E%A9/" class="article-date">
-  <time datetime="2020-04-30T11:16:37.179Z" itemprop="datePublished">2020-04-30</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <p><strong>启动顺序：注册中心 → 配置中心→ 模块工程 → 定时器 → 网关工程</strong> </p>
-<p>1.启动注册中心</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.roncoo.education.server.eureka.ServerEurekaApplication</span><br></pre></td></tr></table></figure>
-
-<p>2.启动配置中心</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.roncoo.education.service.config.ServerConfigApplication</span><br></pre></td></tr></table></figure>
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/16/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/18/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/16/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/18/">下一页</a>
   </nav>
   
 </section>
