@@ -74,6 +74,118 @@
     
     
     
+    <article id="post-高性能MySQL-1-3事务" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/14/%E9%AB%98%E6%80%A7%E8%83%BDMySQL-1-3%E4%BA%8B%E5%8A%A1/"
+    >高性能MySQL--1.3事务</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/14/%E9%AB%98%E6%80%A7%E8%83%BDMySQL-1-3%E4%BA%8B%E5%8A%A1/" class="article-date">
+  <time datetime="2020-05-14T14:21:44.000Z" itemprop="datePublished">2020-05-14</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>在理解事务的概念之前，接触数据库系统的其他高级特性还言之过早。事务就是一组原子性的SQL查询，或者说一个独立的工作单元。如果数据库引擎能够成功地对数据库应用该组查询的全部语句，那么就执行该组查询。如果其中有任何一条语句因为崩溃或其他原因无法执行，那么所有的语句都不会执行。也就是说，事务内的语句，要么全部执行成功，要么全部执行失败。</p>
+<p>本节的内容并非专属于MySQL，如果读者已经熟悉了事务的ACID的概念，可以直接跳转到1.3.4节。<br>银行应用是解释事务必要性的一个经典例子。假设一个银行的数据库有两张表：支票（checking）表和储蓄（savings）表。现在要从用户Jane的支票账户转移200美元到她的储蓄账户，那么需要至少三个步骤：</p>
+<p>1.检查支票账户的余额高于200美元。<br>2.从支票账户余额中减去200美元。<br>3.在储蓄账户余额中增加200美元。<br>上述三个步骤的操作必须打包在一个事务中，任何一个步骤失败，则必须回滚所有的步骤。<br>可以用START TRANSACTION语句开始一个事务，然后要么使用COMMIT提交事务将修改的数据持久保留，要么使用ROLLBACK撤销所有的修改。事务SQL的样本如下：</p>
+<p><img src="https://note.youdao.com/yws/public/resource/c73fe14647eee0b91e81ce4dcbf5b045/xmlnote/02EAA60312F745B380B9BCB1A5086A68/5221" alt="sql"></p>
+<p>单纯的事务概念并不是故事的全部。试想一下，如果执行到第四条语句时服务器崩溃了，会发生什么？天知道，用户可能会损失200美元。再假如，在执行到第三条语句和第四条语句之间时，另外一个进程要删除支票账户的所有余额，那么结果可能就是银行在不知道这个逻辑的情况下白白给了Jane 200美元。<br>除非系统通过严格的ACID测试，否则空谈事务的概念是不够的。ACID表示原子性（atomicity）、一致性（consistency）、隔离性（isolation）和持久性（durability）。一个运行良好的事务处理系统，必须具备这些标准特征。</p>
+<ul>
+<li>原子性（atomicity）</li>
+</ul>
+<p>一个事务必须被视为一个不可分割的最小工作单元，整个事务中的所有操作要么全部提交成功，要么全部失败回滚，对于一个事务来说，不可能只执行其中的一部分操作，这就是事务的原子性。</p>
+<ul>
+<li>一致性（consistency）</li>
+</ul>
+<p>数据库总是从一个一致性的状态转换到另外一个一致性的状态。在前面的例子中，一致性确保了，即使在执行第三、四条语句之间时系统崩溃，支票账户中也不会损失200美元，因为事务最终没有提交，所以事务中所做的修改也不会保存到数据库中。</p>
+<ul>
+<li>隔离性（isolation）</li>
+</ul>
+<p>通常来说，一个事务所做的修改在最终提交以前，对其他事务是不可见的。在前面的例子中，当执行完第三条语句、第四条语句还未开始时，此时有另外一个账户汇总程序开始运行，则其看到的支票账户的余额并没有被减去200美元。后面我们讨论隔离级别（Isolation level）的时候，会发现为什么我们要说“通常来说”是不可见的。</p>
+<ul>
+<li>持久性（durability）</li>
+</ul>
+<p>一旦事务提交，则其所做的修改就会永久保存到数据库中。此时即使系统崩溃，修改的数据也不会丢失。持久性是个有点模糊的概念，因为实际上持久性也分很多不同的级别。有些持久性策略能够提供非常强的安全保障，而有些则未必。而且不可能有能做到100%的持久性保证的策略（如果数据库本身就能做到真正的持久性，那么备份又怎么能增加持久性呢？）。在后面的一些章节中，我们会继续讨论MySQL中持久性的真正含义。</p>
+<p>事务的ACID特性可以确保银行不会弄丢你的钱。而在应用逻辑中，要实现这一点非常难，甚至可以说是不可能完成的任务。一个兼容ACID的数据库系统，需要做很多复杂但可能用户并没有觉察到的工作，才能确保ACID的实现。<br>就像锁粒度的升级会增加系统开销一样，这种事务处理过程中额外的安全性，也会需要数据库系统做更多的额外工作。一个实现了ACID的数据库，相比没有实现ACID的数据库，通常会需要更强的CPU处理能力、更大的内存和更多的磁盘空间。正如本章不断重复的，这也正是MySQL的存储引擎架构可以发挥优势的地方。用户可以根据业务是否需要事务处理，来选择合适的存储引擎。对于一些不需要事务的查询类应用，选择一个非事务型的存储引擎，可以获得更高的性能。即使存储引擎不支持事务，也可以通过LOCK TABLES语句为应用提供一定程度的保护，这些选择用户都可以自主决定。</p>
+<p>1.3.1 隔离级别<br>隔离性其实比想象的要复杂。在SQL标准中定义了四种隔离级别，每一种级别都规定了一个事务中所做的修改，哪些在事务内和事务间是可见的，哪些是不可见的。较低级别的隔离通常可以执行更高的并发，系统的开销也更低。</p>
+<p>下面简单地介绍一下四种隔离级别。</p>
+<ul>
+<li>READ UNCOMMITTED（未提交读）</li>
+</ul>
+<p>在READ UNCOMMITTED级别，事务中的修改，即使没有提交，对其他事务也都是可见的。事务可以读取未提交的数据，这也被称为脏读（Dirty Read）。这个级别会导致很多问题，从性能上来说，READ UNCOMMITTED不会比其他的级别好太多，但却缺乏其他级别的很多好处，除非真的有非常必要的理由，在实际应用中一般很少使用。</p>
+<ul>
+<li>READ COMMITTED（提交读）</li>
+</ul>
+<p>大多数数据库系统的默认隔离级别都是READ COMMITTED（但MySQL不是）。READ COMMITTED满足前面提到的隔离性的简单定义：一个事务开始时，只能“看见”已经提交的事务所做的修改。换句话说，一个事务从开始直到提交之前，所做的任何修改对其他事务都是不可见的。这个级别有时候也叫做不可重复读（nonrepeatable read），因为两次执行同样的查询，可能会得到不一样的结果。</p>
+<ul>
+<li>REPEATABLE READ（可重复读）</li>
+</ul>
+<p>REPEATABLE READ解决了脏读的问题。该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是理论上，可重复读隔离级别还是无法解决另外一个幻读（Phantom Read）的问题。所谓幻读， 指的是当某个事务在读取某个范围内的记录时，另外一个事务又在该范围内插入了新的记录，当之前的事务再次读取该范围的记录时，会产生幻行（Phantom Row）。InnoDB和XtraDB存储引擎通过多版本并发控制（MVCC,Multiversion Concurrency Control）解决了幻读的问题。本章稍后会做进一步的讨论。</p>
+<ul>
+<li>REPEATABLE READ（可重复读）</li>
+</ul>
+<p>REPEATABLE READ解决了脏读的问题。该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是理论上，可重复读隔离级别还是无法解决另外一个幻读（Phantom Read）的问题。所谓幻读， 指的是当某个事务在读取某个范围内的记录时，另外一个事务又在该范围内插入了新的记录，当之前的事务再次读取该范围的记录时，会产生幻行（Phantom Row）。InnoDB和XtraDB存储引擎通过多版本并发控制（MVCC,Multiversion Concurrency Control）解决了幻读的问题。本章稍后会做进一步的讨论。</p>
+<p>表1-1：ANSI SQL隔离级别</p>
+<p><img src="https://note.youdao.com/yws/public/resource/c73fe14647eee0b91e81ce4dcbf5b045/xmlnote/9FF86F5771954561B6BBC84C9EFEBEB8/5225" alt="隔离级别"></p>
+<p>摘自：《高性能MySQL（第3版）》 — 〔美〕施瓦茨（Baron Schwartz）  〔美〕扎伊采夫（Peter Zaitsev）  〔美〕特卡琴科（Vadim Tkachenko）</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%8B%E5%8A%A1/" rel="tag">事务</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-关于Java流的几个概念：IO、BIO、NIO、AIO" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -387,143 +499,6 @@
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
 
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Redis分布式锁正确的实现方法" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/05/13/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95/"
-    >Redis分布式锁正确的实现方法</a> 
-</h2>
- 
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/05/13/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95/" class="article-date">
-  <time datetime="2020-05-13T01:03:31.000Z" itemprop="datePublished">2020-05-13</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-
-      
-      <h1 id="Redis分布式锁正确的实现方法"><a href="#Redis分布式锁正确的实现方法" class="headerlink" title="Redis分布式锁正确的实现方法"></a>Redis分布式锁正确的实现方法</h1><p>分布式锁一般有数据库乐观锁、基于Redis的分布式锁以及基于ZooKeeper的分布式锁三种实现方式，而本文将为大家带来的就是第二种基于Redis的分布式锁正确的实现方法，希望对大家会有所帮助。</p>
-<p><strong>可靠性</strong></p>
-<p>首先，想要保证分布式锁可以使用，下面这四个条件是必须要满足的：</p>
-<p>1、互斥性。在任意时刻，只有一个客户端能持有锁。</p>
-<p>2、不会发生死锁。即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续其他客户端能加锁。</p>
-<p>3、具有容错性。只要大部分的Redis节点正常运行，客户端就可以加锁和解锁。</p>
-<p>4、解铃还须系铃人。加锁和解锁必须是同一个客户端，客户端自己不能把别人加的锁给解了。</p>
-<p><strong>代码实现</strong></p>
-<p>引入Jedis开源组件</p>
-<p>首先我们要通过Maven引入Jedis开源组件，在pom.xml文件加入下面的代码：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>加锁代码</strong></p>
-<p><strong>正确代码</strong></p>
-<p>Talk is cheap, show me the code。先展示代码，再带大家慢慢解释为什么这样实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTool</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LOCK_SUCCESS = <span class="string">"OK"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SET_IF_NOT_EXIST = <span class="string">"NX"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SET_WITH_EXPIRE_TIME = <span class="string">"PX"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 尝试获取分布式锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey 锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId 请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> expireTime 超期时间 单位毫秒</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否获取成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">tryGetDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (LOCK_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，我们加锁就一行代码：jedis.set(String key, String value, String nxxx, String expx, int time)，这个set()方法一共有五个形参：</p>
-<p>第一个为key，我们使用key来当锁，因为key是唯一的。</p>
-<p>第二个为value，我们传的是requestId，很多童鞋可能不明白，有key作为锁不就够了吗，为什么还要用到value？原因就是我们在上面讲到可靠性时，分布式锁要满足第四个条件解铃还须系铃人，通过给value赋值为requestId，我们就知道这把锁是哪个请求加的了，在解锁的时候就可以有依据。requestId可以使用UUID.randomUUID().toString()方法生成。</p>
-<p>第三个为nxxx，这个参数我们填的是NX，意思是SET IF NOT EXIST，即当key不存在时，我们进行set操作；若key已经存在，则不做任何操作；</p>
-<p>第四个为expx，这个参数我们传的是PX，意思是我们要给这个key加一个过期的设置，具体时间由第五个参数决定。</p>
-<p>第五个为time，与第四个参数相呼应，代表key的过期时间。</p>
-<p>总的来说，执行上面的set()方法就只会导致两种结果：</p>
-<ol>
-<li><p>当前没有锁（key不存在），那么就进行加锁操作，并对锁设置个有效期，同时value表示加锁的客户端。</p>
-</li>
-<li><p>已有锁存在，不做任何操作。</p>
-</li>
-</ol>
-<p><strong>jedis版本号升级3.2.0后</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>代码修改为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 尝试获取分布式锁</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis      Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey    锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId  请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> expireTime 超期时间 单位毫秒</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否获取成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">tryGetDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">        SetParams setParams = SetParams.setParams().px(expireTime).nx();</span><br><span class="line">        <span class="comment">//String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);</span></span><br><span class="line">        String result = jedis.set(lockKey, requestId, setParams);</span><br><span class="line">        <span class="keyword">if</span> (LOCK_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>错误示例1</strong></p>
-<p>比较常见的错误示例就是使用jedis.setnx()和jedis.expire()组合实现加锁，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongGetLock1</span><span class="params">(Jedis jedis, String lockKey, String requestId, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">    Long result = jedis.setnx(lockKey, requestId);</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 若在这里程序突然崩溃，则无法设置过期时间，将发生死锁</span></span><br><span class="line">        jedis.expire(lockKey, expireTime);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>setnx()方法作用就是SET IF NOT EXIST，expire()方法就是给锁加一个过期时间。乍一看好像和前面的set()方法结果一样，然而由于这是两条Redis命令，不具有原子性，如果程序在执行完setnx()之后突然崩溃，导致锁没有设置过期时间。那么将会发生死锁。网上之所以有人这样实现，是因为低版本的jedis并不支持多参数的set()方法。</p>
-<p><strong>错误示例2</strong></p>
-<p>这一种错误示例就比较难以发现问题，而且实现也比较复杂。实现思路：使用jedis.setnx()命令实现加锁，其中key是锁，value是锁的过期时间。执行过程：1. 通过setnx()方法尝试加锁，如果当前锁不存在，返回加锁成功。2. 如果锁已经存在则获取锁的过期时间，和当前时间比较，如果锁已经过期，则设置新的过期时间，返回加锁成功。代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">wrongGetLock2</span><span class="params">(Jedis jedis, String lockKey, <span class="keyword">int</span> expireTime)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> expires = System.currentTimeMillis() + expireTime;</span><br><span class="line">    String expiresStr = String.valueOf(expires);</span><br><span class="line">    <span class="comment">// 如果当前锁不存在，返回加锁成功</span></span><br><span class="line">    <span class="keyword">if</span> (jedis.setnx(lockKey, expiresStr) == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果锁存在，获取锁的过期时间</span></span><br><span class="line">    String currentValueStr = jedis.get(lockKey);</span><br><span class="line">    <span class="keyword">if</span> (currentValueStr != <span class="keyword">null</span> &amp;&amp; Long.parseLong(currentValueStr) &lt; System.currentTimeMillis()) &#123;</span><br><span class="line">        <span class="comment">// 锁已过期，获取上一个锁的过期时间，并设置现在锁的过期时间</span></span><br><span class="line">        String oldValueStr = jedis.getSet(lockKey, expiresStr);</span><br><span class="line">        <span class="keyword">if</span> (oldValueStr != <span class="keyword">null</span> &amp;&amp; oldValueStr.equals(currentValueStr)) &#123;</span><br><span class="line">            <span class="comment">// 考虑多线程并发的情况，只有一个线程的设置值和当前值相同，它才有权利加锁</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他情况，一律返回加锁失败</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码的错误之处在于：</p>
-<ol>
-<li><p>由于是客户端自己生成过期时间，所以需要强制要求分布式下每个客户端的时间必须同步。</p>
-</li>
-<li><p>当锁过期的时候，如果多个客户端同时执行jedis.getSet()方法，那么虽然最终只有一个客户端可以加锁，但是这个客户端的锁的过期时间可能被其他客户端覆盖。</p>
-</li>
-<li><p>锁不具备拥有者标识，即任何客户端都可以解锁。</p>
-</li>
-</ol>
-<p><strong>解锁代码</strong></p>
-<p><strong>正确代码</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTool</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Long RELEASE_SUCCESS = <span class="number">1L</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 释放分布式锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> jedis Redis客户端</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> lockKey 锁</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestId 请求标识</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否释放成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">releaseDistributedLock</span><span class="params">(Jedis jedis, String lockKey, String requestId)</span> </span>&#123;</span><br><span class="line">        String script = <span class="string">"if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end"</span>;</span><br><span class="line">        Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));</span><br><span class="line">        <span class="keyword">if</span> (RELEASE_SUCCESS.equals(result)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，我们解锁只需要两行代码就搞定了！第一行代码，我们写了一个简单的Lua脚本代码，上一次见到这个编程语言还是在《黑客与画家》里，没想到这次居然用上了。第二行代码，我们将Lua代码传到jedis.eval()方法里，并使参数KEYS[1]赋值为lockKey，ARGV[1]赋值为requestId。eval()方法是将Lua代码交给Redis服务端执行。</p>
-<p>那么这段Lua代码的功能是什么呢？其实很简单，首先获取锁对应的value值，检查是否与requestId相等，如果相等则删除锁（解锁）。那么为什么要使用Lua语言来实现呢？因为要确保上述操作是原子性的。关于非原子性会带来什么问题，可以阅读【解锁代码-错误示例2】 。那么为什么执行eval()方法可以确保原子性，源于Redis的特性，简单来说，就是在eval命令执行Lua代码的时候，Lua代码将被当成一个命令去执行，并且直到eval命令执行完成，Redis才会执行其他命令。</p>
-<p><strong>错误示例1</strong></p>
-<p>最常见的解锁代码就是直接使用jedis.del()方法删除锁，这种不先判断锁的拥有者而直接解锁的方式，会导致任何客户端都可以随时进行解锁，即使这把锁不是它的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongReleaseLock1</span><span class="params">(Jedis jedis, String lockKey)</span> </span>&#123;</span><br><span class="line">    jedis.del(lockKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>错误示例2</strong></p>
-<p>这种解锁代码乍一看也是没问题，甚至我之前也差点这样实现，与正确姿势差不多，唯一区别的是分成两条命令去执行，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wrongReleaseLock2</span><span class="params">(Jedis jedis, String lockKey, String requestId)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 判断加锁与解锁是不是同一个客户端</span></span><br><span class="line">    <span class="keyword">if</span> (requestId.equals(jedis.get(lockKey))) &#123;</span><br><span class="line">        <span class="comment">// 若在此时，这把锁突然不是这个客户端的，则会误解锁</span></span><br><span class="line">        jedis.del(lockKey);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如代码注释，这个代码的问题在于如果调用jedis.del()方法的时候，这把锁已经不属于当前客户端的时候会解除他人加的锁。那么是否真的有这种场景？答案是肯定的，比如客户端A加锁，一段时间之后客户端A解锁，在执行jedis.del()之前，锁突然过期了，此时客户端B尝试加锁成功，然后客户端A再执行del()方法，则将客户端B的锁给解除了。</p>
-<p><strong>总结</strong></p>
-<p>本文介绍的Redis分布式锁都是用JAVA实现，对于加锁和解锁的方法也分别给出了错误示例供大家参考。其实想要通过Redis实现分布式锁难度并不高，只要能满足上面给出的十个可靠性条件即可。</p>
-<p>参考资料：<a href="https://www.w3cschool.cn/redis/redis-yj3f2p0c.html" target="_blank" rel="noopener">Redis分布式锁正确的实现方法</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
 
     </footer>
 
